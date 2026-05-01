@@ -18,7 +18,7 @@ while not pr.window_should_close():
         ball_pos.x += 10
 
     pr.draw_circle_v(ball_pos, 25, pr.RED)
-    pr.draw_fps(0,0)
+    pr.draw_fps(0, 0)
     pr.end_drawing()
 
 pr.close_window()
