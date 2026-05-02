@@ -1,6 +1,7 @@
 import pyray as pr
 import raylib as rl
 
+WINDOW_WIDTH, WINDOW_HEIGHT = 600, 600
 
 
 def get_bounding_pos(model, pos) -> pr.BoundingBox:
@@ -11,9 +12,8 @@ def get_bounding_pos(model, pos) -> pr.BoundingBox:
 
 
 # settings
-pr.init_window(800, 600, "3D basics")
+pr.init_window(WINDOW_WIDTH, WINDOW_HEIGHT, "3D collisions testing")
 pr.set_target_fps(60)
-pr.set_exit_key(rl.KEY_ESCAPE)
 
 # camera
 camera = pr.Camera3D()
@@ -37,9 +37,13 @@ show_collision_box: int = 0
 
 
 while not pr.window_should_close():
-    # input
-    player_direction.x = int(pr.is_key_down(rl.KEY_RIGHT)) - int(pr.is_key_down(rl.KEY_LEFT))
-    player_direction.z = int(pr.is_key_down(rl.KEY_DOWN)) - int(pr.is_key_down(rl.KEY_UP))
+    # logic
+    player_direction.x = int(pr.is_key_down(rl.KEY_RIGHT)) - int(
+        pr.is_key_down(rl.KEY_LEFT)
+    )
+    player_direction.z = int(pr.is_key_down(rl.KEY_DOWN)) - int(
+        pr.is_key_down(rl.KEY_UP)
+    )
     player_direction = rl.Vector3Normalize(player_direction)
 
     dt = pr.get_frame_time()
@@ -48,10 +52,11 @@ while not pr.window_should_close():
 
     # collisions
     is_collision = pr.check_collision_boxes(
-            get_bounding_pos(player_model, player_position),
-            get_bounding_pos(obs_model, obs_position),
-        )
+        get_bounding_pos(player_model, player_position),
+        get_bounding_pos(obs_model, obs_position),
+    )
 
+    # drawing
     pr.begin_drawing()
     pr.clear_background(rl.BLACK)
 
@@ -60,11 +65,14 @@ while not pr.window_should_close():
 
     pr.draw_model(player_model, player_position, 1, pr.ORANGE)
     pr.draw_bounding_box(get_bounding_pos(player_model, player_position), pr.BLUE)
-    pr.draw_model(obs_model, obs_position, 1, pr.GREEN) if not is_collision else pr.draw_model(obs_model, obs_position, 1, pr.SKYBLUE)
+    pr.draw_model(
+        obs_model, obs_position, 1, pr.GREEN
+    ) if not is_collision else pr.draw_model(obs_model, obs_position, 1, pr.SKYBLUE)
     pr.draw_bounding_box(get_bounding_pos(obs_model, obs_position), pr.DARKBLUE)
 
     pr.end_mode_3d()
 
+    # UI shuold be outside the camera mode
     if is_collision:
         if pr.gui_text_box(pr.Rectangle(0, 40, 60, 20), b"Collision", 40, True):
             pass
