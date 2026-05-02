@@ -5,6 +5,7 @@ This repo is meant to gather some of `raylib` scripts I've been doing as I'm sti
 
 I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-python-cffi/pyray.html
 
+
 ## Simple Window
 - a simple window display
 ```console
@@ -67,4 +68,28 @@ Traceback (most recent call last):
     pr.draw_cube_wires_v(position=pr.Vector3(-3,0,3), size=pr.Vector3(2,2,2), color=pr.BLUE)
     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: _wrap_function.<locals>.wrapped_func() got an unexpected keyword argument 'position'
+```
+
+# Project Tree
+
+```console
+├── LICENSE
+├── README.md
+├── docs
+│   ├── 3d_cube_camera.png
+│   ├── moving_ball.png
+│   └── simple_window.png
+├── main.py
+├── projects
+│   ├── 3d_cube_camera
+│   │   ├── __init__.py
+│   │   └── main.py
+│   ├── move_ball
+│   │   ├── __init__.py
+│   │   └── main.py
+│   └── simple_window
+│       ├── __init__.py
+│       └── main.py
+├── pyproject.toml
+└── uv.lock
 ```
