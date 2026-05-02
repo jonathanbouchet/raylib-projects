@@ -1,0 +1,5 @@
+import pyray as pr
+
+WINDOW_WIDTH, WINDOW_HEIGHT = 600, 600
+TARGET_FPS = 60
+COLORS = [pr.RED, pr.YELLOW, pr.BLUE, pr.GRAY, pr.GREEN]
