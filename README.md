@@ -113,19 +113,40 @@ uv run projects/3d_collisions_check/main.py
 | :---: | :---: |
 | ![no_coll](docs/3d_collision_check_no.png) | ![coll](docs/3d_collision_check_yes.png) |
 
+
+## `raygui` icons`
+- motivation: gui icons manipulation / raygui
+- raygui: [https://github.com/raysan5/raygui](https://github.com/raysan5/raygui)
+
+```console
+uv run projects/raygui_icons/main.py   
+```
+
+| all icons | icon pressed |
+| :---: | :---: |
+| ![all icons](docs/raygui_icons_all.png) | ![icon pressed](docs/raygui_icons_pressed.png) |
+
+
 # Project Tree
 
 ```console
 ├── LICENSE
 ├── README.md
 ├── docs
+│   ├── 3d_collision_check_no.png
+│   ├── 3d_collision_check_yes.png
 │   ├── 3d_cube_camera.png
 │   ├── instantiate_rings_0.png
 │   ├── instantiate_rings_1.png
 │   ├── moving_ball.png
+│   ├── raygui_icons_all.png
+│   ├── raygui_icons_pressed.png
 │   └── simple_window.png
 ├── main.py
 ├── projects
+│   ├── 3d_collisions_check
+│   │   ├── __init__.py
+│   │   └── main.py
 │   ├── 3d_cube_camera
 │   │   ├── __init__.py
 │   │   └── main.py
@@ -139,6 +160,11 @@ uv run projects/3d_collisions_check/main.py
 │   │   └── sprite.py
 │   ├── move_ball
 │   │   ├── __init__.py
+│   │   └── main.py
+│   ├── raygui_icons
+│   │   ├── __init__.py
+│   │   ├── assets
+│   │   │   └── icon.json
 │   │   └── main.py
 │   └── simple_window
 │       ├── __init__.py
