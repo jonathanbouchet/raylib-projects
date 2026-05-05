@@ -146,7 +146,7 @@ uv run projects/tsoding/main.py
 
 | cube no wireframe | cube wireframe |
 | :---: | :---: |
-| <video src="docs/tsoding_recording.mov" width="75%" controls></video> | <video src="docs/tsoding_recording_wireframe.mov" width="75%" controls></video> |
+| <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov" width="75%" controls></video> | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording_wireframe.mov" width="75%" controls></video> |
 
 
 # Project Tree
