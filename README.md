@@ -12,7 +12,11 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 uv run projects/simple_window/main.py
 ```
 
-!["docs/simple_window.png"](docs/simple_window.png)
+<figure>
+<img src="docs/simple_window.png" width="300">
+<figcaption>a basic window</figcaption>
+</figure>
+<!-- !["docs/simple_window.png"](docs/simple_window.png) -->
 
 ## Moving ball
 - trying keyboard input
@@ -20,7 +24,11 @@ uv run projects/simple_window/main.py
 uv run projects/move_ball/main.py
 ```
 
-!["docs/moving_ball.png"](docs/moving_ball.png)
+<figure>
+<img src="docs/moving_ball.png" width="300">
+<figcaption>a moving ball</figcaption>
+</figure>
+<!-- !["docs/moving_ball.png"](docs/moving_ball.png) -->
 
 ## 3D Rotating cube
 
@@ -28,8 +36,11 @@ uv run projects/move_ball/main.py
 ```console
 uv run projects/3d_cube_camera/main.py
 ```
-
-!["docs/3d_cube_camera.png"](docs/3d_cube_camera.png)
+<figure>
+<img src="docs/3d_cube_camera.png" width="300">
+<figcaption>a rotating cube</figcaption>
+</figure>
+<!-- !["docs/3d_cube_camera.png"](docs/3d_cube_camera.png) -->
 
 - looks like to apply a `rotation` to an object, I should use `pr.draw_model_ex` function so the `mesh` needs to be define before
 - the (high level) structure of a `raylib` app :
@@ -132,10 +143,14 @@ uv run projects/raygui_icons/main.py
 ```console
 uv run projects/tsoding/main.py   
 ```
+<figure>
+<img src="docs/tsoding_recording.png" width="300">
+<figcaption>a rotating cube</figcaption>
+</figure>
 
-| rotation | rotation with wireframe |
+<!-- | rotation | rotation with wireframe |
 | :---: | :---: |
-| ![rotation](docs/tsoding_recording.png ) | TO DO|
+| ![rotation](docs/tsoding_recording.png ) | TO BE ADDED | -->
 
 <!-- [![Watch the video](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov)](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov) -->
 
