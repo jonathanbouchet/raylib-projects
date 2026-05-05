@@ -114,7 +114,7 @@ uv run projects/3d_collisions_check/main.py
 | ![no_coll](docs/3d_collision_check_no.png) | ![coll](docs/3d_collision_check_yes.png) |
 
 
-## `raygui` icons`
+## `raygui` icons
 - motivation: gui icons manipulation / raygui
 - raygui: [https://github.com/raysan5/raygui](https://github.com/raysan5/raygui)
 
@@ -126,6 +126,16 @@ uv run projects/raygui_icons/main.py
 | :---: | :---: |
 | ![all icons](docs/raygui_icons_all.png) | ![icon pressed](docs/raygui_icons_pressed.png) |
 
+## tsoding
+- motivation: reproduce [tsoding's video](https://www.youtube.com/watch?v=qjWkNZ0SXfo&t=7s) where a cube is rendering with simple math tools (amazing video)
+
+```console
+uv run projects/tsoding/main.py   
+```
+
+<!-- <p align="center" width="100%">
+<video src="https://github.com/user-attachments/assets/563d36e5-1c92-49e6-aa88-c873a20ddf1d" width="80%" controls></video>
+</p> -->
 
 # Project Tree
 
