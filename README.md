@@ -133,9 +133,9 @@ uv run projects/raygui_icons/main.py
 uv run projects/tsoding/main.py   
 ```
 
-<!-- <p align="center" width="100%">
-<video src="https://github.com/user-attachments/assets/563d36e5-1c92-49e6-aa88-c873a20ddf1d" width="80%" controls></video>
-</p> -->
+<p align="center" width="100%">
+<video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov" width="80%" controls></video>
+</p>
 
 # Project Tree
 
