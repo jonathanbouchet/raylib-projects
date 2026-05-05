@@ -69,7 +69,7 @@ vals = [
 
 while not pr.window_should_close():
     dt = pr.get_frame_time()
-    dz += dt
+    # dz += dt
     da += math.pi * dt
     pr.begin_drawing()
     pr.clear_background(pr.BLACK)

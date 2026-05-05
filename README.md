@@ -133,7 +133,11 @@ uv run projects/raygui_icons/main.py
 uv run projects/tsoding/main.py   
 ```
 
-[![Watch the video](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov)](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov)
+| rotation | rotation with wireframe |
+| :---: | :---: |
+| ![rotation](docs/tsoding_recording.png ) | TO DO|
+
+<!-- [![Watch the video](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov)](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov) -->
 
 
 # Project Tree
