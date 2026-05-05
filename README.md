@@ -143,16 +143,10 @@ uv run projects/raygui_icons/main.py
 ```console
 uv run projects/tsoding/main.py   
 ```
-<figure>
-<img src="docs/tsoding_recording.png" width="300">
-<figcaption>a rotating cube</figcaption>
-</figure>
 
-<!-- | rotation | rotation with wireframe |
+| cube no wireframe | cube wireframe |
 | :---: | :---: |
-| ![rotation](docs/tsoding_recording.png ) | TO BE ADDED | -->
-
-<!-- [![Watch the video](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov)](https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov) -->
+| <video src="docs/tsoding_recording.mov" width="75%" controls></video> | <video src="docs/tsoding_recording_wireframe.mov" width="75%" controls></video> |
 
 
 # Project Tree
