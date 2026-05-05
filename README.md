@@ -143,10 +143,13 @@ uv run projects/raygui_icons/main.py
 ```console
 uv run projects/tsoding/main.py   
 ```
-
-| cube no wireframe | cube wireframe |
+| no wireframe| wireframe only |
 | :---: | :---: |
-| <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov" width="75%" controls></video> | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording_wireframe.mov" width="75%" controls></video> |
+| ![all icons](docs/tsoding_recording.png) | ![icon pressed](docs/tsoding_recording_wireframe.png) |
+
+<!-- | cube no wireframe | cube wireframe |
+| :---: | :---: |
+| <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov" width="75%" controls></video> | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording_wireframe.mov" width="75%" controls></video> | -->
 
 
 # Project Tree
