@@ -1,4 +1,5 @@
 import pyray as pr
+from data import vals, vertices
 import math
 
 window_width, window_height = 600, 600
@@ -50,38 +51,7 @@ def get_point(
     return pr.Vector2(x, y)
 
 
-dz = 1  # translation value by frame
-da = 0  # rotation value by frame
-
-vals = [
-    {"x": -0.25, "y": 0.25, "z": 0.25},
-    {"x": -0.25, "y": -0.25, "z": 0.25},
-    {"x": 0.25, "y": 0.25, "z": 0.25},
-    {"x": 0.25, "y": -0.25, "z": 0.25},
-    {"x": -0.25, "y": 0.25, "z": -0.25},
-    {"x": -0.25, "y": -0.25, "z": -0.25},
-    {"x": 0.25, "y": 0.25, "z": -0.25},
-    {"x": 0.25, "y": -0.25, "z": -0.25},
-]
-
-vertices = [
-    [0, 1, 3, 2, 0],  # vertices front
-    [4, 5, 7, 6, 4],  # vertices back
-    [0, 4],  # vertices top left
-    [2, 6],  # vertices top rigth
-    [1, 5],  # vertices bottom left
-    [3, 7],  # vertices bottom right
-]
-
-
-while not pr.window_should_close():
-    dt = pr.get_frame_time()
-    # dz += dt
-    da += math.pi * dt
-    pr.begin_drawing()
-    pr.clear_background(pr.BLACK)
-
-    # draw vertices
+def draw_vertices():
     for val in vals:
         p = get_point(
             x=val.get("x"),
@@ -96,7 +66,8 @@ while not pr.window_should_close():
             default_color,
         )
 
-    # draw lines
+
+def draw_lines():
     for list_of_vertices in vertices:
         for idx in range(0, len(list_of_vertices) - 1):
             current = list_of_vertices[idx]
@@ -125,7 +96,35 @@ while not pr.window_should_close():
                 default_color,
             )
 
-    pr.draw_fps(0, 0)
+
+dz = 1  # translation value by frame
+da = 0  # rotation value by frame
+active_ptr = pr.ffi.new("int *", 0)  # Initial value
+slider_value = pr.ffi.new("float *", 3.14)  # Initial value
+
+while not pr.window_should_close():
+    selectedOption = pr.gui_toggle_group(
+        pr.Rectangle(20, 20, 100, 20), "vertices;lines;both", active_ptr
+    )
+    sliderOption = pr.gui_slider(
+        pr.Rectangle(20, 40, 100, 20), "0", "2pi", slider_value, 0.0, 6.28
+    )
+
+    dt = pr.get_frame_time()
+    # dz += dt
+    da += slider_value[0] * dt
+    pr.begin_drawing()
+    pr.clear_background(pr.BLACK)
+
+    if active_ptr[0] == 0:
+        draw_vertices()
+    elif active_ptr[0] == 1:
+        draw_lines()
+    else:
+        draw_lines()
+        draw_vertices()
+
+    pr.draw_fps(20, 0)
 
     pr.end_drawing()
 

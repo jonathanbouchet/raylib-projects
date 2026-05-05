@@ -143,9 +143,11 @@ uv run projects/raygui_icons/main.py
 ```console
 uv run projects/tsoding/main.py   
 ```
-| no wireframe| wireframe only |
-| :---: | :---: |
-| ![all icons](docs/tsoding_recording.png) | ![icon pressed](docs/tsoding_recording_wireframe.png) |
+
+| no wireframe| wireframe only | both |
+| :---: | :---: | :---: |
+| ![all icons](docs/tsoding_recording_0.png) | ![icon pressed](docs/tsoding_recording_1.png) | ![icon pressed](docs/tsoding_recording_2.png) |
+
 
 <!-- | cube no wireframe | cube wireframe |
 | :---: | :---: |
