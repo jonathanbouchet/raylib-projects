@@ -152,3 +152,14 @@ uv run projects/tsoding/main.py
 <!-- | cube no wireframe | cube wireframe |
 | :---: | :---: |
 | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov" width="75%" controls></video> | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording_wireframe.mov" width="75%" controls></video> | -->
+
+# Raycast
+- *work in progress: TO DO: multiple BBox**
+- idea is to display when a raycast hits an object. 
+- The initial test was using `pr.draw_line` to represent the ray and use `pr.check_collision_lines` to check collisions between the ray (as a line) and the 4 lines forming a rectangle
+- using `pr.Ray` simplifies a bit the logic
+
+| | |
+| :---: | :---: |
+| ![all icons](docs/raycasting.png) |  |
+
