@@ -159,6 +159,10 @@ uv run projects/tsoding/main.py
 - The initial test was using `pr.draw_line` to represent the ray and use `pr.check_collision_lines` to check collisions between the ray (as a line) and the 4 lines forming a rectangle
 - using `pr.Ray` simplifies a bit the logic
 
+```console
+uv run projects/raycasting/main.py   
+```
+
 | 1 box| multiple boxes|
 | :---: | :---: |
 | ![all icons](docs/raycasting.png) | ![](docs/raycasting_multiple_boxes_fixed.png)  |
@@ -176,6 +180,10 @@ uv run projects/tsoding/main.py
     - refactor to have both the Sun, Earth and Moon derive from a given class
     - add other planets (?)
     - 3D to show excenticity of ellipse 
+
+```console
+uv run projects/solar_system/main.py 
+```
 
 | no background| deepsky texture|
 | :---: | :---: |
