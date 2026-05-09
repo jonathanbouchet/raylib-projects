@@ -154,13 +154,14 @@ uv run projects/tsoding/main.py
 | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov" width="75%" controls></video> | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording_wireframe.mov" width="75%" controls></video> | -->
 
 # Raycast
-- *work in progress: TO DO: multiple BBox**
+- ~~*work in progress: TO DO: multiple BBox**~~
 - idea is to display when a raycast hits an object. 
 - The initial test was using `pr.draw_line` to represent the ray and use `pr.check_collision_lines` to check collisions between the ray (as a line) and the 4 lines forming a rectangle
 - using `pr.Ray` simplifies a bit the logic
 
 | 1 box| multiple boxes|
 | :---: | :---: |
-| ![all icons](docs/raycasting.png) | ![](docs/raycasting_multiple_boxes.png)  |
+| ![all icons](docs/raycasting.png) | ![](docs/raycasting_multiple_boxes_fixed.png)  |
 
-- the right screenshot shows my actual issue: if a box is behind where the ray already collided, it will still find the collision
+- code ended a bit messy to associate ray, bboxes and whether or not there are collisions so next step is to improve it
+- in short: now it shows the ray as green, with the collision point, no ray (red nor green) for ghost collisions. When a ray does not collide with a BBox, the ray is shown as red
