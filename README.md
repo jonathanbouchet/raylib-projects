@@ -149,10 +149,6 @@ uv run projects/tsoding/main.py
 | ![all icons](docs/tsoding_recording_0.png) | ![icon pressed](docs/tsoding_recording_1.png) | ![icon pressed](docs/tsoding_recording_2.png) |
 
 
-<!-- | cube no wireframe | cube wireframe |
-| :---: | :---: |
-| <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording.mov" width="75%" controls></video> | <video src="https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording_wireframe.mov" width="75%" controls></video> | -->
-
 ## Raycast
 - ~~*work in progress: TO DO: multiple BBox**~~
 - idea is to display when a raycast hits an object. 
