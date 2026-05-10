@@ -173,8 +173,8 @@ uv run projects/raycasting/main.py
 - Moon's revolution around the earth is hard-coded
 - *TO DO*:  
     - refactor to have both the Sun, Earth and Moon derive from a given class
-    - add other planets (?)
-    - 3D to show excenticity of ellipse 
+    - add other planets [WIP]
+    - 3D to show excenticity of ellipse [WIP]
 
 ```console
 uv run projects/solar_system/main.py 
@@ -182,4 +182,10 @@ uv run projects/solar_system/main.py
 
 | no background| deepsky texture|
 | :---: | :---: |
-| ![all icons](docs/solar_system_no_background.png) | ![](docs/solar_system_background.png)  |
+| ![all icons](docs/solar_system_no_background.png) | ![](docs/solar_system_3d.png)  |
+
+- 3D version:
+    - initial version
+    - camera can be moved with keyboard but needs improvement
+    - overall code needs refactoring
+    - all satellites are orbiting in the same plan, which is not the case
