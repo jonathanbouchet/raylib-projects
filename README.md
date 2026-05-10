@@ -148,8 +148,6 @@ uv run projects/tsoding/main.py
 | :---: | :---: | :---: |
 | ![all icons](docs/tsoding_recording_0.png) | ![icon pressed](docs/tsoding_recording_1.png) | ![icon pressed](docs/tsoding_recording_2.png) |
 
-https://github.com/jonathanbouchet/raylib-projects/blob/main/docs/tsoding_recording_updates.mov
-
 ## Raycast
 - ~~*work in progress: TO DO: multiple BBox**~~
 - idea is to display when a raycast hits an object. 
