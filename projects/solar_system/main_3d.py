@@ -3,6 +3,7 @@ import raylib as rl
 import math
 
 width, height = 800, 600
+icon_width, icon_height = 20, 20
 
 # earth parameters
 a: int = 200  # radiusH
@@ -45,26 +46,34 @@ dl_moon = 0
 speed_revolution = 1 / 4
 slider_value = pr.ffi.new("float *", 1.0)  # Initial value
 
-camera_speed = 0.5
+camera_speed = 5
 
 while not pr.window_should_close():
     # update
 
-    # Update position based on keys
-    if pr.is_key_down(rl.KEY_UP):
-        camera.position.z -= camera_speed
-    if pr.is_key_down(rl.KEY_DOWN):
-        camera.position.z += camera_speed
-    if pr.is_key_down(rl.KEY_LEFT):
+    if pr.gui_button(
+        pr.Rectangle(0, 20, icon_width, icon_height), "#118#ICON_ARROW_LEFT_FILL"
+    ):
         camera.position.x -= camera_speed
-    if pr.is_key_down(rl.KEY_RIGHT):
+    if pr.gui_button(
+        pr.Rectangle(40, 20, icon_width, icon_height), "#119#ICON_ARROW_RIGHT_FILL"
+    ):
         camera.position.x += camera_speed
-
-    if pr.is_key_pressed(pr.KEY_Z):
+    if pr.gui_button(
+        pr.Rectangle(20, 0, icon_width, icon_height), "#121#ICON_ARROW_UP_FILL"
+    ):
+        camera.position.z -= camera_speed
+    if pr.gui_button(
+        pr.Rectangle(20, 40, icon_width, icon_height), "#120#ICON_ARROW_DOWN_FILL"
+    ):
+        camera.position.z += camera_speed
+    if pr.gui_button(
+        pr.Rectangle(20, 20, icon_width, icon_height), "#169#ICON_CAMERA_CURSOR"
+    ):
         camera.target = pr.Vector3(0.0, 0.0, 0.0)
 
     sliderOption = pr.gui_slider(
-        pr.Rectangle(20, 40, 100, 20), "0", "2.0", slider_value, 0.0, 2.0
+        pr.Rectangle(80, 20, 100, 20), "0", "2.0", slider_value, 0.0, 2.0
     )
 
     dt = pr.get_frame_time()
@@ -136,7 +145,7 @@ while not pr.window_should_close():
     pr.draw_grid(15, 5.0)
     pr.end_mode_3d()
 
-    pr.draw_fps(0, 0)
+    pr.draw_fps(0, 580)
     pr.end_drawing()
 
 # pr.unload_texture(background)
