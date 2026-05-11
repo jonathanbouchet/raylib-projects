@@ -172,7 +172,7 @@ uv run projects/raycasting/main.py
     - the slider can increase by a factor 2 (max) or decrease the speed
 - Moon's revolution around the earth is hard-coded
 - *TO DO*:  
-    - refactor to have both the Sun, Earth and Moon derive from a given class
+    - ~~refactor to have both the Sun, Earth and Moon derive from a given class~~
     - add other planets [WIP]
     - 3D to show excenticity of ellipse [WIP]
 
