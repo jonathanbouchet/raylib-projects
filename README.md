@@ -189,3 +189,10 @@ uv run projects/solar_system/main.py
     - camera can be moved with keyboard but needs improvement
     - overall code needs refactoring
     - all satellites are orbiting in the same plan, which is not the case
+
+# tests
+- from the `projects` folder
+- right now only `solar_system` has classes that can be tests
+```python
+python -m pytest -rA
+```
