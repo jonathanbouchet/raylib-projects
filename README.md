@@ -13,10 +13,10 @@ uv run projects/simple_window/main.py
 ```
 
 <figure>
-<img src="docs/simple_window.png" width="300">
+<img src="images/simple_window.png" width="300">
 <figcaption>a basic window</figcaption>
 </figure>
-<!-- !["docs/simple_window.png"](docs/simple_window.png) -->
+<!-- !["images/simple_window.png"](images/simple_window.png) -->
 
 ## Moving ball
 - trying keyboard input
@@ -25,10 +25,10 @@ uv run projects/move_ball/main.py
 ```
 
 <figure>
-<img src="docs/moving_ball.png" width="300">
+<img src="images/moving_ball.png" width="300">
 <figcaption>a moving ball</figcaption>
 </figure>
-<!-- !["docs/moving_ball.png"](docs/moving_ball.png) -->
+<!-- !["images/moving_ball.png"](images/moving_ball.png) -->
 
 ## 3D Rotating cube
 
@@ -37,10 +37,10 @@ uv run projects/move_ball/main.py
 uv run projects/3d_cube_camera/main.py
 ```
 <figure>
-<img src="docs/3d_cube_camera.png" width="300">
+<img src="images/3d_cube_camera.png" width="300">
 <figcaption>a rotating cube</figcaption>
 </figure>
-<!-- !["docs/3d_cube_camera.png"](docs/3d_cube_camera.png) -->
+<!-- !["images/3d_cube_camera.png"](images/3d_cube_camera.png) -->
 
 - looks like to apply a `rotation` to an object, I should use `pr.draw_model_ex` function so the `mesh` needs to be define before
 - the (high level) structure of a `raylib` app :
@@ -107,7 +107,7 @@ uv run projects/instantiate_rings/main.py
 
 | Start | running |
 | :---: | :---: |
-| ![start](docs/instantiate_rings_0.png) | ![running](docs/instantiate_rings_1.png) |
+| ![start](images/instantiate_rings_0.png) | ![running](images/instantiate_rings_1.png) |
 
 ## 3d collisions check
 - motivation: collision detection for 3d objects
@@ -122,7 +122,7 @@ uv run projects/3d_collisions_check/main.py
 
 | no collision | collision |
 | :---: | :---: |
-| ![no_coll](docs/3d_collision_check_no.png) | ![coll](docs/3d_collision_check_yes.png) |
+| ![no_coll](images/3d_collision_check_no.png) | ![coll](images/3d_collision_check_yes.png) |
 
 
 ## `raygui` icons
@@ -135,7 +135,7 @@ uv run projects/raygui_icons/main.py
 
 | all icons | icon pressed |
 | :---: | :---: |
-| ![all icons](docs/raygui_icons_all.png) | ![icon pressed](docs/raygui_icons_pressed.png) |
+| ![all icons](images/raygui_icons_all.png) | ![icon pressed](images/raygui_icons_pressed.png) |
 
 ## tsoding
 - motivation: reproduce [tsoding's video](https://www.youtube.com/watch?v=qjWkNZ0SXfo&t=7s) where a cube is rendering with simple math tools (amazing video)
@@ -146,7 +146,7 @@ uv run projects/tsoding/main.py
 
 | no wireframe| wireframe only | both |
 | :---: | :---: | :---: |
-| ![all icons](docs/tsoding_recording_0.png) | ![icon pressed](docs/tsoding_recording_1.png) | ![icon pressed](docs/tsoding_recording_2.png) |
+| ![all icons](images/tsoding_recording_0.png) | ![icon pressed](images/tsoding_recording_1.png) | ![icon pressed](images/tsoding_recording_2.png) |
 
 ## Raycast
 - ~~*work in progress: TO DO: multiple BBox**~~
@@ -160,7 +160,7 @@ uv run projects/raycasting/main.py
 
 | 1 box| multiple boxes|
 | :---: | :---: |
-| ![all icons](docs/raycasting.png) | ![](docs/raycasting_multiple_boxes_fixed.png)  |
+| ![all icons](images/raycasting.png) | ![](images/raycasting_multiple_boxes_fixed.png)  |
 
 - code ended a bit messy to associate ray, bboxes and whether or not there are collisions so next step is to improve it
 - in short: now it shows the ray as green, with the collision point, no ray (red nor green) for ghost collisions. When a ray does not collide with a BBox, the ray is shown as red
@@ -182,7 +182,7 @@ uv run projects/solar_system/main.py
 
 | no background| deepsky texture|
 | :---: | :---: |
-| ![all icons](docs/solar_system_no_background.png) | ![](docs/solar_system_3d.png)  |
+| ![all icons](images/solar_system_no_background.png) | ![](images/solar_system_3d.png)  |
 
 - 3D version:
     - initial version
