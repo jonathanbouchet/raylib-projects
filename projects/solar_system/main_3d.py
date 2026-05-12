@@ -6,11 +6,6 @@ from stellar_objects import Star, Planetoid
 width, height = 800, 600
 icon_width, icon_height = 20, 20
 
-# mars parameters
-distance_to_mars = [2, 3]
-r_mars_moon = [0.25, 0.35]
-mars_moon_speed_revolution = 0.5
-
 pr.init_window(width, height, "ellipse")
 pr.set_target_fps(60)
 
@@ -36,6 +31,13 @@ earth_moon = Planetoid(
     color=pr.Color(246, 241, 213, 255),
     speed_revolution=1,
     distance_to_center=3,
+)
+mars = Planetoid(
+    pr.Vector3(0, 0, 0),
+    radius=0.5,
+    color=pr.Color(150, 69, 20, 255),
+    speed_revolution=earth.speed_revolution / 1.88,
+    distance_to_center=30,
 )
 
 dl = 0  # t component in the ellipse coordinates
@@ -83,6 +85,9 @@ while not pr.window_should_close():
     earth_moon.update(
         dl=dl_moon, x_offset=earth.position.x, z_offset=earth.position.z
     )  # moon has an offset, i.e the position of the earth w/r the Sun
+    mars.update(
+        dl=dl, x_offset=0, z_offset=0
+    )  # mars has no offset, it rotates around the sun
 
     # rendering
     pr.begin_drawing()
@@ -91,9 +96,13 @@ while not pr.window_should_close():
 
     sun.draw()
     earth.draw()
-    earth.draw_trajectory()
+    earth.draw_trajectory(x_offset=0, z_offset=0)
 
     earth_moon.draw()
+    earth_moon.draw_trajectory(x_offset=earth.position.x, z_offset=earth.position.z)
+
+    mars.draw()
+    mars.draw_trajectory(x_offset=0, z_offset=0)
 
     pr.draw_grid(15, 5.0)
     pr.end_mode_3d()

@@ -30,9 +30,9 @@ class Planetoid(Body):
         self.speed_revolution: int = speed_revolution
         self.distance_to_center: int = distance_to_center
 
-    def draw_trajectory(self):
+    def draw_trajectory(self, x_offset: float, z_offset: float):
         pr.draw_circle_3d(
-            pr.Vector3(0, 0, 0),  # center
+            pr.Vector3(x_offset, 0, z_offset),  # center
             self.distance_to_center,
             pr.Vector3(1, 0, 0),
             90,
@@ -47,7 +47,6 @@ class Planetoid(Body):
             dl * self.speed_revolution * 2 * math.pi
         )
         self.position.y = self.position.y
-        # self.move()
 
     def move(self):
         self.draw()
