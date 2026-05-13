@@ -22,9 +22,3 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 ```python
 python -m pytest -rA
 ```
-
-# Documentation
-```console
-mkdocs build
-mkdocs serve -a localhost:8001
-```
