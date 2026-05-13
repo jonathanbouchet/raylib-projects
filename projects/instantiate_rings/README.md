@@ -18,7 +18,7 @@ if (
 - organize the code into classes; `Game` is its own class so when calling `game.run`, the full `raylib` process is done
 - the top left counter keeps track of the number of rings instantiated
 
-```console
+```bash
 uv run projects/instantiate_rings/main.py   
 ```
 

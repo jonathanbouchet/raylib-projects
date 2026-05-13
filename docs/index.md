@@ -19,6 +19,6 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 # tests
 - from the `projects` folder
 - right now only `solar_system` has classes that can be tests
-```python
+```bash
 python -m pytest -rA
 ```

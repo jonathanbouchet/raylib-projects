@@ -4,7 +4,7 @@
 - The initial test was using `pr.draw_line` to represent the ray and use `pr.check_collision_lines` to check collisions between the ray (as a line) and the 4 lines forming a rectangle
 - using `pr.Ray` simplifies a bit the logic
 
-```console
+```bash
 uv run projects/raycasting/main.py   
 ```
 

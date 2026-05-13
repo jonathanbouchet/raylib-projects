@@ -1,7 +1,7 @@
 ## tsoding
 - motivation: reproduce [tsoding's video](https://www.youtube.com/watch?v=qjWkNZ0SXfo&t=7s) where a cube is rendering with simple math tools (amazing video)
 
-```console
+```bash
 uv run projects/tsoding/main.py   
 ```
 

@@ -1,7 +1,7 @@
 ## 3D Rotating cube
 
 - trying 3D
-```console
+```bash
 uv run projects/3d_cube_camera/main.py
 ```
 <figure>
@@ -41,7 +41,7 @@ pr.draw_cube_wires_v(position=pr.Vector3(-3,0,3), size=pr.Vector3(2,2,2), color=
 
 However it's returning the following error:
 
-```console
+```bash
 Traceback (most recent call last):
   File "/Users/jonathanbouchet/WORK/RAYLIB_PROJECTS_GH/raylib-projects/projects/3d_cube_camera/main.py", line 27, in <module>
     pr.draw_cube_wires_v(position=pr.Vector3(-3,0,3), size=pr.Vector3(2,2,2), color=pr.BLUE)

@@ -9,7 +9,7 @@
     - add other planets [WIP]
     - 3D to show excenticity of ellipse [WIP]
 
-```console
+```bash
 uv run projects/solar_system/main.py 
 ```
 

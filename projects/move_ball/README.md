@@ -1,6 +1,6 @@
 ## Moving ball
 - trying keyboard input
-```console
+```bash
 uv run projects/move_ball/main.py
 ```
 

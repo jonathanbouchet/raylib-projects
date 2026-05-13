@@ -1,6 +1,6 @@
 ## Simple Window
 - a simple window display
-```console
+```bash
 uv run projects/simple_window/main.py
 ```
 

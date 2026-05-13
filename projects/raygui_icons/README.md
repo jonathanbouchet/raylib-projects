@@ -2,7 +2,7 @@
 - motivation: gui icons manipulation / raygui
 - raygui: [https://github.com/raysan5/raygui](https://github.com/raysan5/raygui)
 
-```console
+```bash
 uv run projects/raygui_icons/main.py   
 ```
 

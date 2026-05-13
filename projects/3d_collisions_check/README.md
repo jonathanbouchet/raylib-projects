@@ -5,7 +5,7 @@
 - the collision is checked using the `pr.check_collision_boxes` function
 - when true, a `raygui textbox` is drawn and color of the obstacle changes
 
-```console
+```bash
 uv run projects/3d_collisions_check/main.py   
 ```
 
