@@ -20,7 +20,7 @@ def load_model(choice: int) -> tuple[bool, pr.Model]:
         model = pr.load_model(model_pathname)
         is_model_selected = True
     elif choice == 4:
-        model = pr.load_model("models/cube_colored.glb")
+        model = os.getcwd() + "/projects/load_render/models/cube_colored.glb"
         is_model_selected = True
     else:
         is_model_selected = False
