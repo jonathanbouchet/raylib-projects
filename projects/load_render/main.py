@@ -6,6 +6,28 @@ import os
 width, height = 600, 600
 icon_width, icon_height = 20, 20
 
+def load_model(choice: int) -> tuple[bool, pr.Model]:
+    if choice == 1:
+        model_pathname = os.getcwd() + "/projects/load_render/models/cube.glb"
+        model = pr.load_model(model_pathname)
+        is_model_selected = True
+    elif choice == 2:
+        model_pathname = os.getcwd() + "/projects/load_render/models/sphere.glb"
+        model = pr.load_model(model_pathname)
+        is_model_selected = True
+    elif choice == 3:
+        model_pathname = os.getcwd() + "/projects/load_render/models/torus.glb"
+        model = pr.load_model(model_pathname)
+        is_model_selected = True
+    elif choice == 4:
+        model = pr.load_model("models/cube_colored.glb")
+        is_model_selected = True
+    else:
+        is_model_selected = False
+        model = None
+    return is_model_selected, model
+
+
 pr.init_window(width, height, "render")
 pr.set_target_fps(60)
 
@@ -56,7 +78,7 @@ while not pr.window_should_close():
 
     if pr.gui_dropdown_box(
         pr.Rectangle(80, 20, 120, 20),
-        "CHOOSE A MODEL;CUBE;SPHERE;TORE",
+        "CHOOSE A MODEL;CUBE;SPHERE;TORE;CUBE COLORED",
         active_index_ptr,
         dropdown_edit_mode,
     ):
@@ -68,20 +90,7 @@ while not pr.window_should_close():
         pr.Rectangle(80, 0, 120, 20), "0", "2.0", slider_value, 0.0, 2.0
     )
 
-    if selected_value == 1:
-        model_pathname = os.getcwd() + "/projects/load_render/models/cube.glb"
-        model = pr.load_model(model_pathname)
-        is_model_selected = True
-    elif selected_value == 2:
-        model_pathname = os.getcwd() + "/projects/load_render/models/sphere.glb"
-        model = pr.load_model(model_pathname)
-        is_model_selected = True
-    elif selected_value == 3:
-        model_pathname = os.getcwd() + "/projects/load_render/models/torus.glb"
-        model = pr.load_model(model_pathname)
-        is_model_selected = True
-    else:
-        is_model_selected = False
+    is_model_selected, model = load_model(selected_value)
 
     dt = pr.get_frame_time()
     dl += dt * slider_value[0]  # take into account the factor from the slider
