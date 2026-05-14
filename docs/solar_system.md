@@ -1,5 +1,3 @@
-## Solar System 
-
 - not at scale (both space and time)
 - default: earth's revolution around the Sun is done in 30s
     - the slider can increase by a factor 2 (max) or decrease the speed
@@ -15,7 +13,7 @@ uv run projects/solar_system/main.py
 
 | no background| deepsky texture|
 | :---: | :---: |
-| ![all icons](../images/solar_system_no_background.png) | ![](../images/solar_system_3d.png)  |
+| ![all icons](img/solar_system_no_background.png) | ![](img/solar_system_3d.png)  |
 
 - 3D version:
     - initial version

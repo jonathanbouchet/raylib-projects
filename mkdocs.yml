@@ -7,6 +7,10 @@ theme:
   nav:
   - overview: index.md
   - simple window: simple_window.md
+  - moving ball: moving_ball.md
+  - 3D cube: 3d_rotating_cube.md
+  - 3D collions check: 3d_collisions_check.md
+  - Instantiate Object: instantiate_rings.md
   - solar system: solar_system.md
   features:
     - navigation.tabs
@@ -20,18 +24,18 @@ theme:
     - content.code.copy
   language: en
   palette:
-    - scheme: default
-      toggle:
-        icon: material/toggle-switch-off-outline 
-        name: Switch to dark mode
-      primary: teal
-      accent: purple 
     - scheme: slate 
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode    
       primary: teal
       accent: lime
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+      primary: teal
+      accent: purple 
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true

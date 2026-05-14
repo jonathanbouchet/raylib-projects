@@ -10,4 +10,4 @@ uv run projects/3d_collisions_check/main.py
 
 | no collision | collision |
 | :---: | :---: |
-| ![no_coll](../../images/3d_collision_check_no.png) | ![coll](../../images/3d_collision_check_yes.png) |
+| ![no_coll](img/3d_collision_check_no.png) | ![coll](img/3d_collision_check_yes.png) |
