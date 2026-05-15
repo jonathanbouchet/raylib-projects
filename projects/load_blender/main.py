@@ -1,6 +1,7 @@
+from pathlib import Path
 import pyray as pr
 import raylib as rl
-from pathlib import Path
+from model_loader import Model
 
 THIS_DIR = (Path(__file__).parent / "models").resolve()
 print(f"{THIS_DIR=}")
@@ -32,25 +33,6 @@ def get_input(camera: pr.Camera3D) -> None:
         camera.target = pr.Vector3(0.0, 0.0, 0.0)
 
 
-def load_model(choice: int) -> tuple[bool, pr.Model]:
-    if choice == 1:
-        model = pr.load_model(str(THIS_DIR / "cube.glb"))
-        is_model_selected = True
-    elif choice == 2:
-        model = pr.load_model(str(THIS_DIR / "sphere.glb"))
-        is_model_selected = True
-    elif choice == 3:
-        model = pr.load_model(str(THIS_DIR / "torus.glb"))
-        is_model_selected = True
-    elif choice == 4:
-        model = pr.load_model(str(THIS_DIR / "cube_colored.glb"))
-        is_model_selected = True
-    else:
-        is_model_selected = False
-        model = None
-    return is_model_selected, model
-
-
 pr.init_window(width, height, "render")
 pr.set_target_fps(60)
 
@@ -63,6 +45,11 @@ camera.fovy = 45.0
 camera.projection = rl.CAMERA_PERSPECTIVE
 camera_speed = 2
 
+# model
+model = Model(
+    position=pr.Vector3(0, 0, 0), rotation_axis=pr.Vector3(0, 0, 0), rotation=0
+)
+
 # UI
 slider_value = pr.ffi.new("float *", 1.0)  # Initial value
 dropdown_edit_mode = False
@@ -70,10 +57,7 @@ active_index_ptr = pr.ffi.new("int *", 0)
 
 # transform
 dl: float = 0
-rotation = 0
 selected_value: int = -1
-is_model_selected = False
-model_pathname: str = ""
 
 while not pr.window_should_close():
     # update
@@ -87,7 +71,11 @@ while not pr.window_should_close():
     ):
         dropdown_edit_mode = not dropdown_edit_mode
         selected_value = active_index_ptr[0]
-        is_model_selected, model = load_model(selected_value)
+        model.load(choice=selected_value)
+        print(
+            f"{model.is_selected}, {model.position.x}, {model.position.y}, {model.position.z}, {model.rotation}"
+        )
+        print(f"{selected_value=}")
 
     sliderOption = pr.gui_slider(
         pr.Rectangle(80, 0, 120, 20), "0", "2.0", slider_value, 0.0, 2.0
@@ -101,12 +89,12 @@ while not pr.window_should_close():
     pr.clear_background(pr.Color(43, 46, 44, 255))
     pr.begin_mode_3d(camera)
 
-    if is_model_selected:
+    if model.is_selected:
         pr.draw_model_ex(
-            model,
-            pr.Vector3(0, 0, 0),
-            pr.Vector3(0, 1, 0),
-            rotation,
+            model.blender_model,
+            model.position,
+            model.rotation_axis,
+            model.rotation,
             pr.Vector3(1, 1, 1),
             rl.WHITE,
         )
