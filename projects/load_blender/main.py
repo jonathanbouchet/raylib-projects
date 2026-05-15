@@ -1,28 +1,49 @@
 import pyray as pr
 import raylib as rl
-import os
+from pathlib import Path
 
+THIS_DIR = (Path(__file__).parent / "models").resolve()
+print(f"{THIS_DIR=}")
 
 width, height = 600, 600
 icon_width, icon_height = 20, 20
 
 
+def get_input(camera: pr.Camera3D) -> None:
+    if pr.gui_button(
+        pr.Rectangle(0, 20, icon_width, icon_height), "#118#ICON_ARROW_LEFT_FILL"
+    ):
+        camera.position.x -= camera_speed
+    if pr.gui_button(
+        pr.Rectangle(40, 20, icon_width, icon_height), "#119#ICON_ARROW_RIGHT_FILL"
+    ):
+        camera.position.x += camera_speed
+    if pr.gui_button(
+        pr.Rectangle(20, 0, icon_width, icon_height), "#121#ICON_ARROW_UP_FILL"
+    ):
+        camera.position.z -= camera_speed
+    if pr.gui_button(
+        pr.Rectangle(20, 40, icon_width, icon_height), "#120#ICON_ARROW_DOWN_FILL"
+    ):
+        camera.position.z += camera_speed
+    if pr.gui_button(
+        pr.Rectangle(20, 20, icon_width, icon_height), "#169#ICON_CAMERA_CURSOR"
+    ):
+        camera.target = pr.Vector3(0.0, 0.0, 0.0)
+
+
 def load_model(choice: int) -> tuple[bool, pr.Model]:
     if choice == 1:
-        model_pathname = os.getcwd() + "/projects/load_blender/models/cube.glb"
-        model = pr.load_model(model_pathname)
+        model = pr.load_model(str(THIS_DIR / "cube.glb"))
         is_model_selected = True
     elif choice == 2:
-        model_pathname = os.getcwd() + "/projects/load_blender/models/sphere.glb"
-        model = pr.load_model(model_pathname)
+        model = pr.load_model(str(THIS_DIR / "sphere.glb"))
         is_model_selected = True
     elif choice == 3:
-        model_pathname = os.getcwd() + "/projects/load_blender/models/torus.glb"
-        model = pr.load_model(model_pathname)
+        model = pr.load_model(str(THIS_DIR / "torus.glb"))
         is_model_selected = True
     elif choice == 4:
-        model_pathname = os.getcwd() + "/projects/load_blender/models/cube_colored.glb"
-        model = pr.load_model(model_pathname)
+        model = pr.load_model(str(THIS_DIR / "cube_colored.glb"))
         is_model_selected = True
     else:
         is_model_selected = False
@@ -56,26 +77,7 @@ model_pathname: str = ""
 
 while not pr.window_should_close():
     # update
-    if pr.gui_button(
-        pr.Rectangle(0, 20, icon_width, icon_height), "#118#ICON_ARROW_LEFT_FILL"
-    ):
-        camera.position.x -= camera_speed
-    if pr.gui_button(
-        pr.Rectangle(40, 20, icon_width, icon_height), "#119#ICON_ARROW_RIGHT_FILL"
-    ):
-        camera.position.x += camera_speed
-    if pr.gui_button(
-        pr.Rectangle(20, 0, icon_width, icon_height), "#121#ICON_ARROW_UP_FILL"
-    ):
-        camera.position.z -= camera_speed
-    if pr.gui_button(
-        pr.Rectangle(20, 40, icon_width, icon_height), "#120#ICON_ARROW_DOWN_FILL"
-    ):
-        camera.position.z += camera_speed
-    if pr.gui_button(
-        pr.Rectangle(20, 20, icon_width, icon_height), "#169#ICON_CAMERA_CURSOR"
-    ):
-        camera.target = pr.Vector3(0.0, 0.0, 0.0)
+    get_input(camera=camera)
 
     if pr.gui_dropdown_box(
         pr.Rectangle(80, 20, 120, 20),
