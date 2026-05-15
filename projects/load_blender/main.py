@@ -47,11 +47,11 @@ camera_speed = 2
 
 # model
 model = Model(
-    position=pr.Vector3(0, 0, 0), rotation_axis=pr.Vector3(0, 0, 0), rotation=0
+    position=pr.Vector3(0, 0, 0), rotation_axis=pr.Vector3(0, 1, 0), rotation=0
 )
 
 # UI
-slider_value = pr.ffi.new("float *", 1.0)  # Initial value
+slider_value = pr.ffi.new("float *", 0.0)  # Initial value
 dropdown_edit_mode = False
 active_index_ptr = pr.ffi.new("int *", 0)
 
@@ -78,11 +78,11 @@ while not pr.window_should_close():
         print(f"{selected_value=}")
 
     sliderOption = pr.gui_slider(
-        pr.Rectangle(80, 0, 120, 20), "0", "2.0", slider_value, 0.0, 2.0
+        pr.Rectangle(80, 0, 120, 20), "-1", "1", slider_value, -1.0, 1.0
     )
 
     dt = pr.get_frame_time()
-    dl += dt * slider_value[0]  # take into account the factor from the slider
+    dl += 200 * dt * slider_value[0]  # take into account the factor from the slider
 
     # rendering
     pr.begin_drawing()
@@ -94,7 +94,7 @@ while not pr.window_should_close():
             model.blender_model,
             model.position,
             model.rotation_axis,
-            model.rotation,
+            dl, # updated rotation by the slider
             pr.Vector3(1, 1, 1),
             rl.WHITE,
         )
