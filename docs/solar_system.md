@@ -20,3 +20,13 @@ uv run projects/solar_system/main.py
     - camera can be moved with keyboard but needs improvement
     - overall code needs refactoring
     - all satellites are orbiting in the same plan, which is not the case
+
+::: projects.solar_system.stellar_objects
+    handler: python
+    options:
+      members:
+        - Body
+        - Star
+        - Planetoid
+      show_root_heading: True
+      show_source: True
