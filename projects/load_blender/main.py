@@ -6,21 +6,23 @@ import os
 width, height = 600, 600
 icon_width, icon_height = 20, 20
 
+
 def load_model(choice: int) -> tuple[bool, pr.Model]:
     if choice == 1:
-        model_pathname = os.getcwd() + "/projects/load_render/models/cube.glb"
+        model_pathname = os.getcwd() + "/projects/load_blender/models/cube.glb"
         model = pr.load_model(model_pathname)
         is_model_selected = True
     elif choice == 2:
-        model_pathname = os.getcwd() + "/projects/load_render/models/sphere.glb"
+        model_pathname = os.getcwd() + "/projects/load_blender/models/sphere.glb"
         model = pr.load_model(model_pathname)
         is_model_selected = True
     elif choice == 3:
-        model_pathname = os.getcwd() + "/projects/load_render/models/torus.glb"
+        model_pathname = os.getcwd() + "/projects/load_blender/models/torus.glb"
         model = pr.load_model(model_pathname)
         is_model_selected = True
     elif choice == 4:
-        model = os.getcwd() + "/projects/load_render/models/cube_colored.glb"
+        model_pathname = os.getcwd() + "/projects/load_blender/models/cube_colored.glb"
+        model = pr.load_model(model_pathname)
         is_model_selected = True
     else:
         is_model_selected = False
@@ -38,19 +40,18 @@ camera.target = pr.Vector3(0.0, 0.0, 0.0)
 camera.up = pr.Vector3(0.0, 1.0, 0.0)
 camera.fovy = 45.0
 camera.projection = rl.CAMERA_PERSPECTIVE
-
-
-slider_value = pr.ffi.new("float *", 1.0)  # Initial value
 camera_speed = 2
-dl: float = 0
 
+# UI
+slider_value = pr.ffi.new("float *", 1.0)  # Initial value
 dropdown_edit_mode = False
 active_index_ptr = pr.ffi.new("int *", 0)
-is_model_selected = False
 
 # transform
+dl: float = 0
 rotation = 0
-
+selected_value: int = -1
+is_model_selected = False
 model_pathname: str = ""
 
 while not pr.window_should_close():
@@ -83,14 +84,12 @@ while not pr.window_should_close():
         dropdown_edit_mode,
     ):
         dropdown_edit_mode = not dropdown_edit_mode
-
-    selected_value = active_index_ptr[0]
+        selected_value = active_index_ptr[0]
+        is_model_selected, model = load_model(selected_value)
 
     sliderOption = pr.gui_slider(
         pr.Rectangle(80, 0, 120, 20), "0", "2.0", slider_value, 0.0, 2.0
     )
-
-    is_model_selected, model = load_model(selected_value)
 
     dt = pr.get_frame_time()
     dl += dt * slider_value[0]  # take into account the factor from the slider
