@@ -2,6 +2,7 @@ from pathlib import Path
 import pyray as pr
 import raylib as rl
 from model_loader import Model
+from camera import MyCamera
 
 THIS_DIR = (Path(__file__).parent / "models").resolve()
 print(f"{THIS_DIR=}")
@@ -10,40 +11,39 @@ width, height = 600, 600
 icon_width, icon_height = 20, 20
 
 
-def get_input(camera: pr.Camera3D) -> None:
+def get_input(camera: MyCamera) -> None:
     if pr.gui_button(
         pr.Rectangle(0, 20, icon_width, icon_height), "#118#ICON_ARROW_LEFT_FILL"
     ):
-        camera.position.x -= camera_speed
+        camera.update(action="left")
     if pr.gui_button(
         pr.Rectangle(40, 20, icon_width, icon_height), "#119#ICON_ARROW_RIGHT_FILL"
     ):
-        camera.position.x += camera_speed
+        camera.update(action="right")
     if pr.gui_button(
         pr.Rectangle(20, 0, icon_width, icon_height), "#121#ICON_ARROW_UP_FILL"
     ):
-        camera.position.z -= camera_speed
+        camera.update(action="up")
     if pr.gui_button(
         pr.Rectangle(20, 40, icon_width, icon_height), "#120#ICON_ARROW_DOWN_FILL"
     ):
-        camera.position.z += camera_speed
+        camera.update(action="down")
     if pr.gui_button(
         pr.Rectangle(20, 20, icon_width, icon_height), "#169#ICON_CAMERA_CURSOR"
     ):
-        camera.target = pr.Vector3(0.0, 0.0, 0.0)
+        camera.update(action="recenter")
 
 
 pr.init_window(width, height, "render")
 pr.set_target_fps(60)
 
 # camera
-camera = pr.Camera3D()
-camera.position = pr.Vector3(0.0, 5.0, 10.0)
-camera.target = pr.Vector3(0.0, 0.0, 0.0)
-camera.up = pr.Vector3(0.0, 1.0, 0.0)
-camera.fovy = 45.0
-camera.projection = rl.CAMERA_PERSPECTIVE
-camera_speed = 2
+camera = MyCamera(
+    position=pr.Vector3(0.0, 5.0, 10.0),
+    target=pr.Vector3(0.0, 0.0, 0.0),
+    fovy=45.0,
+    speed=2,
+)
 
 # model
 model = Model(
@@ -87,14 +87,14 @@ while not pr.window_should_close():
     # rendering
     pr.begin_drawing()
     pr.clear_background(pr.Color(43, 46, 44, 255))
-    pr.begin_mode_3d(camera)
+    pr.begin_mode_3d(camera.camera)
 
     if model.is_selected:
         pr.draw_model_ex(
             model.blender_model,
             model.position,
             model.rotation_axis,
-            dl, # updated rotation by the slider
+            dl,  # updated rotation by the slider
             pr.Vector3(1, 1, 1),
             rl.WHITE,
         )
