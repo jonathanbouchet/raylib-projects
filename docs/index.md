@@ -15,6 +15,8 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 - `tsoding`: reproduce [tsoding's video](https://www.youtube.com/watch?v=qjWkNZ0SXfo&t=7s) where a cube is rendering with simple math tools (amazing video)
 - `Raycast`: idea is to display when a raycast hits an object. 
 - `Solar System`: a 3D view of the Soalr System
+- `Load Blender`: a Blender model viewer
+- `To do app`: a to-do app with a fastapi backend ; `raylib` is used a frontend
 
 # tests
 - from the `projects` folder
