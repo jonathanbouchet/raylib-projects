@@ -16,6 +16,7 @@ dependencies = [
     "pydantic>=2.13.4",
     "pytest>=9.0.3",
     "raylib>=5.5.0.4",
+    "requests>=2.34.0",
     "ruff>=0.15.12",
     "uvicorn>=0.47.0",
 ]

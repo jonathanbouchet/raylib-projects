@@ -710,6 +710,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pytest" },
     { name = "raylib" },
+    { name = "requests" },
     { name = "ruff" },
     { name = "uvicorn" },
 ]
@@ -727,6 +728,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pytest", specifier = ">=9.0.3" },
     { name = "raylib", specifier = ">=5.5.0.4" },
+    { name = "requests", specifier = ">=2.34.0" },
     { name = "ruff", specifier = ">=0.15.12" },
     { name = "uvicorn", specifier = ">=0.47.0" },
 ]

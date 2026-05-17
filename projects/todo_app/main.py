@@ -1,5 +1,6 @@
 import pyray as pr
 import raylib as rl
+import requests
 
 width, height = 600, 600
 
@@ -9,19 +10,18 @@ orange = pr.Color(242, 204, 132, 255)
 light_orange = pr.Color(255, 240, 203, 255)
 green = pr.Color(167, 186, 66, 255)
 
+url: str = "http://0.0.0.0:8000"
+headers = {"Content-Type":"application/json"}
+
 
 # Initialize raylib window
 pr.init_window(width, height, "raygui TextInputBox")
 pr.set_target_fps(60)
-# Syntax: GuiSetStyle(control, property, value)
-# pr.gui_set_style(pr.TEXTBOX, rl.TEXT_COLOR_NORMAL, pr.color_to_int(pr.PINK))
 
 # TextInputBox parameters
 box_text = "Edit me!"
 box_title = "Add todo"
 box_width, box_height = 200, 140
-
-# pr.gui_set_style()
 
 # Window position state (Centered initially)
 box_rec = pr.Rectangle(0, 100, box_width, box_height)
@@ -32,10 +32,21 @@ is_dragging = False
 mouse_offset_x = 0.0
 mouse_offset_y = 0.0
 
+# button API calls
+show_text: bool = False
+
 while not pr.window_should_close():
+    # test api calls
+    if pr.gui_button(pr.Rectangle(100, 400, 100, 25), "get API status"):
+        response = requests.get(url=url, headers=headers)
+        print(response, response.content)
+        if response.ok:
+            show_text = True  # Trigger the text display
+            response_json = response.json()
+    if show_text:
+        pr.draw_text(f"{response_json["status"]}", 100, 430, 20, pr.GREEN)
+
     # 0. background
-    # pr.draw_line(int(width/2), 0, int(width/2), pr.get_screen_height(), blue)
-    # pr.draw_rectangle(int(width/2), 0, int(width/2) + 5, pr.get_screen_height(), blue)
     pr.draw_rectangle(
         int(width / 2) + 5, 0, pr.get_screen_width(), pr.get_screen_height(), orange
     )

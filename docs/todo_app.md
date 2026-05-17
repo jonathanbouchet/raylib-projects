@@ -3,12 +3,19 @@
 - run backend:
 ```bash
 uvicorn projects.todo_app.app:app --reload
+or
+uv run uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 - no SQL database, for now the `todo` are just in memory
 - run frontend:
 ```bash
 uv run projects/todo_app/main.py
 ```
+
+| fastapi swagger + raylib UI| |
+| :---: | :---: |
+| ![all icons](img/todo_app_testing.png) | ![]()  |
+
 
 ## backend
 ::: projects.todo_app.app
