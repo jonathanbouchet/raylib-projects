@@ -16,7 +16,8 @@ class ToDoUser(BaseModel):
 
 
 # In-memory database
-db = []
+# db = []
+db = [{"id": 0, "title": "TEST1"}, {"id":1, "title": "TEST2"}]
 
 
 # Health

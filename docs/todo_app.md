@@ -2,7 +2,7 @@
 - work in progress 
 - run backend:
 ```bash
-uvicorn projects.todo_app.app:app --reload
+uvicorn projects.todo_app.app:app
 or
 uv run uvicorn app:app --host 0.0.0.0 --port 8000
 ```
@@ -12,9 +12,9 @@ uv run uvicorn app:app --host 0.0.0.0 --port 8000
 uv run projects/todo_app/main.py
 ```
 
-| fastapi swagger + raylib UI| |
-| :---: | :---: |
-| ![all icons](img/todo_app_testing.png) | ![]()  |
+| start| adding a todo| getting list of todos |
+| :---: | :---: | :---: |
+| ![start](img/todo_app_testing_v0.png) | ![adding a todo](img/todo_app_testing_v1.png) | ![get list of todos](img/todo_app_testing_v2.png) |
 
 
 ## backend

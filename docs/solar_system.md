@@ -11,7 +11,7 @@
 uv run projects/solar_system/main.py 
 ```
 
-| no background| deepsky texture|
+| 2D|3D|
 | :---: | :---: |
 | ![all icons](img/solar_system_no_background.png) | ![](img/solar_system_3d.png)  |
 
