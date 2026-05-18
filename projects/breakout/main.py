@@ -1,12 +1,22 @@
 import random as rn
 import pyray as pr
 import raylib as rl
-from utils import Player, Ball
+from utils import Player, Ball, Bricks
 
 width, height = 600, 400
 
 pr.init_window(width, height, "breakout")
 pr.set_target_fps(60)
+
+brick_height: int = 30
+bricks_num: int = 4
+bricks_rows: int = 4
+bricks = Bricks(
+    window_width=width,
+    brick_height=brick_height,
+    num_row=bricks_rows,
+    num_brick=bricks_num,
+)
 
 player_width: int = 100
 player_height: int = 20

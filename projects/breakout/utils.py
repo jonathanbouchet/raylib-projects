@@ -88,6 +88,28 @@ class Brick(Sprite):
         pass
 
 
+class Bricks(Brick):
+    def __init__(
+        self, window_width: int, num_brick: int, brick_height: int, num_row: int
+    ):
+        self.window_width: int = window_width
+        self.num_brick: int = num_brick
+        self.brick_height: int = brick_height
+        self.num_row: int = num_row
+        self.brick_width: int = int(self.window_width / self.num_brick)
+
+    def make_bricks(self):
+        for i in range(self.num_row):
+            for j in range(self.num_brick):
+                pass
+                # pr.draw_rectangle_rounded(
+                #     pr.Rectangle(self.position.x, self.position.y, self.width, self.height),
+                #     self.player_roundness,
+                #     20,
+                #     self.color,
+                # )
+
+
 class Ball(Sprite):
     def __init__(
         self,
