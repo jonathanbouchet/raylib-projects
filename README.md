@@ -17,6 +17,7 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 - `Solar System`: a 3D view of the Solar System
 - `Load Blender`: a simple Blender mesh loader/viewer
 - `To-do app`: a to-do app with a fastapi backend; `raylib` is used as frontend
+- `breakout`: a `breakout` game`
 
 # tests
 - from the `projects` folder
