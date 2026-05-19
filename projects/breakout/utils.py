@@ -2,6 +2,16 @@ import pyray as pr
 import raylib as rl
 import settings as setting
 
+def rect_to_bounding_box(rect: pr.Rectangle) -> pr.BoundingBox:
+    # Define the minimum corner (top-left)
+    min_vec = pr.Vector3(rect.x, rect.y, 0.0)
+    
+    # Define the maximum corner (bottom-right)
+    max_vec = pr.Vector3(rect.x + rect.width, rect.y + rect.height, 0.0)
+    
+    # Return the new BoundingBox structure
+    return pr.BoundingBox(min_vec, max_vec)
+
 
 class Sprite:
     def __init__(
@@ -12,6 +22,7 @@ class Sprite:
         height: int,
         speed: int,
         color: pr.Color,
+        disabled: bool,
     ) -> None:
         self.position: pr.Vector2 = position
         self.direction: pr.Vector2 = direction
@@ -19,6 +30,7 @@ class Sprite:
         self.height: int = height
         self.speed: int = speed
         self.color: pr.Color = color
+        self.disabled: bool = disabled
 
 
 class Player(Sprite):
@@ -31,6 +43,7 @@ class Player(Sprite):
         speed: int,
         roundness: float,
         color: pr.Color,
+        disabled: bool,
     ) -> None:
         super().__init__(
             position=position,
@@ -39,6 +52,7 @@ class Player(Sprite):
             height=height,
             speed=speed,
             color=color,
+            disabled=disabled,
         )
         self.player_roundness = roundness
 
@@ -75,6 +89,7 @@ class Brick(Sprite):
         speed: int,
         roundness: float,
         color: pr.Color,
+        disabled: bool,
     ) -> None:
         super().__init__(
             position=position,
@@ -83,10 +98,18 @@ class Brick(Sprite):
             height=height,
             speed=speed,
             color=color,
+            disabled=disabled,
         )
 
     def update(self) -> None:
         pass
+
+    def draw(self) -> None:
+        pr.draw_rectangle_v(
+            pr.Vector2(self.position.x, self.position.y),
+            pr.Vector2(self.width, self.height),
+            self.color,
+        )
 
 
 class Bricks(Brick):
@@ -94,18 +117,37 @@ class Bricks(Brick):
         self.num_brick: int = num_brick
         self.brick_height: int = brick_height
         self.num_row: int = num_row
-        self.brick_width: int = int(setting.window_width / self.num_brick)
+        self.brick_width: int = int(setting.window_width / self.num_brick) - 20
+        self.bricks_list: list[Brick] = []
 
     def make_bricks(self):
-        for i in range(self.num_row):
-            for j in range(self.num_brick):
-                pass
-                # pr.draw_rectangle_rounded(
-                #     pr.Rectangle(self.position.x, self.position.y, self.width, self.height),
-                #     self.player_roundness,
-                #     20,
-                #     self.color,
-                # )
+        for i in range(5):
+            for j in range(2):
+                # print(i,j)
+                pos_x = i*120 + 10
+                pos_y = j*40 + 10
+                print(f"{pos_x=}, {pos_y=}, {self.brick_width=}")
+                brick = Brick(
+                    pr.Vector2(pos_x, pos_y), 
+                    direction=pr.Vector2(0,0), 
+                    width=100, 
+                    height=30, 
+                    speed=0, 
+                    roundness=0, 
+                    color=setting.brick_color, 
+                    disabled=False,
+                )
+                self.bricks_list.append(brick)
+
+    def update(self, dt: float, ball_center: pr.Vector2, ball_radius: float) -> None:
+        for brick in self.bricks_list:
+            brick_bounding_box = rect_to_bounding_box(pr.Rectangle(brick.position.x, brick.position.y, 100, 300))
+            if pr.check_collision_box_sphere(pr.BoundingBox(brick_bounding_box), pr.Vector3(ball_center.x, ball_center.y, 0), ball_radius):
+                brick.disabled = True
+
+    def draw(self) -> None:
+        _ = [brick.draw() for brick in self.bricks_list if not brick.disabled]
+
 
 
 class Ball(Sprite):
@@ -117,6 +159,7 @@ class Ball(Sprite):
         height: int,
         speed: int,
         color: pr.Color,
+        disabled: bool,
     ) -> None:
         super().__init__(
             position=position,
@@ -125,6 +168,7 @@ class Ball(Sprite):
             height=height,
             speed=speed,
             color=color,
+            disabled=disabled,
         )
 
     def move(self, dt: float) -> None:

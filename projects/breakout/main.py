@@ -25,6 +25,7 @@ bricks = Bricks(
     num_row=setting.bricks_rows,
     num_brick=setting.bricks_num,
 )
+bricks.make_bricks()
 
 player = Player(
     position=pr.Vector2(
@@ -36,6 +37,7 @@ player = Player(
     speed=setting.player_speed,
     roundness=setting.player_roundness,
     color=setting.player_color,
+    disabled=setting.player_disabled,
 )
 
 ball = Ball(
@@ -46,6 +48,7 @@ ball = Ball(
     height=setting.ball_height,
     speed=setting.ball_speed,
     color=setting.ball_color,
+    disabled=setting.ball_disabled,
 )
 
 
@@ -54,12 +57,14 @@ while not pr.window_should_close():
     dt = pr.get_frame_time()
     player.update(dt=dt)
     ball.update(dt=dt)
+    bricks.update(dt, ball.position, ball.width)
 
     # rendering
     pr.begin_drawing()
     pr.clear_background(rl.BLACK)
     player.draw()
     ball.draw()
+    bricks.draw()
     pr.draw_fps(0, 380)
     pr.end_drawing()
 
