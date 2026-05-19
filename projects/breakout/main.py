@@ -1,50 +1,53 @@
-import random as rn
+import random
+import math
 import pyray as pr
 import raylib as rl
 from utils import Player, Ball, Bricks
+import settings as setting
 
-width, height = 600, 400
 
-pr.init_window(width, height, "breakout")
+def generate_random_unit_vector():
+    # Pick a random angle between 0 and 2*pi
+    theta = random.uniform(0, 2 * math.pi)
+
+    # Calculate x and y using trigonometry
+    x = math.cos(theta)
+    y = math.sin(theta)
+
+    return [x, y]
+
+
+pr.init_window(setting.window_width, setting.window_height, "breakout")
 pr.set_target_fps(60)
 
-brick_height: int = 30
-bricks_num: int = 4
-bricks_rows: int = 4
 bricks = Bricks(
-    window_width=width,
-    brick_height=brick_height,
-    num_row=bricks_rows,
-    num_brick=bricks_num,
+    brick_height=setting.brick_height,
+    num_row=setting.bricks_rows,
+    num_brick=setting.bricks_num,
 )
-
-player_width: int = 100
-player_height: int = 20
-player_speed: int = 400
-player_roundness: int = 0.75
-player_color: pr.Color = rl.DARKGRAY
 
 player = Player(
-    position=pr.Vector2(width / 2 - player_width / 2, height - 40),
+    position=pr.Vector2(
+        setting.window_width / 2 - setting.player_width / 2, setting.window_height - 40
+    ),
     direction=pr.Vector2(0, 0),
-    width=player_width,
-    height=player_height,
-    speed=player_speed,
-    roundness=player_roundness,
-    color=player_color,
+    width=setting.player_width,
+    height=setting.player_height,
+    speed=setting.player_speed,
+    roundness=setting.player_roundness,
+    color=setting.player_color,
 )
-
-ball_speed: int = 500
-ball_color: pr.Color = rl.DARKBLUE
 
 ball = Ball(
-    position=pr.Vector2(width / 2, height / 2),
-    direction=pr.Vector2(rn.uniform(-0.75, 0.75), rn.uniform(-1, 1)),
-    width=10,
-    height=10,
-    speed=ball_speed,
-    color=ball_color,
+    position=pr.Vector2(setting.window_width / 2, setting.window_height / 2),
+    direction=pr.Vector2(random.uniform(-0.75, 0.75), random.uniform(-1, 1)),
+    # direction=pr.Vector2(ball_direction[0], ball_direction[1]),
+    width=setting.ball_width,
+    height=setting.ball_height,
+    speed=setting.ball_speed,
+    color=setting.ball_color,
 )
+
 
 while not pr.window_should_close():
     # logic
