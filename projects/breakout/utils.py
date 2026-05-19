@@ -121,16 +121,16 @@ class Bricks(Brick):
         self.bricks_list: list[Brick] = []
 
     def make_bricks(self):
-        for i in range(5):
-            for j in range(2):
+        for i in range(10):
+            for j in range(3):
                 # print(i,j)
-                pos_x = i*120 + 10
+                pos_x = i*60 + 10
                 pos_y = j*40 + 10
                 print(f"{pos_x=}, {pos_y=}, {self.brick_width=}")
                 brick = Brick(
                     pr.Vector2(pos_x, pos_y), 
                     direction=pr.Vector2(0,0), 
-                    width=100, 
+                    width=50, 
                     height=30, 
                     speed=0, 
                     roundness=0, 
@@ -139,10 +139,11 @@ class Bricks(Brick):
                 )
                 self.bricks_list.append(brick)
 
-    def update(self, dt: float, ball_center: pr.Vector2, ball_radius: float) -> None:
+    def update(self, dt: float, ball_center: pr.Vector2, ball_radius: int) -> None:
         for brick in self.bricks_list:
-            brick_bounding_box = rect_to_bounding_box(pr.Rectangle(brick.position.x, brick.position.y, 100, 300))
-            if pr.check_collision_box_sphere(pr.BoundingBox(brick_bounding_box), pr.Vector3(ball_center.x, ball_center.y, 0), ball_radius):
+            brick_bounding_box = rect_to_bounding_box(pr.Rectangle(brick.position.x, brick.position.y, 100, 30))
+            # print(brick_bounding_box)
+            if pr.check_collision_box_sphere(brick_bounding_box, pr.Vector3(ball_center.x, ball_center.y, 0), ball_radius):
                 brick.disabled = True
 
     def draw(self) -> None:
