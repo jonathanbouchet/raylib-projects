@@ -6,7 +6,7 @@ window_width, window_height = 600, 400
 brick_height: int = 30
 bricks_num: int = 5
 bricks_rows: int = 4
-brick_color: pr.Color = pr.DARKGREEN
+brick_color: pr.Color = pr.DARKPURPLE
 brick_disabled: bool = False
 
 player_width: int = 100

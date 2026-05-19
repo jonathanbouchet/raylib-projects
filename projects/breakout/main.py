@@ -43,7 +43,6 @@ player = Player(
 ball = Ball(
     position=pr.Vector2(setting.window_width / 2, setting.window_height / 2),
     direction=pr.Vector2(random.uniform(-0.75, 0.75), random.uniform(-1, 1)),
-    # direction=pr.Vector2(ball_direction[0], ball_direction[1]),
     width=setting.ball_width,
     height=setting.ball_height,
     speed=setting.ball_speed,
@@ -57,7 +56,8 @@ while not pr.window_should_close():
     dt = pr.get_frame_time()
     player.update(dt=dt)
     ball.update(dt=dt)
-    bricks.update(dt, ball.position, ball.width)
+    ball.check_collision_player(player)
+    ball.check_collision_bricks(bricks)
 
     # rendering
     pr.begin_drawing()

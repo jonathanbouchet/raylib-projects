@@ -139,12 +139,8 @@ class Bricks(Brick):
                 )
                 self.bricks_list.append(brick)
 
-    def update(self, dt: float, ball_center: pr.Vector2, ball_radius: int) -> None:
-        for brick in self.bricks_list:
-            brick_bounding_box = rect_to_bounding_box(pr.Rectangle(brick.position.x, brick.position.y, 100, 30))
-            # print(brick_bounding_box)
-            if pr.check_collision_box_sphere(brick_bounding_box, pr.Vector3(ball_center.x, ball_center.y, 0), ball_radius):
-                brick.disabled = True
+    def update(self) -> None:
+        pass
 
     def draw(self) -> None:
         _ = [brick.draw() for brick in self.bricks_list if not brick.disabled]
@@ -180,12 +176,13 @@ class Ball(Sprite):
             self.direction.x *= -1
         if (
             self.position.y - self.width / 2 < 0
-            or self.position.y + self.width / 2 > setting.window_height
         ):
             self.direction.y *= -1
 
         dt = pr.get_frame_time()
-        self.direction = pr.vector2_normalize(self.direction)
+        if pr.vector2_length(self.direction) > 0:
+            self.direction = pr.vector2_normalize(self.direction)
+        self.direction = pr.vector2_normalize(self.direction) if pr.vector2_length(self.direction) > 0 else self.direction
         self.position.x += self.direction.x * self.speed * dt
         self.position.y += self.direction.y * self.speed * dt
 
@@ -194,3 +191,14 @@ class Ball(Sprite):
 
     def update(self, dt) -> None:
         self.move(dt=dt)
+
+    def check_collision_player(self, player: Player) -> None:
+        player_bounding_box = rect_to_bounding_box(pr.Rectangle(player.position.x, player.position.y, player.width, player.height))
+        if pr.check_collision_box_sphere(player_bounding_box, pr.Vector3(self.position.x, self.position.y, 0), self.width):
+            self.direction.y *= -1
+    
+    def check_collision_bricks(self, bricks: Bricks) -> None:
+        for brick in bricks.bricks_list:
+            brick_bounding_box = rect_to_bounding_box(pr.Rectangle(brick.position.x, brick.position.y, 100, 30))
+            if pr.check_collision_box_sphere(brick_bounding_box, pr.Vector3(self.position.x, self.position.y, 0), self.width):
+                brick.disabled = True
