@@ -1,15 +1,20 @@
+import math
+import random
 import pyray as pr
 import raylib as rl
 import settings as setting
 
+
+def generate_random_unit_vector() -> tuple[float, float]:
+    theta = random.uniform(0, 2 * math.pi)
+    x = math.cos(theta)
+    y = math.sin(theta)
+    return [x, y]
+
+
 def rect_to_bounding_box(rect: pr.Rectangle) -> pr.BoundingBox:
-    # Define the minimum corner (top-left)
     min_vec = pr.Vector3(rect.x, rect.y, 0.0)
-    
-    # Define the maximum corner (bottom-right)
     max_vec = pr.Vector3(rect.x + rect.width, rect.y + rect.height, 0.0)
-    
-    # Return the new BoundingBox structure
     return pr.BoundingBox(min_vec, max_vec)
 
 
@@ -124,17 +129,17 @@ class Bricks(Brick):
         for i in range(10):
             for j in range(3):
                 # print(i,j)
-                pos_x = i*60 + 10
-                pos_y = j*40 + 10
+                pos_x = i * 60 + 10
+                pos_y = j * 40 + 10
                 print(f"{pos_x=}, {pos_y=}, {self.brick_width=}")
                 brick = Brick(
-                    pr.Vector2(pos_x, pos_y), 
-                    direction=pr.Vector2(0,0), 
-                    width=50, 
-                    height=30, 
-                    speed=0, 
-                    roundness=0, 
-                    color=setting.brick_color, 
+                    pr.Vector2(pos_x, pos_y),
+                    direction=pr.Vector2(0, 0),
+                    width=50,
+                    height=30,
+                    speed=0,
+                    roundness=0,
+                    color=setting.brick_color,
                     disabled=False,
                 )
                 self.bricks_list.append(brick)
@@ -144,7 +149,6 @@ class Bricks(Brick):
 
     def draw(self) -> None:
         _ = [brick.draw() for brick in self.bricks_list if not brick.disabled]
-
 
 
 class Ball(Sprite):
@@ -174,15 +178,17 @@ class Ball(Sprite):
             or self.position.x + self.width / 2 > setting.window_width
         ):
             self.direction.x *= -1
-        if (
-            self.position.y - self.width / 2 < 0
-        ):
+        if self.position.y - self.width / 2 < 0:
             self.direction.y *= -1
 
         dt = pr.get_frame_time()
         if pr.vector2_length(self.direction) > 0:
             self.direction = pr.vector2_normalize(self.direction)
-        self.direction = pr.vector2_normalize(self.direction) if pr.vector2_length(self.direction) > 0 else self.direction
+        self.direction = (
+            pr.vector2_normalize(self.direction)
+            if pr.vector2_length(self.direction) > 0
+            else self.direction
+        )
         self.position.x += self.direction.x * self.speed * dt
         self.position.y += self.direction.y * self.speed * dt
 
@@ -193,12 +199,26 @@ class Ball(Sprite):
         self.move(dt=dt)
 
     def check_collision_player(self, player: Player) -> None:
-        player_bounding_box = rect_to_bounding_box(pr.Rectangle(player.position.x, player.position.y, player.width, player.height))
-        if pr.check_collision_box_sphere(player_bounding_box, pr.Vector3(self.position.x, self.position.y, 0), self.width):
+        player_bounding_box = rect_to_bounding_box(
+            pr.Rectangle(
+                player.position.x, player.position.y, player.width, player.height
+            )
+        )
+        if pr.check_collision_box_sphere(
+            player_bounding_box,
+            pr.Vector3(self.position.x, self.position.y, 0),
+            self.width,
+        ):
             self.direction.y *= -1
-    
+
     def check_collision_bricks(self, bricks: Bricks) -> None:
         for brick in bricks.bricks_list:
-            brick_bounding_box = rect_to_bounding_box(pr.Rectangle(brick.position.x, brick.position.y, 100, 30))
-            if pr.check_collision_box_sphere(brick_bounding_box, pr.Vector3(self.position.x, self.position.y, 0), self.width):
+            brick_bounding_box = rect_to_bounding_box(
+                pr.Rectangle(brick.position.x, brick.position.y, 100, 30)
+            )
+            if pr.check_collision_box_sphere(
+                brick_bounding_box,
+                pr.Vector3(self.position.x, self.position.y, 0),
+                self.width,
+            ):
                 brick.disabled = True

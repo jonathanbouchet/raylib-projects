@@ -1,20 +1,8 @@
 import random
-import math
 import pyray as pr
 import raylib as rl
 from utils import Player, Ball, Bricks
 import settings as setting
-
-
-def generate_random_unit_vector():
-    # Pick a random angle between 0 and 2*pi
-    theta = random.uniform(0, 2 * math.pi)
-
-    # Calculate x and y using trigonometry
-    x = math.cos(theta)
-    y = math.sin(theta)
-
-    return [x, y]
 
 
 pr.init_window(setting.window_width, setting.window_height, "breakout")
