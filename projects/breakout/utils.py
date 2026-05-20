@@ -102,9 +102,10 @@ class Brick(Sprite):
             width=width,
             height=height,
             speed=speed,
-            color=color[0],
+            color=color,
             disabled=disabled,
         )
+        self.current_color: pr.Color = color[0]
         self.strength: int = 2  # hardcoded
 
     def update(self) -> None:
@@ -114,7 +115,7 @@ class Brick(Sprite):
         pr.draw_rectangle_v(
             pr.Vector2(self.position.x, self.position.y),
             pr.Vector2(self.width, self.height),
-            self.color,
+            self.current_color,
         )
 
 
@@ -188,6 +189,7 @@ class Ball(Sprite):
             self.spawned = False
 
         dt = pr.get_frame_time()
+
         if pr.vector2_length(self.direction) > 0:
             self.direction = pr.vector2_normalize(self.direction)
         self.direction = (
@@ -215,6 +217,14 @@ class Ball(Sprite):
 
     def start(self) -> None:
 
+        pr.draw_text(
+            "Press Space to spawn ball",
+            int(self.position.x) - 100,
+            int(self.position.y) - 40,
+            20,
+            pr.WHITE,
+        )
+
         if pr.is_key_pressed(rl.KEY_SPACE):
             self.spawned = True
             self.direction = pr.Vector2(
@@ -241,14 +251,16 @@ class Ball(Sprite):
     def check_collision_bricks(self, bricks: Bricks) -> None:
         for brick in bricks.bricks_list:
             brick_bounding_box = rect_to_bounding_box(
-                pr.Rectangle(brick.position.x, brick.position.y, 100, 30)
+                pr.Rectangle(brick.position.x, brick.position.y, 50, 30)
             )
             if pr.check_collision_box_sphere(
                 brick_bounding_box,
                 pr.Vector3(self.position.x, self.position.y, 0),
                 self.width,
             ):
-                # brick.strength -= 1
-                # brick.color = rl.PURPLE
-                # if brick.strength == 0:
-                brick.disabled = True
+                brick.strength -= 1
+                if brick.strength > 0:
+                    self.direction.y *= -1
+                    brick.current_color = brick.color[1]
+                else:
+                    brick.disabled = True
