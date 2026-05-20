@@ -211,15 +211,13 @@ class Ball(Sprite):
         self.position.y = position.y - self.width
         self.speed = 0
 
-        print("spawn ball")
         self.disabled = False
     
     def start(self) -> None:
 
         if pr.is_key_pressed(rl.KEY_SPACE):
-            print("restart")
             self.spawned = True
-            self.direction = pr.Vector2(random.uniform(-0.75, 0.75), random.uniform(-1, 0))
+            self.direction = pr.Vector2(random.uniform(-0.25, 0.25), random.uniform(-1, 0))
             self.speed = setting.ball_speed
 
 

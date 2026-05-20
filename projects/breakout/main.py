@@ -48,9 +48,9 @@ while not pr.window_should_close():
     ball.check_collision_player(player)
     ball.check_collision_bricks(bricks)
 
-    if ball.disabled:
-        ball.spawn_ball(position=player.position)
     if not ball.spawned:
+        ball.spawn_ball(position=player.position)
+    # if not ball.spawned:
         ball.start()
 
     # rendering
