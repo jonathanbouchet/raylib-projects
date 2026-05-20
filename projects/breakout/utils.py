@@ -130,7 +130,6 @@ class Bricks(Brick):
     def make_bricks(self):
         for i in range(10):
             for j in range(3):
-                # print(i,j)
                 pos_x = i * 60 + 10
                 pos_y = j * 40 + 10
                 brick = Brick(
@@ -150,6 +149,9 @@ class Bricks(Brick):
 
     def draw(self) -> None:
         _ = [brick.draw() for brick in self.bricks_list if not brick.disabled]
+
+    def get_bricks_destroyed_count(self) -> None:
+        return len([brick for brick in self.bricks_list if brick.disabled])
 
 
 class Ball(Sprite):
@@ -174,6 +176,7 @@ class Ball(Sprite):
             disabled=disabled,
         )
         self.spawned: bool = spawned
+        self.spawn_count: int = 0
 
     def move(self, dt: float) -> None:
         if (
@@ -217,15 +220,23 @@ class Ball(Sprite):
 
     def start(self) -> None:
 
+        # pr.draw_text(
+        #     "Press Space to spawn ball",
+        #     int(self.position.x) - 100,
+        #     int(self.position.y) - 40,
+        #     20,
+        #     pr.WHITE,
+        # )
         pr.draw_text(
-            "Press Space to spawn ball",
-            int(self.position.x) - 100,
-            int(self.position.y) - 40,
+            "Press Space to start",
+            150,
+            300,
             20,
             pr.WHITE,
         )
 
         if pr.is_key_pressed(rl.KEY_SPACE):
+            self.spawn_count += 1
             self.spawned = True
             self.direction = pr.Vector2(
                 random.uniform(-0.25, 0.25), random.uniform(-1, 0)

@@ -58,7 +58,21 @@ while not pr.window_should_close():
     player.draw()
     ball.draw()
     bricks.draw()
-    pr.draw_fps(0, 380)
+    pr.draw_fps(0, setting.window_height - 20)
+    pr.draw_text(
+        f"PLAYER SCORE: {ball.spawn_count}",
+        100,
+        setting.window_height - 20,
+        20,
+        rl.GREEN,
+    )
+    pr.draw_text(
+        f"BRICKS: {bricks.get_bricks_destroyed_count()}",
+        320,
+        setting.window_height - 20,
+        20,
+        rl.GREEN,
+    )
     pr.end_drawing()
 
 pr.close_window()
