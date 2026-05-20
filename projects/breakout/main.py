@@ -35,8 +35,8 @@ ball = Ball(
     height=setting.ball_height,
     speed=setting.ball_speed,
     color=setting.ball_color,
-    disabled=setting.ball_disabled,
-    spawned=True,
+    disabled=not setting.ball_disabled,
+    spawned=False,
 )
 
 
@@ -50,7 +50,6 @@ while not pr.window_should_close():
 
     if not ball.spawned:
         ball.spawn_ball(position=player.position)
-    # if not ball.spawned:
         ball.start()
 
     # rendering

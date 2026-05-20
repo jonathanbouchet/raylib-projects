@@ -26,7 +26,7 @@ class Sprite:
         width: int,
         height: int,
         speed: int,
-        color: pr.Color,
+        color: list[pr.Color],
         disabled: bool,
     ) -> None:
         self.position: pr.Vector2 = position
@@ -34,7 +34,7 @@ class Sprite:
         self.width: int = width
         self.height: int = height
         self.speed: int = speed
-        self.color: pr.Color = color
+        self.color: list[pr.Color] = color
         self.disabled: bool = disabled
 
 
@@ -47,7 +47,7 @@ class Player(Sprite):
         height: int,
         speed: int,
         roundness: float,
-        color: pr.Color,
+        color: list[pr.Color],
         disabled: bool,
     ) -> None:
         super().__init__(
@@ -56,7 +56,7 @@ class Player(Sprite):
             width=width,
             height=height,
             speed=speed,
-            color=color,
+            color=color[0],
             disabled=disabled,
         )
         self.player_roundness = roundness
@@ -93,7 +93,7 @@ class Brick(Sprite):
         height: int,
         speed: int,
         roundness: float,
-        color: pr.Color,
+        color: list[pr.Color],
         disabled: bool,
     ) -> None:
         super().__init__(
@@ -102,9 +102,10 @@ class Brick(Sprite):
             width=width,
             height=height,
             speed=speed,
-            color=color,
+            color=color[0],
             disabled=disabled,
         )
+        self.strength: int = 2  # hardcoded
 
     def update(self) -> None:
         pass
@@ -158,7 +159,7 @@ class Ball(Sprite):
         width: int,
         height: int,
         speed: int,
-        color: pr.Color,
+        color: list[pr.Color],
         disabled: bool,
         spawned: bool,
     ) -> None:
@@ -168,7 +169,7 @@ class Ball(Sprite):
             width=width,
             height=height,
             speed=speed,
-            color=color,
+            color=color[0],
             disabled=disabled,
         )
         self.spawned: bool = spawned
@@ -207,19 +208,19 @@ class Ball(Sprite):
         :param position: the current location of the player
         :type position: pr.Vector2
         """
-        self.position.x = position.x + setting.player_width/2
+        self.position.x = position.x + setting.player_width / 2
         self.position.y = position.y - self.width
         self.speed = 0
-
         self.disabled = False
-    
+
     def start(self) -> None:
 
         if pr.is_key_pressed(rl.KEY_SPACE):
             self.spawned = True
-            self.direction = pr.Vector2(random.uniform(-0.25, 0.25), random.uniform(-1, 0))
+            self.direction = pr.Vector2(
+                random.uniform(-0.25, 0.25), random.uniform(-1, 0)
+            )
             self.speed = setting.ball_speed
-
 
     def update(self, dt) -> None:
         self.move(dt=dt)
@@ -247,4 +248,7 @@ class Ball(Sprite):
                 pr.Vector3(self.position.x, self.position.y, 0),
                 self.width,
             ):
+                # brick.strength -= 1
+                # brick.color = rl.PURPLE
+                # if brick.strength == 0:
                 brick.disabled = True
