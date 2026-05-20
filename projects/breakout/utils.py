@@ -131,7 +131,6 @@ class Bricks(Brick):
                 # print(i,j)
                 pos_x = i * 60 + 10
                 pos_y = j * 40 + 10
-                print(f"{pos_x=}, {pos_y=}, {self.brick_width=}")
                 brick = Brick(
                     pr.Vector2(pos_x, pos_y),
                     direction=pr.Vector2(0, 0),
@@ -161,6 +160,7 @@ class Ball(Sprite):
         speed: int,
         color: pr.Color,
         disabled: bool,
+        spawned: bool,
     ) -> None:
         super().__init__(
             position=position,
@@ -171,6 +171,7 @@ class Ball(Sprite):
             color=color,
             disabled=disabled,
         )
+        self.spawned: bool = spawned
 
     def move(self, dt: float) -> None:
         if (
@@ -180,6 +181,10 @@ class Ball(Sprite):
             self.direction.x *= -1
         if self.position.y - self.width / 2 < 0:
             self.direction.y *= -1
+        if self.position.y - self.width > setting.window_height:
+            # disable the ball
+            self.disabled = True
+            self.spawned = False
 
         dt = pr.get_frame_time()
         if pr.vector2_length(self.direction) > 0:
@@ -193,7 +198,30 @@ class Ball(Sprite):
         self.position.y += self.direction.y * self.speed * dt
 
     def draw(self) -> None:
-        pr.draw_circle_v(self.position, self.width, self.color)
+        if not self.disabled:
+            pr.draw_circle_v(self.position, self.width, self.color)
+
+    def spawn_ball(self, position: pr.Vector2) -> None:
+        """spawn_ball: spawn the ball in the top-middle of the player with random direction
+
+        :param position: the current location of the player
+        :type position: pr.Vector2
+        """
+        self.position.x = position.x + setting.player_width/2
+        self.position.y = position.y - self.width
+        self.speed = 0
+
+        print("spawn ball")
+        self.disabled = False
+    
+    def start(self) -> None:
+
+        if pr.is_key_pressed(rl.KEY_SPACE):
+            print("restart")
+            self.spawned = True
+            self.direction = pr.Vector2(random.uniform(-0.75, 0.75), random.uniform(-1, 0))
+            self.speed = setting.ball_speed
+
 
     def update(self, dt) -> None:
         self.move(dt=dt)
