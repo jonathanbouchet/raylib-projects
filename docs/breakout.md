@@ -6,7 +6,7 @@
 - `Ball`:
     - collisions are checked for top, left and right wall. When it occurs, the `direction` of the ball is reversed
 
-    ::: projects.breakout.utils.Ball.move
+    ::: projects.breakout.ball.Ball.move
         handler: python
         <!-- options:
         members:
@@ -23,18 +23,6 @@
 ```bash
 uv run projects/breakout/main.py   
 ```
-
-<!-- ::: projects.utils
-    handler: python
-    options:
-      members:
-        - Sprite
-        - Player
-        - Ball
-        - Brick
-        - Brick
-      show_root_heading: True
-      show_source: True -->
 
 | Start | running |
 | :---: | :---: |
