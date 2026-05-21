@@ -1,7 +1,11 @@
 import random
 import pyray as pr
 import raylib as rl
-from utils import Player, Ball, Bricks
+
+# from utils import Player, Ball, Bricks
+from player import Player
+from ball import Ball
+from bricks import Bricks
 import settings as setting
 
 
