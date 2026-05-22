@@ -31,5 +31,8 @@
     },
     {
         "BREAKOUT": "projects/breakout/main.py"
+    },
+    {
+        "RUBIKSCUBE": "projects/rubikscube/main.py"
     }
 ]
