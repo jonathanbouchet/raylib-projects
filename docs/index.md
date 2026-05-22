@@ -25,3 +25,11 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 ```bash
 python -m pytest -rA
 ```
+
+# Launcher
+- added a `tkinter` window to start the apps
+```python
+uv run launcher.py
+```
+
+![](img/launcher.png)

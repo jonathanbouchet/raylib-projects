@@ -31,3 +31,9 @@ python -m pytest -rA
 mkdocs build
 mkdocs serve -a localhost:8001
 ```
+
+# Launcher
+- added a `tkinter` window to start the apps
+```python
+uv run launcher.py
+```
