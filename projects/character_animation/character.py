@@ -2,15 +2,56 @@ import pyray as pr
 import raylib as rl
 
 
-def multiply_vector2(v, scalar):
-    return pr.Vector2(v.x * scalar, v.y * scalar)
-
-
-class Player:
-    def __init__(self, position: pr.Vector2, direction: pr.Vector2, speed: int) -> None:
+class Sprite:
+    def __init__(
+        self,
+        position: pr.Vector2,
+        direction: pr.Vector2,
+        speed: int,
+        textures: dict[str, list[pr.Texture2D]],
+    ) -> None:
         self.position: pr.Vector2 = position
         self.direction: pr.Vector2 = direction
         self.speed: int = speed
+        self.animation_index: int = 0
+        self.all_textures: dict[str, list[pr.Texture2D]] = textures
+        self.idle_textures: list[pr.Texture2D] = self.all_textures.get("idle")
+        self.run_textures: list[pr.Texture2D] = self.all_textures.get("run")
+
+    def update(self, dt: float) -> None:
+        self.move(dt=dt)
+
+    def move(self, dt: float) -> None:
+        pass
+
+    def draw(self, dt: float) -> None:
+        if self.direction.x == 0 and self.direction.y == 0:
+            self.animation_index += len(self.idle_textures) * dt
+            pr.draw_texture_v(
+                self.idle_textures[int(self.animation_index % len(self.idle_textures))],
+                self.position,
+                pr.WHITE,
+            )
+        else:
+            self.animation_index += len(self.run_textures) * dt
+            pr.draw_texture_v(
+                self.run_textures[int(self.animation_index % len(self.run_textures))],
+                self.position,
+                pr.WHITE,
+            )
+
+
+class Player(Sprite):
+    def __init__(
+        self,
+        position: pr.Vector2,
+        direction: pr.Vector2,
+        speed: int,
+        textures: dict[str, list[pr.Texture2D]],
+    ) -> None:
+        super().__init__(
+            position=position, direction=direction, speed=speed, textures=textures
+        )
 
     def move(self, dt: float) -> None:
         self.direction.x = int(pr.is_key_down(rl.KEY_RIGHT)) - int(
@@ -23,15 +64,4 @@ class Player:
             self.position,
             pr.vector2_scale(pr.vector2_scale(self.direction, self.speed), dt),
         )
-        # self.position.x += self.direction.x * self.speed * dt
-        # self.position.y += self.direction.y * self.speed * dt
-
-    def animate(self, dt: float):
-        pass
-
-    def update(self, dt: float) -> None:
-        self.move(dt=dt)
-        self.animate(dt=dt)
-
-    def draw(self) -> None:
-        pr.draw_rectangle_v(self.position, pr.Vector2(20, 40), pr.YELLOW)
+        self.direction = rl.Vector2Normalize(self.direction)
