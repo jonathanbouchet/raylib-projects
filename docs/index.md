@@ -18,6 +18,7 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 - `Load Blender`: a Blender model viewer
 - `To do app`: a to-do app with a fastapi backend ; `raylib` is used a frontend
 - `Breakout`: a breakout game
+- `Character animation`: a character animation
 
 # tests
 - from the `projects` folder
