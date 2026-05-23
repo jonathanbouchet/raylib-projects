@@ -2,7 +2,7 @@ import pyray as pr
 from character import Player
 from utils import load_textures
 
-width, height = 600, 600
+width, height = 1280, 720
 
 pr.init_window(width, height, "anim")
 pr.set_target_fps(60)
@@ -30,5 +30,6 @@ while not pr.window_should_close():
     player.draw(dt=dt)
 
     pr.draw_fps(0, 0)
+    pr.draw_text(f"PLAYER STATE: {player.get_state()}", 0, 20, 20, pr.GREEN)
     pr.end_drawing()
 pr.close_window()

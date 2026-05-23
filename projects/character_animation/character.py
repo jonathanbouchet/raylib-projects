@@ -1,5 +1,11 @@
+from enum import Enum
 import pyray as pr
 import raylib as rl
+
+class States(Enum):
+    IDLE = 0
+    RUNNING = 1
+    OTHER = 2
 
 
 class Sprite:
@@ -14,6 +20,7 @@ class Sprite:
         self.direction: pr.Vector2 = direction
         self.speed: int = speed
         self.animation_index: int = 0
+        self.state: States = States.IDLE
         self.all_textures: dict[str, list[pr.Texture2D]] = textures
         self.idle_textures: list[pr.Texture2D] = self.all_textures.get("idle")
         self.run_textures: list[pr.Texture2D] = self.all_textures.get("run")
@@ -26,6 +33,7 @@ class Sprite:
 
     def draw(self, dt: float) -> None:
         if self.direction.x == 0 and self.direction.y == 0:
+            self.state = States.IDLE
             self.animation_index += len(self.idle_textures) * dt
             pr.draw_texture_v(
                 self.idle_textures[int(self.animation_index % len(self.idle_textures))],
@@ -33,12 +41,16 @@ class Sprite:
                 pr.WHITE,
             )
         else:
+            self.state = States.RUNNING
             self.animation_index += len(self.run_textures) * dt
             pr.draw_texture_v(
                 self.run_textures[int(self.animation_index % len(self.run_textures))],
                 self.position,
                 pr.WHITE,
             )
+
+    def get_state(self) -> States:
+        return self.state
 
 
 class Player(Sprite):
@@ -64,4 +76,5 @@ class Player(Sprite):
             self.position,
             pr.vector2_scale(pr.vector2_scale(self.direction, self.speed), dt),
         )
-        self.direction = rl.Vector2Normalize(self.direction)
+        # self.direction = rl.Vector2Normalize(self.direction)
+
