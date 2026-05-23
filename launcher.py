@@ -1,5 +1,5 @@
 import os
-import json
+from pathlib import Path
 from tkinter import ttk
 import tkinter as tk
 
@@ -22,9 +22,12 @@ main_window.config(width=300, height=200)
 # Quick command to center the window
 main_window.eval("tk::PlaceWindow . center")
 
-# loads apps metadata
-with open("apps.json", "r") as f:
-    data = json.load(f)
+# list all subdirs
+subdirs = [str(x) for x in Path('projects').iterdir() if x.is_dir() and 'pycache' not in str(x)]
+# extract the name of the projects
+projects = [x.split("/")[1] for x in subdirs if not "pycache" in x]
+# format data
+data = [{x: f"projects/{x}/main.py"} for x in projects]
 
 main_window.title("RAYGUI APPS")
 combo = ttk.Combobox(state="readonly", values=[k for x in data for k in x.keys()])
