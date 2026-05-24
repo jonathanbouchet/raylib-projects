@@ -31,6 +31,12 @@ while not pr.window_should_close():
     player.draw(dt=dt)
 
     pr.draw_fps(0, 0)
-    pr.draw_text(f"PLAYER STATE: {player.get_state()}", 0, 20, 20, pr.GREEN)
+    pr.draw_text(
+        f"{str(player.get_state()).split('.')[1]}",
+        int(player.get_position().x) + 30,
+        int(player.get_position().y) - 10,
+        20,
+        pr.GREEN,
+    )
     pr.end_drawing()
 pr.close_window()

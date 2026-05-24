@@ -39,6 +39,9 @@ class BaseSprite:
     def draw(self, dt: float) -> None:
         pass
 
+    def get_position(self) -> pr.Vector2:
+        return self.position
+
     def get_state(self) -> States:
         return self.state
 
