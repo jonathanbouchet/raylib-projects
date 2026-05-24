@@ -1,5 +1,5 @@
 import pyray as pr
-from character import Player
+from character import Sprite, AnimatedSprite
 from utils import load_textures
 
 width, height = 1280, 720
@@ -7,11 +7,12 @@ width, height = 1280, 720
 pr.init_window(width, height, "anim")
 pr.set_target_fps(60)
 
-# player = Player(
-#     position=pr.Vector2(width / 2, height / 2), direction=pr.Vector2(0, 0), speed=200
+
+# player = Sprite(
+#     position=pr.Vector2(width / 2, height / 2), direction=pr.Vector2(0, 0), speed=200, width=40, height=80,color=pr.YELLOW
 # )
 player_textures = load_textures()
-player = Player(
+player = AnimatedSprite(
     position=pr.Vector2(width / 2, height / 2),
     direction=pr.Vector2(0, 0),
     speed=200,
