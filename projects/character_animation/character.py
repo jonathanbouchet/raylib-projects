@@ -21,10 +21,10 @@ class BaseSprite:
         self.speed: int = speed
         self.state: States = States.IDLE
 
-    def update(self, dt: float) -> None:
-        self.move(dt=dt)
+    def update(self, dt: float, other: pr.Rectangle) -> None:
+        self.move(dt=dt, other=other)
 
-    def move(self, dt: float) -> None:
+    def move(self, dt: float, other: pr.Rectangle) -> None:
         self.direction.x = int(pr.is_key_down(rl.KEY_RIGHT)) - int(
             pr.is_key_down(rl.KEY_LEFT)
         )
@@ -60,6 +60,33 @@ class Sprite(BaseSprite):
         self.width: int = width
         self.height: int = height
         self.color: pr.Color = color
+        self.is_grounded: bool = False
+
+    def get_rectangle(self) -> pr.Rectangle:
+        return pr.Rectangle(self.position.x, self.position.y, self.width, self.height)
+
+    def check_collision(self, other: pr.Rectangle):
+        # print(f"{self.get_rectangle().x=}, {self.get_rectangle().y=}, {other.x=}, {other.y=}")
+        if pr.check_collision_recs(self.get_rectangle(), other):
+            self.position.y = other.y - self.height
+            self.is_grounded = True
+        else:
+            self.is_grounded = False
+
+    def move(self, dt: float, other: pr.Rectangle) -> None:
+        # add physics
+        self.position.y += 300 * dt
+        self.check_collision(other=other)
+        self.direction.x = int(pr.is_key_down(rl.KEY_RIGHT)) - int(
+            pr.is_key_down(rl.KEY_LEFT)
+        )
+        self.direction.y = int(pr.is_key_down(rl.KEY_DOWN)) - int(
+            pr.is_key_down(rl.KEY_UP)
+        )
+        self.position = pr.vector2_add(
+            self.position,
+            pr.vector2_scale(pr.vector2_scale(self.direction, self.speed), dt),
+        )
 
     def draw(self, dt: float) -> None:
         """for a character based on Sprite, we expect a primitive shape to represnet the character, i.e rectangle
