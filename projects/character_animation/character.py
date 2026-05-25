@@ -5,8 +5,8 @@ import raylib as rl
 
 class States(Enum):
     IDLE = 0
-    RUNNING = 1
-    OTHER = 2
+    WALKING = 1
+    JUMPING = 2
 
 
 class BaseSprite:
@@ -45,13 +45,22 @@ class BaseSprite:
     def get_state(self) -> States:
         return self.state
 
+    def set_state(self):
+        if self.is_grounded:
+            if self.direction.x == 0 and self.direction.y == 0:
+                self.state = States.IDLE
+            elif self.direction.x != 0:
+                self.state = States.WALKING
+        else:
+            self.state = States.JUMPING
+
 
 class Sprite(BaseSprite):
     def __init__(
         self,
         position: pr.Vector2,
         direction: pr.Vector2,
-        speed: int,
+        speed: float,
         width: int,
         height: int,
         color: pr.Color,
@@ -60,52 +69,58 @@ class Sprite(BaseSprite):
         self.width: int = width
         self.height: int = height
         self.color: pr.Color = color
+
+        # Physics state
+        self.vy: float = 0.0  # vertical velocity (px/s)
+        self.gravity: float = 1500.0  # gravity (px/s^2) — tune to taste
+        self.jump_speed: float = 500.0  # initial jump impulse (px/s)
         self.is_grounded: bool = False
 
     def get_rectangle(self) -> pr.Rectangle:
         return pr.Rectangle(self.position.x, self.position.y, self.width, self.height)
 
-    def check_collision(self, other: pr.Rectangle):
-        # print(f"{self.get_rectangle().x=}, {self.get_rectangle().y=}, {other.x=}, {other.y=}")
-        if pr.check_collision_recs(self.get_rectangle(), other):
-            self.position.y = other.y - self.height
-            self.is_grounded = True
-        else:
-            self.is_grounded = False
+    def check_collision(self, other: pr.Rectangle) -> bool:
+        return pr.check_collision_recs(self.get_rectangle(), other)
 
     def move(self, dt: float, other: pr.Rectangle) -> None:
-        # add physics
-        self.position.y += 300 * dt
-        self.check_collision(other=other)
+        # Horizontal input & move
         self.direction.x = int(pr.is_key_down(rl.KEY_RIGHT)) - int(
             pr.is_key_down(rl.KEY_LEFT)
         )
-        self.direction.y = int(pr.is_key_down(rl.KEY_DOWN)) - int(
-            pr.is_key_down(rl.KEY_UP)
-        )
-        self.position = pr.vector2_add(
-            self.position,
-            pr.vector2_scale(pr.vector2_scale(self.direction, self.speed), dt),
-        )
+        self.position.x += self.direction.x * self.speed * dt
+
+        # Jump input (use is_key_pressed for single press)
+        if pr.is_key_pressed(rl.KEY_SPACE) and self.is_grounded:
+            self.vy = -self.jump_speed
+            self.is_grounded = False
+
+        # Apply gravity
+        self.vy += self.gravity * dt
+
+        # Integrate vertical velocity
+        self.position.y += self.vy * dt
+
+        # Simple collision resolution (vertical only)
+        if self.check_collision(other):
+            # If we hit the platform from above, snap on top and stop vertical velocity
+            if self.vy >= 0 and self.position.y + self.height > other.y:
+                self.position.y = other.y - self.height
+                self.vy = 0.0
+                self.is_grounded = True
+            else:
+                # Basic fallback: prevent penetrating from below (optional improvement)
+                self.position.y = other.y + other.height
+                self.vy = 0.0
+                self.is_grounded = False
+        else:
+            self.is_grounded = False
+
+        self.set_state()
 
     def draw(self, dt: float) -> None:
-        """for a character based on Sprite, we expect a primitive shape to represnet the character, i.e rectangle
-
-        :param dt: _description_
-        :type dt: _type_
-        :return: _description_
-        :rtype: _type_
-        """
-        if self.direction.x == 0 and self.direction.y == 0:
-            self.state = States.IDLE
-            pr.draw_rectangle_v(
-                self.position, pr.Vector2(self.width, self.height), self.color
-            )
-        else:
-            self.state = States.RUNNING
-            pr.draw_rectangle_v(
-                self.position, pr.Vector2(self.width, self.height), self.color
-            )
+        pr.draw_rectangle_v(
+            self.position, pr.Vector2(self.width, self.height), self.color
+        )
 
 
 class AnimatedSprite(BaseSprite):
@@ -135,7 +150,7 @@ class AnimatedSprite(BaseSprite):
                 pr.WHITE,
             )
         else:
-            self.state = States.RUNNING
+            self.state = States.WALKING
             self.animation_index += len(self.run_textures) * dt
             pr.draw_texture_v(
                 self.run_textures[int(self.animation_index % len(self.run_textures))],

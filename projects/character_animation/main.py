@@ -11,7 +11,7 @@ pr.set_target_fps(60)
 player = Sprite(
     position=pr.Vector2(width / 2, height / 2),
     direction=pr.Vector2(0, 0),
-    speed=200,
+    speed=300,
     width=40,
     height=80,
     color=pr.YELLOW,
