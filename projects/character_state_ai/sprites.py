@@ -91,17 +91,35 @@ class Enemy(Sprite):
         color: pr.Color,
         width: int,
         height: int,
+        debug: bool,
+        color_detected: pr.Color
     ) -> None:
         super().__init__(
-            position=position, direction=direction, speed=speed, color=color
+            position=position, direction=direction, speed=speed, color=color, debug=debug
         )
         self.width: int = width
         self.height: int = height
+        self.color_detected: pr.Color = color_detected
+        self.current_color: pr.Color = self.color
 
-    def move(self, dt: float) -> None:
-        pass
+    def move(self, dt: float, target_pos: pr.Vector2) -> None:
+        current_pos = self.position
+        lerp_speed = 0.025
+
+        current_pos = pr.vector2_lerp(current_pos, target_pos, lerp_speed)
+        self.position = current_pos
 
     def draw(self) -> None:
         pr.draw_rectangle_v(
-            self.position, pr.Vector2(self.width, self.height), self.color
+            self.position, pr.Vector2(self.width, self.height), self.current_color
         )
+
+    def update(self, dt: float, player: Player) -> None:
+        self.detect_player(dt=dt, player=player)
+
+    def detect_player(self, dt: float, player: Player):
+        if pr.check_collision_point_circle(self.position, player.position, player.detection_area):
+            self.current_color = self.color_detected
+            self.move(dt=dt, target_pos=player.position)
+        else:
+            self.current_color = self.color

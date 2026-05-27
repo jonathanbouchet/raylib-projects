@@ -11,7 +11,7 @@ player_height: int = 20
 player_color = pr.YELLOW
 player_direction: pr.Vector2 = pr.Vector2(0, 0)
 player_speed: int = 300
-player_area: int = 200
+player_area: int = 150
 player_debug: bool = True
 player = Player(
     position=pr.Vector2(
@@ -28,9 +28,11 @@ player = Player(
 
 enemy_width: int = 20
 enemy_height: int = 20
-enemy_color = pr.RED
+enemy_color = pr.ORANGE
+enemy_color_detected = pr.RED
 enemy_direction: pr.Vector2 = pr.Vector2(0, 0)
 enemy_speed: int = 300
+enemy_debug = True
 enemy = Enemy(
     position=pr.Vector2(20, 20),
     direction=enemy_direction,
@@ -38,6 +40,8 @@ enemy = Enemy(
     width=enemy_width,
     height=enemy_height,
     color=enemy_color,
+    debug=enemy_debug,
+    color_detected=enemy_color_detected
 )
 
 
@@ -45,7 +49,7 @@ while not pr.window_should_close():
     # logic
     dt = pr.get_frame_time()
     player.update(dt=dt)
-    enemy.update(dt=dt)
+    enemy.update(dt=dt, player=player)
 
     # rendering
     pr.begin_drawing()
