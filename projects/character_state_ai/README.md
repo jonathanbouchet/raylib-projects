@@ -9,4 +9,4 @@
     - use `way points` for the AI to patrol 
     - use fix trajectory (circle)
 - [ ] some debug UI visuals
-- [ x ] idea for the player's control -> through mouse click, so that I can experime t with `Lerp`
+- [x] idea for the player's control -> through mouse click, so that I can experime t with `Lerp`
