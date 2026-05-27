@@ -1,5 +1,5 @@
 import pyray as pr
-from sprites import Player, Enemy
+from sprites import Player, Enemy, WayPoints
 
 window_width, window_height = 600, 600
 
@@ -8,7 +8,7 @@ pr.set_target_fps(60)
 
 player_width: int = 20
 player_height: int = 20
-player_color = pr.YELLOW
+player_color = pr.GREEN
 player_direction: pr.Vector2 = pr.Vector2(0, 0)
 player_speed: int = 300
 player_area: int = 150
@@ -28,7 +28,7 @@ player = Player(
 
 enemy_width: int = 20
 enemy_height: int = 20
-enemy_color = pr.ORANGE
+enemy_color = pr.YELLOW
 enemy_color_detected = pr.RED
 enemy_direction: pr.Vector2 = pr.Vector2(0, 0)
 enemy_speed: int = 300
@@ -44,6 +44,14 @@ enemy = Enemy(
     color_detected=enemy_color_detected,
 )
 
+markers_positions = [
+    pr.Vector2(window_width / 2, 20),
+    pr.Vector2(window_width / 2, window_height - 20),
+    pr.Vector2(20, window_height / 2),
+    pr.Vector2(window_width - 20, window_height / 2),
+]
+markers = WayPoints(positions=markers_positions, color=pr.BLUE, width=10, height=10)
+markers.make_points()
 
 while not pr.window_should_close():
     # logic
@@ -56,6 +64,7 @@ while not pr.window_should_close():
     pr.clear_background(pr.BLACK)
     player.draw()
     enemy.draw()
+    markers.draw_points()
     pr.draw_fps(0, 0)
     pr.end_drawing()
 

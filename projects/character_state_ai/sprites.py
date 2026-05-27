@@ -20,7 +20,6 @@ class Sprite:
     def move(self, dt: float) -> None:
 
         # move player with mouse
-
         if pr.is_mouse_button_down(0):
             current_pos = self.position
             target_pos = pr.get_mouse_position()
@@ -129,3 +128,34 @@ class Enemy(Sprite):
             self.move(dt=dt, target_pos=player.position)
         else:
             self.current_color = self.color
+
+
+class WayPoints:
+    def __init__(
+        self, positions: list[pr.Vector2], color: pr.Color, width: int, height: int
+    ):
+        self.positions: list[pr.Vector2] = positions
+        self.color: pr.Color = color
+        self.num_points: int = len(self.positions)
+        self.waypoint_width: int = width
+        self.waypoint_height: int = height
+        self.waypoints: list[Sprite] = []
+
+    def make_points(self) -> None:
+        for position in self.positions:
+            point_sprite = Sprite(
+                position=position,
+                direction=pr.Vector2(0, 0),
+                color=self.color,
+                speed=0,
+                debug=True,
+            )
+            self.waypoints.append(point_sprite)
+
+    def draw_points(self) -> None:
+        for waypoint in self.waypoints:
+            pr.draw_rectangle_v(
+                waypoint.position,
+                pr.Vector2(self.waypoint_width, self.waypoint_height),
+                self.color,
+            )
