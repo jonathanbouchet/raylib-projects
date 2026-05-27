@@ -41,7 +41,7 @@ enemy = Enemy(
     height=enemy_height,
     color=enemy_color,
     debug=enemy_debug,
-    color_detected=enemy_color_detected
+    color_detected=enemy_color_detected,
 )
 
 

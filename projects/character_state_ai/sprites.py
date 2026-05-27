@@ -92,10 +92,14 @@ class Enemy(Sprite):
         width: int,
         height: int,
         debug: bool,
-        color_detected: pr.Color
+        color_detected: pr.Color,
     ) -> None:
         super().__init__(
-            position=position, direction=direction, speed=speed, color=color, debug=debug
+            position=position,
+            direction=direction,
+            speed=speed,
+            color=color,
+            debug=debug,
         )
         self.width: int = width
         self.height: int = height
@@ -118,7 +122,9 @@ class Enemy(Sprite):
         self.detect_player(dt=dt, player=player)
 
     def detect_player(self, dt: float, player: Player):
-        if pr.check_collision_point_circle(self.position, player.position, player.detection_area):
+        if pr.check_collision_point_circle(
+            self.position, player.position, player.detection_area
+        ):
             self.current_color = self.color_detected
             self.move(dt=dt, target_pos=player.position)
         else:
