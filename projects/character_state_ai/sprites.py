@@ -1,5 +1,5 @@
+import random
 import pyray as pr
-import raylib as rl
 
 
 class Sprite:
@@ -193,24 +193,36 @@ class Enemy(Sprite):
             )
 
     def update(self, dt: float, player: Player, waypoints: WayPoints) -> None:
-        # self.detect_player(dt=dt, player=player)
-        current_waypoint = waypoints.get_waypoint_data(self.waypoint_idx)
-        self.move(dt=dt, target_pos=current_waypoint.position)
-        # check if enemy has arrived to the waypoint, then increment the waypoint_idx to patrol to the next one
-        if pr.check_collision_point_circle(
-            self.position, current_waypoint.position, current_waypoint.detection_area
-        ):
-            self.waypoint_idx += 1
-            # print(f"{self.waypoint_idx}, {waypoints.num_points}")
-            if self.waypoint_idx > waypoints.num_points - 1:
-                # warp around the max number of way points
-                self.waypoint_idx = 0
+        if self.detect_player(dt=dt, player=player):
+            current_waypoint = player
+            self.move(dt=dt, target_pos=current_waypoint.position)
+        else:
+            current_waypoint = waypoints.get_waypoint_data(self.waypoint_idx)
+            self.move(dt=dt, target_pos=current_waypoint.position)
+            # check if enemy has arrived to the waypoint, then increment the waypoint_idx to patrol to the next one
+            if pr.check_collision_point_circle(
+                self.position,
+                current_waypoint.position,
+                current_waypoint.detection_area,
+            ):
+                # self.waypoint_idx += 1
+                possible_waypoints = list(range(4))
+                possible_waypoints.remove(self.waypoint_idx)
+                idx = random.choices(possible_waypoints)
+                self.waypoint_idx = idx[0]
+                # print(f"{self.waypoint_idx}, {waypoints.num_points}")
+                if self.waypoint_idx > waypoints.num_points - 1:
+                    # warp around the max number of way points
+                    self.waypoint_idx = 0
 
-    def detect_player(self, dt: float, player: Player):
-        if pr.check_collision_point_circle(
-            self.position, player.position, player.detection_area
+    def detect_player(self, dt: float, player: Player) -> bool:
+        player_detected: bool = False
+        if pr.check_collision_circles(
+            self.position, self.detection_area, player.position, player.detection_area
         ):
             self.current_color = self.color_detected
-            self.move(dt=dt, target_pos=player.position)
+            # self.move(dt=dt, target_pos=player.position)
+            player_detected = True
         else:
             self.current_color = self.color
+        return player_detected
