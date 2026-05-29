@@ -1,5 +1,6 @@
 import numpy as np
 import pyray as pr
+import settings as settings
 
 
 class Grid:
@@ -10,8 +11,6 @@ class Grid:
         self.grid = np.zeros(
             (self.grid_rows, self.grid_cols), dtype=int
         )  # init with 0's
-        self.color_cell_value: pr.Color = pr.DARKGRAY
-        self.color_cell_clicked: pr.Color = pr.YELLOW
         self.colors: list[pr.Color] = [pr.DARKGRAY, pr.YELLOW]
 
     def update(self) -> None:
@@ -32,7 +31,6 @@ class Grid:
                     i * self.cell_size + 1,
                     self.cell_size - 1,
                     self.cell_size - 1,
-                    # pr.BEIGE
                     self.colors[cell_value],
                 )
 
