@@ -7,10 +7,12 @@ class Grid:
         self.grid_rows: int = num_rows
         self.grid_cols: int = num_cols
         self.cell_size: int = cell_size
-        self.grid = np.zeros((self.grid_rows, self.grid_cols), dtype=int)
-        self.color_cell_value: pr.Color = pr.Color(
-            26, 31, 40, 255
-        )  # backgroud = darkgrey
+        self.grid = np.zeros(
+            (self.grid_rows, self.grid_cols), dtype=int
+        )  # init with 0's
+        self.color_cell_value: pr.Color = pr.DARKGRAY
+        self.color_cell_clicked: pr.Color = pr.YELLOW
+        self.colors: list[pr.Color] = [pr.DARKGRAY, pr.YELLOW]
 
     def update(self) -> None:
         pass
@@ -31,6 +33,11 @@ class Grid:
                     self.cell_size - 1,
                     self.cell_size - 1,
                     # pr.BEIGE
-                    # self.colors[cell_value],
-                    self.color_cell_value,
+                    self.colors[cell_value],
                 )
+
+    def get_cell_clicked(self, pos: pr.Vector2) -> tuple[int, int]:
+        i = int(pos.x / self.cell_size)
+        j = int(pos.y / self.cell_size)
+        self.grid[j][i] = not self.grid[j][i]
+        return [i, j]
