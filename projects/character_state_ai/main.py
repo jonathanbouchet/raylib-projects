@@ -51,6 +51,7 @@ markers_positions = [
     pr.Vector2(window_width / 2, 20),
     pr.Vector2(window_width - 20, window_height / 2),
     pr.Vector2(window_width / 2, window_height - 20),
+    pr.Vector2(window_width / 2, window_height / 2),
 ]
 markers = WayPoints(
     positions=markers_positions, color=pr.BLUE, detection_area=20, width=10, height=10
