@@ -14,6 +14,7 @@ dependencies = [
     "mkdocstrings>=1.0.4",
     "mkdocstrings-python>=2.0.3",
     "numpy>=2.4.6",
+    "pathfinding>=1.0.21",
     "pydantic>=2.13.4",
     "pytest>=9.0.3",
     "raylib>=5.5.0.4",

@@ -3,15 +3,15 @@ import pyray as pr
 import settings as settings
 
 
-class Grid:
+class Board:
     def __init__(self, num_rows, num_cols: int, cell_size: int):
         self.grid_rows: int = num_rows
         self.grid_cols: int = num_cols
         self.cell_size: int = cell_size
-        self.grid = np.zeros(
+        self.grid = np.ones(
             (self.grid_rows, self.grid_cols), dtype=int
-        )  # init with 0's
-        self.colors: list[pr.Color] = [pr.DARKGRAY, pr.YELLOW]
+        )  # init with 1's as walkable tiles for the pathfinder algorithm
+        self.colors: list[pr.Color] = [pr.BLACK, pr.DARKGRAY, pr.YELLOW]
 
     def update(self) -> None:
         pass
@@ -37,5 +37,5 @@ class Grid:
     def get_cell_clicked(self, pos: pr.Vector2) -> tuple[int, int]:
         i = int(pos.x / self.cell_size)
         j = int(pos.y / self.cell_size)
-        self.grid[j][i] = not self.grid[j][i]
+        self.grid[j][i] = 2# not self.grid[j][i]
         return [i, j]

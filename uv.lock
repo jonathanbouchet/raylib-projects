@@ -515,6 +515,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pathfinding"
+version = "1.0.21"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fb/e5/0d17c8283b5689b7662fbd50d8b6f6d8c78e5e8e88414b0901a2ddcb1dc7/pathfinding-1.0.21.tar.gz", hash = "sha256:3127457394e5ba8799388e267c7515554948832a40a218828913aa9aa736ec23", size = 24249, upload-time = "2026-05-27T05:20:47.056Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/de/f0/8a87d4f63c1460018efc4578547ba4879d7170ab249beb6bf7573acf7f3a/pathfinding-1.0.21-py3-none-any.whl", hash = "sha256:ed63d967202b452f667e9e86ddf881a810b5751441e0fc1bf0942da4d43b214d", size = 26070, upload-time = "2026-05-27T05:20:45.835Z" },
+]
+
+[[package]]
 name = "pathspec"
 version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -758,6 +767,7 @@ dependencies = [
     { name = "mkdocstrings" },
     { name = "mkdocstrings-python" },
     { name = "numpy" },
+    { name = "pathfinding" },
     { name = "pydantic" },
     { name = "pytest" },
     { name = "raylib" },
@@ -777,6 +787,7 @@ requires-dist = [
     { name = "mkdocstrings", specifier = ">=1.0.4" },
     { name = "mkdocstrings-python", specifier = ">=2.0.3" },
     { name = "numpy", specifier = ">=2.4.6" },
+    { name = "pathfinding", specifier = ">=1.0.21" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pytest", specifier = ">=9.0.3" },
     { name = "raylib", specifier = ">=5.5.0.4" },
