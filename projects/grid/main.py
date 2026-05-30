@@ -10,14 +10,18 @@ board = Board(
     num_cols=settings.num_cells,
     cell_size=int(settings.window_width / settings.num_cells),
 )
+board.prepare_grid()
 board.print()  # debug
 is_mouse_pressed: bool = False
 
 while not pr.window_should_close():
     # logic
     if pr.is_mouse_button_pressed(0):
+        if board.has_been_processed:
+            board.reset_board()
         cell_ids = board.get_cell_clicked(pos=pr.get_mouse_position())
         is_mouse_pressed = True
+        board.find_path()
 
     # rendering
     pr.begin_drawing()
