@@ -23,7 +23,7 @@ class Board:
             pr.PINK,
         ]
         self.start_cell: list[int] = []  # to be updated when the user clicks a cell
-        self.end_cell: list[int] = [num_rows - 1, num_rows - 1]  # 3 = end cell
+        self.end_cell: list[int] = [self.grid_rows - 1, self.grid_rows - 1]  # end cell
         self.block_probability = 0.15  # 15% of chance for any element to be zeros
         self.grid = np.where(
             np.random.rand(self.grid_rows, self.grid_cols) < self.block_probability,
@@ -31,10 +31,15 @@ class Board:
             1,
         )  # init with 1's as walkable tiles for the pathfinder algorithm
         self.has_been_processed: bool = False
-        self.initial_grid = copy.deepcopy(self.grid)  # self.grid.copy()
+        self.initial_grid = None  # copy.deepcopy(self.grid)  # self.grid.copy()
 
     def prepare_grid(self):
+        self.end_cell: list[int] = [
+            self.grid_rows - 1,
+            self.grid_rows - 1,
+        ]  # 3 = end cell
         self.grid[self.end_cell[0]][self.end_cell[1]] = 3
+        self.initial_grid = copy.deepcopy(self.grid)  # self.grid.copy()
 
     def update(self) -> None:
         pass
@@ -103,7 +108,7 @@ class Board:
 
     def reset_board(self) -> None:
         print("resetting the board")
-        self.prepare_grid()
         self.grid = self.initial_grid
+        self.prepare_grid()
         print("done")
         self.print()
