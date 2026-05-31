@@ -13,8 +13,11 @@ def display_selection():
     # Get the selected value.
     selection = combo.get()
     path: str = [d[selection] for d in data if selection in d]
+    if path[0] == "projects/solar_system/main.py":
+        os.system(f"uv run projects/solar_system/main_3d.py") # FIX ME LATER
     # print(f"{selection=}, {key=}, {path=}")
-    os.system(f"uv run {path[0]}")
+    else:
+        os.system(f"uv run {path[0]}")
 
 
 main_window = tk.Tk()
