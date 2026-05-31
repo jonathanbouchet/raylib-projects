@@ -21,7 +21,7 @@ while not pr.window_should_close():
             board.reset_board()
         cell_ids = board.get_cell_clicked(pos=pr.get_mouse_position())
         is_mouse_pressed = True
-        board.find_path() # runs pathfinder algorithm
+        board.find_path()  # runs pathfinder algorithm
 
     # rendering
     pr.begin_drawing()
