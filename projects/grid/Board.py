@@ -3,6 +3,8 @@ import numpy as np
 import pyray as pr
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
+from pathfinding.finder.dijkstra import DijkstraFinder
+from pathfinding.finder.breadth_first import BreadthFirstFinder
 from pathfinding.core.diagonal_movement import DiagonalMovement
 import settings as settings
 
@@ -31,7 +33,7 @@ class Board:
             1,
         )  # init with 1's as walkable tiles for the pathfinder algorithm
         self.has_been_processed: bool = False
-        self.initial_grid = None  # copy.deepcopy(self.grid)  # self.grid.copy()
+        self.initial_grid = None
 
     def prepare_grid(self):
         self.end_cell: list[int] = [
@@ -70,35 +72,34 @@ class Board:
         return [i, j]
 
     def find_path(self) -> None:
-        # 2. Instantiate the grid object
+        # 1. nstantiate the grid object
         grid = Grid(matrix=self.grid)
 
-        # 3. Define the start and end nodes (X, Y format)
-        # Note: matrix indexing is matrix[Y][X], but grid.node() uses (X, Y)
+        # 2.efine the start and end nodes (X, Y format)
         start = grid.node(self.start_cell[0], self.start_cell[1])
         end = grid.node(self.end_cell[0], self.end_cell[1])  # Bottom-right corner
 
-        # 4. Create the finder instance
-        # You can customize diagonal movement rules here
-        finder = AStarFinder(diagonal_movement=DiagonalMovement.always)
+        # 3. reate the finder instance
+        # finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
+        finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
 
-        # 5. Find the path
+        # 4. find the path
         # Warning: This operation mutates the grid object internally
         path, runs = finder.find_path(start, end, grid)
 
-        # 6. Output the results
+        # optional: output the results
         print(f"Algorithm finished in {runs} iterations.")
         print("Path found:")
 
-        # Convert node objects into readable (X, Y) coordinates
+        # 5. Convert node objects into readable (X, Y) coordinates
         clean_path = [(node.x, node.y) for node in path]
         print(clean_path)
 
-        # Optional: Visualize the grid map with the path drawn on it
+        # optional: Visualize the grid map with the path drawn on it
         print("\nVisualized Grid Map:")
         print(grid.grid_str(path=path, start=start, end=end))
 
-        # visualize path:
+        # 6. visualize path:
         for i in range(1, len(clean_path) - 1):
             x = clean_path[i][1]
             y = clean_path[i][0]

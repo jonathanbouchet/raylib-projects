@@ -26,3 +26,52 @@ matrix = [
 - since a walkable tile is defined as 1, I need to initialize the grid with `1`
 - a block will be defined as `0`
 - we can define the starting and ending tile as `2` and `3`: choice of the user by mouse-clicking
+
+### List of algorithms
+
+```python
+import pathfinding.finder as pf
+pf.__all__
+# ['a_star', 'best_first', 'bi_a_star', 'bi_breadth_first', 'bi_best_first', 'bi_dijkstra', 'breadth_first', 'dijkstra', 'finder', 'ida_star']
+```
+
+- A*
+- Dijkstra
+- Best-First
+- Bi-directional A*
+- Breadth First Search (BFS)
+- Bi-directional Breadth First Search (BFS)
+- Iterative Deeping A* (IDA*)
+- Minimum Spanning Tree (MSP)
+
+### Output example
+
+```bash
+1 1 1 1 0 1 1 1 1 0 
+1 1 1 1 0 1 1 1 1 1 
+1 0 0 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 1 1 
+1 1 0 1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 1 0 1 
+1 0 1 1 1 1 0 0 1 1 
+1 1 0 1 1 1 1 0 1 1 
+1 1 0 1 1 1 1 1 1 1 
+1 0 1 1 1 1 1 1 1 3 
+Algorithm finished in 69 iterations.
+Path found:
+[(1, 1), (2, 1), (3, 1), (3, 2), (3, 3), (4, 4), (5, 5), (5, 6), (5, 7), (6, 8), (7, 8), (8, 9), (9, 9)]
+
+Visualized Grid Map:
++----------+
+|    #    #|
+| sxx#     |
+| ##x      |
+|   x      |
+|  # x     |
+|     x  # |
+| #   x##  |
+|  #  x #  |
+|  #   xx  |
+| #      xe|
++----------+
+```

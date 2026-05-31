@@ -1,7 +1,7 @@
 import pyray as pr
 
-window_width, window_height = 600, 600
-num_cells: int = 20
+window_width, window_height = 800, 800
+num_cells: int = 10
 yellow = pr.Color(244, 167, 1, 255)
 maroon = pr.Color(92, 31, 0, 255)
 grey = pr.Color(191, 177, 124, 255)
