@@ -48,5 +48,3 @@ class BaseBoard:
         elif self.grid[j][i] == 2:
             self.grid[j][i] = 1
         return [i, j]
-
-   
