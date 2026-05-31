@@ -72,14 +72,14 @@ class Board:
         return [i, j]
 
     def find_path(self) -> None:
-        # 1. nstantiate the grid object
+        # 1. instantiate the grid object
         grid = Grid(matrix=self.grid)
 
-        # 2.efine the start and end nodes (X, Y format)
+        # 2. define the start and end nodes (X, Y format)
         start = grid.node(self.start_cell[0], self.start_cell[1])
         end = grid.node(self.end_cell[0], self.end_cell[1])  # Bottom-right corner
 
-        # 3. reate the finder instance
+        # 3. create the finder instance
         # finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
         finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
 
@@ -91,7 +91,7 @@ class Board:
         print(f"Algorithm finished in {runs} iterations.")
         print("Path found:")
 
-        # 5. Convert node objects into readable (X, Y) coordinates
+        # 5. convert node objects into readable (X, Y) coordinates
         clean_path = [(node.x, node.y) for node in path]
         print(clean_path)
 
