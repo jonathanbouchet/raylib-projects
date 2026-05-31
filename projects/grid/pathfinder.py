@@ -32,13 +32,13 @@ class PathFinder(BaseBoard):
     def set_obstacle(self):
         if self.pathfinder_obstacle == "always":
             return DiagonalMovement.always
-        elif self.pathfinder_obstacle == "if_at_most_one_obstacleays":
+        elif self.pathfinder_obstacle == "if_at_most_one_obstacle":
             return DiagonalMovement.if_at_most_one_obstacle
         elif self.pathfinder_obstacle == "mro":
             return DiagonalMovement.mro
         elif self.pathfinder_obstacle == "never":
             return DiagonalMovement.never
-        elif self.pathfinder_obstacle == "only_when_no_obstacle  ":
+        elif self.pathfinder_obstacle == "only_when_no_obstacle":
             return DiagonalMovement.only_when_no_obstacle
 
     def __str__(self) -> str:
