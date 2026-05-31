@@ -37,3 +37,7 @@ mkdocs serve -a localhost:8001
 ```python
 uv run launcher.py
 ```
+
+# Demo
+## Tsoding
+![](images/tsoding_recording.gif)
