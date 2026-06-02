@@ -39,4 +39,23 @@ example:
 </figure>
 
 - this version just decodes the `.tmj`
-- [ ] : to do: include the `collision` layer
+- [ x ] : to do: include the `collision` layer
+
+### In-game pictures
+
+<figure>
+<img src="../../images/map_loader_in_game.png" width="600">
+<figcaption>in game</figcaption>
+</figure>
+
+- in blue: debugging grid to show the texture tiles layer
+- in red: debugging grid for the collision layer
+   - note: there is some shift in the position due to conversion of `float` to `int` required by `pr.Rectangle`
+
+<figure>
+<img src="../../images/map_loader_in_game.gif" width="600">
+<figcaption>animated gif</figcaption>
+</figure>
+
+- the black square is (supposed to be) a player
+ 

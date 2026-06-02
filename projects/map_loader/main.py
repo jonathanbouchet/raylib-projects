@@ -23,11 +23,29 @@ map = MapLoader(
 )
 map.make_map()
 
+# add collision layer tiles
+walls = map.get_collision_layer()
+print(f"{walls=}")
+
+# add dummy player to showcase
+y_coord: float = 0
+player = pr.Rectangle(100, y_coord, 20,20, pr.BLACK)
+
 while not pr.window_should_close():
+    # logic
+    dt = pr.get_frame_time()
+    # collision:
+    for wall in walls:
+        if pr.check_collision_recs(player, wall):
+            player.y = wall.y - 20 # 20 is the height of the player
+    player.y += 20*dt
+
     pr.begin_drawing()
     pr.clear_background(pr.DARKGRAY)
     map.draw()
     map.draw_grid()
+    map.draw_collision_layer()
+    pr.draw_rectangle_rec(player, pr.BLACK)
     pr.draw_fps(0, 0)
 
     pr.end_drawing()

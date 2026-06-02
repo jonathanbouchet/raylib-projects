@@ -102,6 +102,8 @@ class MapLoader:
         self.decode_map()
         self.map_data_to_texture()
         print(f"loaded {len(self.mapdata_to_texture)} tiles")
+        self.make_collision_layer()
+        print(f"loaded {len(self.map_collision_layer)} collision tiles")
 
     def draw(self):
         for tile in self.mapdata_to_texture:
