@@ -23,6 +23,7 @@ class MapLoader:
         self.texture_num_row: int  #  = int(terrain_texture.height / TILE_WIDTH)
         self.texture_num_col: int  # = int(terrain_texture.width / TILE_WIDTH)
         self.mapdata_to_texture: list[dict[str, int]] = []
+        self.map_collision_layer: list[pr.Rectangle] = []
 
     def load_map(self) -> dict:
         with open(self.map_path, "r") as f:
@@ -53,7 +54,6 @@ class MapLoader:
             self.map_data.append(
                 {"tile_id": int(tile_id), "col_id": int(col_id), "row_id": int(row_id)}
             )
-
         print(f"{self.map_data=}")
 
     def map_data_to_texture(self):
@@ -78,6 +78,23 @@ class MapLoader:
                 }
             )
         self.mapdata_to_texture = res
+
+    def make_collision_layer(self) -> list[pr.Rectangle]:
+        tiles = self.map.get("layers", "")
+        try:
+            tiles_data = tiles[1].get("objects", "")
+            print(f"{tiles_data=}")
+            for tile in tiles_data:
+                self.map_collision_layer.append(pr.Rectangle(tile.get("x"), tile.get("y"), tile.get("width"), tile.get("height")))
+        except KeyError:
+            self.map_collision_layer = []
+
+    def get_collision_layer(self) -> list[pr.Rectangle]:
+        return self.map_collision_layer
+    
+    def draw_collision_layer(self) -> None:
+        for col in self.map_collision_layer:
+            pr.draw_rectangle_lines(int(col.x), int(col.y), int(col.width), int(col.height), pr.RED)
 
     def make_map(self) -> None:
         self.load_map()
@@ -118,5 +135,5 @@ class MapLoader:
                     i * self.window_tile_size + 1,
                     self.window_tile_size - 1,
                     self.window_tile_size - 1,
-                    pr.RED,
+                    pr.BLUE,
                 )
