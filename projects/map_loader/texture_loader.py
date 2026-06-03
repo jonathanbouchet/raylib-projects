@@ -20,26 +20,43 @@ class MapLoader:
         self.map: dict = {}
         self.map_data: dict = {}
         self.texture = None
-        self.texture_num_row: int  #  = int(terrain_texture.height / TILE_WIDTH)
-        self.texture_num_col: int  # = int(terrain_texture.width / TILE_WIDTH)
+        self.texture_num_row: int
+        self.texture_num_col: int
         self.mapdata_to_texture: list[dict[str, int]] = []
         self.map_collision_layer: list[pr.Rectangle] = []
+        # self.window_width: int
+        # self.window_height: int
+        # self.window_tile_size: int
 
     def load_map(self) -> dict:
         with open(self.map_path, "r") as f:
             self.map = json.load(f)
 
-    def load_texture(self) -> pr.Texture:
+    def load_texture(self) -> None:
+        print(f"load texture at {self.texture_path}")
         self.texture = pr.load_texture(self.texture_path)
+        print("heres")
+        print(self.texture.height , self.texture.width)
+        print("pass")
+        print(f"{self.window_tile_size=}")
         self.texture_num_row = int(self.texture.height / self.window_tile_size)
         self.texture_num_col = int(self.texture.width / self.window_tile_size)
         print(f"{self.texture_num_row=}, {self.texture_num_col=}")
 
     def decode_map(self) -> list[dict[str, int]]:
+        print("here")
         tiles = self.map.get("layers", "")
         tiles_data = tiles[0].get("data", "")
         num_tiles_y = self.map.get("height", "")
         num_tiles_x = self.map.get("width", "")
+        tile_width = self.map.get("tilewidth", "")
+
+        # add to class
+        # self.window_tile_size = int(tile_width)
+        # self.window_width = int(self.window_tile_size * num_tiles_x)
+        # self.window_height = int(self.window_tile_size * num_tiles_y)
+
+        print(f"{self.window_tile_size=}, {self.window_width=}, {self.window_height=}")
 
         val = np.array(tiles_data)
         res = val.reshape((num_tiles_y, num_tiles_x))
@@ -97,9 +114,13 @@ class MapLoader:
             pr.draw_rectangle_lines(int(col.x), int(col.y), int(col.width), int(col.height), pr.RED)
 
     def make_map(self) -> None:
+        print("a")
         self.load_map()
-        self.load_texture()
+        print("b")
         self.decode_map()
+        print("c")
+        self.load_texture()
+        print("d")
         self.map_data_to_texture()
         print(f"loaded {len(self.mapdata_to_texture)} tiles")
         self.make_collision_layer()
@@ -139,3 +160,6 @@ class MapLoader:
                     self.window_tile_size - 1,
                     pr.BLUE,
                 )
+
+    # def get_game_window(self) -> tuple[int, int]:
+    #     return [self.window_width, self.window_height]

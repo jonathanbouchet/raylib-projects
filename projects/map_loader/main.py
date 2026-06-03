@@ -7,9 +7,17 @@ TILE_WIDTH = 32
 TILE_HEIGHT = 32
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
-
 texture_path: str = str(THIS_DIR / "terrain_32x32.png")
 map_path = str(THIS_DIR / "map_10_5.tmj")
+
+# map = MapLoader(
+#     texture_path=texture_path,
+#     map_path=map_path,
+# )
+# map.make_map()
+# width, height = map.get_game_window()
+
+# print(f"{width=}, {height=}")
 
 pr.init_window(width, height, "texture")
 pr.set_target_fps(60)
