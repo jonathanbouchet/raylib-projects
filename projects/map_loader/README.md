@@ -59,3 +59,7 @@ example:
 
 - the black square is (supposed to be) a player
  
+### Notes
+- I tried to have the game window defined by the map, ie as the `Tiled` map is loaded, it contains the original `width` and `height`
+- so my idea was to instantiate the MapLoader class first, then do `raylib`'s boilerplate (`initwindow`, `setframe`)
+- however it seems that `init_window` needs to be called before any attempt to load a texture
