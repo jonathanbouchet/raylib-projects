@@ -68,7 +68,7 @@ example:
 </figure>
 
 <figure>
-<img src="../../images/map_floor_collision.gif" width="600">
+<img src="../../images/map_floor_collisions_recording.gif" width="600">
 <figcaption>animated gif</figcaption>
 </figure>
  
