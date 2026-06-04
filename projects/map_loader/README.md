@@ -40,6 +40,7 @@ example:
 
 - this version just decodes the `.tmj`
 - [ x ] : to do: include the `collision` layer
+- [   ] : to do: decode `Player` layer
 
 ### In-game pictures
 
@@ -58,6 +59,18 @@ example:
 </figure>
 
 - the black square is (supposed to be) a player
+
+#### Other pictures with another (larger) map
+
+<figure>
+<img src="../../images/map_floor_collision.png" width="600">
+<figcaption>in game</figcaption>
+</figure>
+
+<figure>
+<img src="../../images/map_floor_collision.gif" width="600">
+<figcaption>animated gif</figcaption>
+</figure>
  
 ### Notes
 - I tried to have the game window defined by the map, ie as the `Tiled` map is loaded, it contains the original `width` and `height`
