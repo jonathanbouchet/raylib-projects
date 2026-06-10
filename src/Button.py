@@ -27,9 +27,9 @@ button2 = Button2(
 
 class BaseButton:
     def __init__(self, position: pr.Vector2, size: pr.Vector2) -> None:
-        self.position: pr.Vector2 = position
-        self.size: pr.Vector2 = size
-        self.state_changed: bool = False
+        self.position = position
+        self.size = size
+        self.state_changed = False
 
     def update(self) -> None:
         # print(f"{pr.check_collision_point_rec(pr.get_mouse_position(), self.rect)}, {pr.is_mouse_button_pressed(0)}")
@@ -50,11 +50,11 @@ class Button(BaseButton):
         changed_color: pr.Color,
     ) -> None:
         super().__init__(position=position, size=size)
-        self.roundness: int = roundness
-        self.segments: int = segments
-        self.base_color: pr.Color = base_color
-        self.changed_color: pr.Color = changed_color
-        self.rect: pr.Rectangle = pr.Rectangle(
+        self.roundness = roundness
+        self.segments = segments
+        self.base_color = base_color
+        self.changed_color = changed_color
+        self.rect = pr.Rectangle(
             self.position.x, self.position.y, self.size.x, self.size.y
         )
 
@@ -71,13 +71,13 @@ class Button2(BaseButton):
         self, position: pr.Vector2, size: pr.Vector2, text1: str, text2: str
     ) -> None:
         super().__init__(position=position, size=size)
-        self.texture1: pr.Texture = pr.load_texture(text1)
-        self.texture2: pr.Texture = pr.load_texture(text2)
+        self.texture1 = pr.load_texture(text1)
+        self.texture2 = pr.load_texture(text2)
         self.rect = pr.Rectangle(
             self.position.x, self.position.y, self.texture1.width, self.texture1.height
         )
 
-    def draw(self):
+    def draw(self) -> None:
         pr.draw_texture(
             self.texture1, int(self.position.x), int(self.position.y), pr.WHITE
         ) if not self.state_changed else pr.draw_texture(

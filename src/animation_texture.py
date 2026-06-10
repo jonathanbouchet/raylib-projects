@@ -27,21 +27,19 @@ class TextureAnim:
         scale: float = 1.0,
     ) -> None:
         self.texture = pr.load_texture(texture_path)
-        self.position: pr.Vector2 = position  # position of the texture
-        self.tile_size: int = tile_size  # size in pizels of a single frame
-        self.texture_width: int = (
-            self.texture.width
-        )  # width in pixels of the whole texture
-        self.texture_heigth: int = (
+        self.position = position  # position of the texture
+        self.tile_size = tile_size  # size in pizels of a single frame
+        self.texture_width = self.texture.width  # width in pixels of the whole texture
+        self.texture_heigth = (
             self.texture.height
         )  # height in pixels of the whole texture
-        self.texture_len: int = int(
+        self.texture_len = int(
             self.texture.width / self.texture.height
         )  # number of animations in the texture
-        self.anim_index: int = 0
-        self.scale_factor: float = scale
+        self.anim_index = 0
+        self.scale_factor = scale
 
-    def draw(self, dt: float, fps: int):
+    def draw(self, dt: float, fps: int) -> None:
         if fps == 0:
             return
 

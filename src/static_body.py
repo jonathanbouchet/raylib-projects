@@ -27,14 +27,14 @@ class Static:
         body_size: pr.Vector2,
         elasticity: float,
         friction: float,
-    ):
+    ) -> None:
         self.static_body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.static_body.position = (position.x, position.y)
         self.static_body_size = (body_size.x, body_size.y)
         self.shape = pymunk.Poly.create_box(self.static_body, self.static_body_size)
         self.shape.elasticity = elasticity
         self.shape.friction = friction
-        self.debug: bool = False
+        self.debug = False
 
     def draw(self) -> None:
         pr.draw_rectangle_v(
