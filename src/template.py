@@ -6,6 +6,8 @@ pr.init_window(width, height, "app")
 pr.set_target_fps(60)
 
 while not pr.window_should_close():
+    # logic here
+    # rendering
     pr.begin_drawing()
     pr.clear_background(pr.BLACK)
     pr.end_drawing()
