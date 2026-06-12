@@ -10,6 +10,7 @@ while not pr.window_should_close():
     # rendering
     pr.begin_drawing()
     pr.clear_background(pr.BLACK)
+    pr.draw_fps(0,0)
     pr.end_drawing()
 
 pr.close_window()
