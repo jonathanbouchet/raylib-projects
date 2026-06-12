@@ -32,7 +32,8 @@ I'm using the `pyray python` bindings: https://electronstudio.github.io/raylib-p
 ```bash
 ├── Button.py # template for a toggle button 
 ├── animation_texture.py # template for animation based on tile
-└── static_body.py # tempplate to add a pymunk STATIC body based on a raylib definition
+└── static_body.py # template to add a pymunk STATIC body based on a raylib definition
+└── template.py # tempplate for a base app
 ```
 
 
