@@ -7,22 +7,26 @@ THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
 pr.init_window(width, height, "app")
 pr.set_target_fps(60)
+
+fixed_background = pr.load_texture(f"{THIS_DIR}/plx-1.png")
+fixed_background_pos = pr.Vector2()
+
 foreground_1 = pr.load_texture(f"{THIS_DIR}/ground.png")
-foreground_2 = pr.load_texture(f"{THIS_DIR}/ground.png")
-foreground_3 = pr.load_texture(f"{THIS_DIR}/ground.png")
-foreground_4 = pr.load_texture(f"{THIS_DIR}/ground.png")
+foreground_2 = foreground_1
+foreground_3 = foreground_1
+foreground_4 = foreground_1
 foreground_pos_1 = pr.Vector2(0, height - 50)
 foreground_pos_2 = pr.Vector2(foreground_1.width, height - 50)
 foreground_pos_3 = pr.Vector2(2 * foreground_2.width, height - 50)
 foreground_pos_4 = pr.Vector2(3 * foreground_3.width, height - 50)
 
 background_11 = pr.load_texture(f"{THIS_DIR}/plx-5.png")
-background_12 = pr.load_texture(f"{THIS_DIR}/plx-5.png")
+background_12 = background_11
 background_pos_11 = pr.Vector2(0, 0)
 background_pos_12 = pr.Vector2(background_11.width, 0)
 
 background_21 = pr.load_texture(f"{THIS_DIR}/plx-4.png")
-background_22 = pr.load_texture(f"{THIS_DIR}/plx-4.png")
+background_22 = background_21
 background_pos_21 = pr.Vector2(0, 0)
 background_pos_22 = pr.Vector2(background_21.width, 0)
 
@@ -42,6 +46,9 @@ while not pr.window_should_close():
 
     background_pos_21.x -= dt * 20
     background_pos_22.x -= dt * 20
+
+    # draw fix background first
+    pr.draw_texture_v(fixed_background, fixed_background_pos, pr.WHITE)
 
     pr.draw_texture_v(background_21, background_pos_21, pr.WHITE)
     pr.draw_texture_v(background_22, background_pos_22, pr.WHITE)
