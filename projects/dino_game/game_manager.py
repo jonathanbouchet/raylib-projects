@@ -5,37 +5,60 @@ import raylib as rl
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
+
 class Sprite:
-    def __init__(self, position: pr.Vector2, texture: pr.Texture, color: pr.Color, debug_color: pr.Color):
+    def __init__(
+        self,
+        position: pr.Vector2,
+        texture: pr.Texture,
+        color: pr.Color,
+        debug_color: pr.Color,
+    ):
         self.position = position
         self.texture = texture
         self.color = color
         self.debug_color = debug_color
 
     def get_rectangle(self) -> pr.Rectangle:
-        return pr.Rectangle(self.position.x, self.position.y, self.texture.width, self.texture.height)
-    
+        return pr.Rectangle(
+            self.position.x, self.position.y, self.texture.width, self.texture.height
+        )
+
     def update(self, dt: float) -> None:
         self.move(dt)
 
     def move(self, dt: float) -> None:
         pass
-    
+
     def draw(self) -> None:
         pr.draw_texture_v(self.texture, self.position, self.color)
-        pr.draw_rectangle_lines(int(self.position.x), int(self.position.y), int(self.texture.width), int(self.texture.height), self.debug_color)
+        pr.draw_rectangle_lines(
+            int(self.position.x),
+            int(self.position.y),
+            int(self.texture.width),
+            int(self.texture.height),
+            self.debug_color,
+        )
 
 
 class Player(Sprite):
-    def __init__(self, position: pr.Vector2, texture: pr.Texture, color: pr.Color, debug_color: pr.Color):
-        super().__init__(position=position, texture=texture, color=color, debug_color=debug_color)
+    def __init__(
+        self,
+        position: pr.Vector2,
+        texture: pr.Texture,
+        color: pr.Color,
+        debug_color: pr.Color,
+    ):
+        super().__init__(
+            position=position, texture=texture, color=color, debug_color=debug_color
+        )
         # Physics state
         self.vy: float = 0.0  # vertical velocity (px/s)
         self.gravity: float = 1500.0  # gravity (px/s^2) — tune to taste
         self.jump_speed: float = 500.0  # initial jump impulse (px/s)
         self.is_grounded: bool = False
         self.dead = False
-    
+
     def update(self, dt: float, other: pr.Rectangle) -> None:
         self.move(dt=dt, other=other)
 
@@ -52,7 +75,7 @@ class Player(Sprite):
                 self.texture = dead_texture
                 self.dead = True
 
-    def move(self, dt: float,  other: pr.Rectangle):
+    def move(self, dt: float, other: pr.Rectangle):
         if pr.is_key_pressed(rl.KEY_SPACE) and self.is_grounded:
             self.vy = -self.jump_speed
             self.is_grounded = False
@@ -77,6 +100,7 @@ class Player(Sprite):
                 self.is_grounded = False
         else:
             self.is_grounded = False
+
 
 class Enemy(Sprite):
     def __init__(
@@ -162,16 +186,28 @@ class Game:
         pr.set_target_fps(self.fps_target)
 
     def load_ground(self):
-        self.floor_rect = pr.Rectangle(0, self.height - self.floor_y_pos, self.width, self.height - self.floor_y_pos)
+        self.floor_rect = pr.Rectangle(
+            0,
+            self.height - self.floor_y_pos,
+            self.width,
+            self.height - self.floor_y_pos,
+        )
 
     def load_player(self) -> None:
         # init_window() needs to be called BEFORE loading any texture
         # WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
-        self.player_texture  = pr.load_texture(self.player_texture_path)
-        self.player = Player(position=pr.Vector2(100, self.height - int(self.player_texture.height) - 20), texture=self.player_texture, color=pr.WHITE, debug_color=pr.BLUE)
+        self.player_texture = pr.load_texture(self.player_texture_path)
+        self.player = Player(
+            position=pr.Vector2(
+                100, self.height - int(self.player_texture.height) - 20
+            ),
+            texture=self.player_texture,
+            color=pr.WHITE,
+            debug_color=pr.BLUE,
+        )
 
     def load_enemy_texture(self) -> None:
-        self.enemy_texture  = pr.load_texture(self.enemy_texture_path)
+        self.enemy_texture = pr.load_texture(self.enemy_texture_path)
 
     def update(self) -> None:
         dt = pr.get_frame_time()
@@ -184,7 +220,10 @@ class Game:
                 self.enemy_list.append(
                     Enemy(
                         texture=self.enemy_texture,
-                        position=pr.Vector2(self.width, self.height - int(self.enemy_texture.height) - 20),
+                        position=pr.Vector2(
+                            self.width,
+                            self.height - int(self.enemy_texture.height) - 20,
+                        ),
                         speed=200,
                         color=pr.WHITE,
                         scale=random.uniform(0.8, 1.4),
@@ -194,7 +233,9 @@ class Game:
 
         # update player
         self.player.update(dt=dt, other=self.floor_rect)
-        self.player.check_collisions_enemies(enemies=[x.get_rectangle() for x in self.enemy_list])
+        self.player.check_collisions_enemies(
+            enemies=[x.get_rectangle() for x in self.enemy_list]
+        )
 
         # updates all blocks
         _ = [block.update(dt=dt) for block in self.enemy_list]
@@ -253,12 +294,12 @@ if __name__ == "__main__":
         height=200,
         fps_target=60,
         name="app",
-        background_color=pr.Color(211, 211, 211, 255), # LIGHT GRAY
+        background_color=pr.Color(211, 211, 211, 255),  # LIGHT GRAY
         floor_y_pos=20,
         show_fps=True,
         show_metrics=True,
         player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
-        enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png"
+        enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png",
     )
     game.init()
     game.load_ground()
