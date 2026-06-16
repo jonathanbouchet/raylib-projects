@@ -1,7 +1,7 @@
 # Notes
 This file is just to document the day to day development
 
-## 2026-06-13
+## 2026-06-12
 - prototyping with moving shapes
 - red line is to show the mid `game window`, the gray line the floor
 - rectangles with random `height` are spawned every second with a given probability (`0.95`) in the snipped below:
@@ -19,7 +19,7 @@ while not pr.window_should_close():
 <img src="../../images/dino_prototype.png" alt="" width="200">
 <!-- ![](../../images/dino_prototype.png) -->
 
-# 2026-06-14
+# 2026-06-13
 - modified `game window` and `color` to reflect the original game
 - adding dino texture
 - adding collision shape debug
@@ -57,7 +57,7 @@ player.check_collisions_enemies(enemies=[x.get_rectangle() for x in block_list])
 ```
 <img src="../../images/dino_0.png" alt="" width="300">
 
-# 2026-06-15
+# 2026-06-14
 - more textures tweaking: 
     - indeed initially the cactus shape was `32x32` (drawn) then upscaled to `64x64` (simply because it's easier to draw a `32x32`)
     however, I defined the collision shape using the texture size so it created so extra empty space, biasing the collision
@@ -80,3 +80,35 @@ cactus = Cactus(
     scale=random.uniform(0.8, 1.4),
     debug_color=pr.PINK)
 ```
+
+# 2026-06-15
+- added Player class
+- needed some refactoring because initially the Player was instantiated when the Game class is instantiated. However, Raylib needs to have a game window first before using any textures
+
+```bash
+# WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
+```
+
+So I needed to breakdown a bit more the game loop:
+
+```python
+if __name__ == "__main__":
+    game = Game(
+        width=800,
+        height=200,
+        fps_target=60,
+        name="app",
+        background_color=pr.Color(211, 211, 211, 255), # LIGHT GRAY
+        floor_y_pos=100,
+        show_fps=True,
+        show_metrics=True,
+        # player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
+    )
+    game.init()
+    game.load_ground()
+    game.load_player(player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png")
+    game.run()
+    game.end()
+```
+
+<img src="../../images/dino_2.png" alt="" width="300">
