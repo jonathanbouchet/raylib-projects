@@ -78,14 +78,29 @@ class Player(Sprite):
         else:
             self.is_grounded = False
 
-
-class Block:
-    def __init__(self, position: pr.Vector2, size: pr.Vector2, speed: float) -> None:
-        self.position = position
+class Enemy(Sprite):
+    def __init__(
+        self,
+        position: pr.Vector2,
+        texture: pr.Texture,
+        color: pr.Color,
+        speed: float,
+        scale: float,
+        debug_color: pr.Color,
+    ):
+        super().__init__(
+            position=position, texture=texture, color=color, debug_color=debug_color
+        )
         self.speed = speed
-        self.size = size
         self.direction = pr.Vector2(-1, 0)
+        self.scale = scale
         self.disable = False
+
+    # tuning because rectangle from sprite is too wide
+    def get_rectangle(self) -> pr.Rectangle:
+        return pr.Rectangle(
+            self.position.x, self.position.y, self.texture.width, self.texture.height
+        )
 
     def update(self, dt: float) -> None:
         # update velocity
@@ -95,8 +110,19 @@ class Block:
         if self.position.x < 0:
             self.disable = True
 
-    def draw(self):
-        pr.draw_rectangle_v(self.position, self.size, pr.BLACK)
+    def draw(self) -> None:
+        # reposition the texture after scaling, if necessary
+        tmp_pos = pr.Vector2(
+            self.position.x, self.position.y - (self.scale - 1) * self.texture.height
+        )
+        pr.draw_texture_ex(self.texture, tmp_pos, 0, self.scale, self.color)
+        pr.draw_rectangle_lines(
+            int(tmp_pos.x),
+            int(tmp_pos.y),
+            int(self.texture.width * self.scale),
+            int(self.texture.height * self.scale),
+            self.debug_color,
+        )
 
 
 class Game:
@@ -110,7 +136,8 @@ class Game:
         floor_y_pos: int,
         show_fps: bool,
         show_metrics: bool,
-        # player_texture_path: str,
+        player_texture_path: str,
+        enemy_texture_path: str,
     ):
         self.width = width
         self.height = height
@@ -120,18 +147,15 @@ class Game:
         self.show_fps = show_fps
         self.floor_y_pos: int = floor_y_pos
         self.show_metrics = show_metrics
-        # self.player_texture_path = player_texture_path
+        self.player_texture_path = player_texture_path
+        self.enemy_texture_path = enemy_texture_path
 
         # game running time variable
         self.run_time: float = 0
         self.frame_counter: int = 0
 
-        # player
-        # self.player_texture  = pr.load_texture(player_texture_path)
-        # self.player = Player(position=pr.Vector2(100, self.height - int(self.player_texture.height) - 20), texture=self.player_texture, color=pr.WHITE, debug_color=pr.BLUE)
-
         # game objects
-        self.block_list: list[Block] = []
+        self.enemy_list: list[Enemy] = []
 
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
@@ -140,36 +164,40 @@ class Game:
     def load_ground(self):
         self.floor_rect = pr.Rectangle(0, self.height - self.floor_y_pos, self.width, self.height - self.floor_y_pos)
 
-    def load_player(self, player_texture_path: str) -> None:
+    def load_player(self) -> None:
         # init_window() needs to be called BEFORE loading any texture
         # WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
-        self.player_texture  = pr.load_texture(player_texture_path)
+        self.player_texture  = pr.load_texture(self.player_texture_path)
         self.player = Player(position=pr.Vector2(100, self.height - int(self.player_texture.height) - 20), texture=self.player_texture, color=pr.WHITE, debug_color=pr.BLUE)
+
+    def load_enemy_texture(self) -> None:
+        self.enemy_texture  = pr.load_texture(self.enemy_texture_path)
 
     def update(self) -> None:
         dt = pr.get_frame_time()
         self.frame_counter += 1
         self.run_time = pr.get_time()
         if self.frame_counter % 60 == 0:  # spawn a block every frame
-            if random.random() < 0.95:  # and not block_y_spawn:
+            if random.random() < 0.95:
                 s = pr.Vector2(10, random.randint(10, 40))
                 print(f"{s.x}, {s.y}")
-                self.block_list.append(
-                    Block(
-                        position=pr.Vector2(
-                            self.width, random.randint(100, 200 - int(s.y) - 10)
-                        ),
-                        size=s,
-                        speed=100,
+                self.enemy_list.append(
+                    Enemy(
+                        texture=self.enemy_texture,
+                        position=pr.Vector2(self.width, self.height - int(self.enemy_texture.height) - 20),
+                        speed=200,
+                        color=pr.WHITE,
+                        scale=random.uniform(0.8, 1.4),
+                        debug_color=pr.PINK,
                     )
                 )
 
         # update player
         self.player.update(dt=dt, other=self.floor_rect)
-        # self.player.check_collisions_enemies(enemies=[x.get_rectangle() for x in self.block_list])
+        self.player.check_collisions_enemies(enemies=[x.get_rectangle() for x in self.enemy_list])
 
         # updates all blocks
-        _ = [block.update(dt=dt) for block in self.block_list]
+        _ = [block.update(dt=dt) for block in self.enemy_list]
 
         # clean list of blocks
         self.discard_blocks()
@@ -182,13 +210,13 @@ class Game:
         self.player.draw()
 
         # draw block
-        _ = [block.draw() for block in self.block_list if not block.disable]
+        _ = [block.draw() for block in self.enemy_list if not block.disable]
 
         # draw floor
         pr.draw_line_v(
             pr.Vector2(0, self.height - self.floor_y_pos),
             pr.Vector2(self.width, self.height - self.floor_y_pos),
-            pr.WHITE,
+            pr.BLUE,
         )
         pr.draw_line_v(
             pr.Vector2(0, int(self.height / 2)),
@@ -203,7 +231,7 @@ class Game:
             pr.draw_text(
                 f"frame count:{(int(self.frame_counter))}", 0, 40, 20, pr.GREEN
             )
-            pr.draw_text(f"blocks:{(len(self.block_list))}", 0, 60, 20, pr.GREEN)
+            pr.draw_text(f"blocks:{(len(self.enemy_list))}", 0, 60, 20, pr.GREEN)
 
         pr.end_drawing()
 
@@ -216,7 +244,7 @@ class Game:
         pr.close_window()
 
     def discard_blocks(self):
-        self.block_list = [x for x in self.block_list if x.position.x > 0]
+        self.enemy_list = [x for x in self.enemy_list if x.position.x > 0]
 
 
 if __name__ == "__main__":
@@ -226,13 +254,15 @@ if __name__ == "__main__":
         fps_target=60,
         name="app",
         background_color=pr.Color(211, 211, 211, 255), # LIGHT GRAY
-        floor_y_pos=100,
+        floor_y_pos=20,
         show_fps=True,
         show_metrics=True,
-        # player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
+        player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
+        enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png"
     )
     game.init()
     game.load_ground()
-    game.load_player(player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png")
+    game.load_player()
+    game.load_enemy_texture()
     game.run()
     game.end()

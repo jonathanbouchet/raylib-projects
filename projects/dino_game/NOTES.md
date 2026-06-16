@@ -99,7 +99,7 @@ if __name__ == "__main__":
         fps_target=60,
         name="app",
         background_color=pr.Color(211, 211, 211, 255), # LIGHT GRAY
-        floor_y_pos=100,
+        floor_y_pos=50,
         show_fps=True,
         show_metrics=True,
         # player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
