@@ -1,7 +1,7 @@
 import random
 from pathlib import Path
 import pyray as pr
-from entities import Player, Enemy
+from entities import Player, Enemy, States
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
@@ -54,9 +54,9 @@ class Game:
         # init_window() needs to be called BEFORE loading any texture
         # WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
 
-        self.player_texture = pr.load_texture(self.player_textures_data.get('idle')[0])
-        player_running_textures = self.player_textures_data.get('run')
-        player_dead_texture = self.player_textures_data.get('dead')[0]
+        self.player_texture = pr.load_texture(self.player_textures_data.get("idle")[0])
+        player_running_textures = self.player_textures_data.get("run")
+        player_dead_texture = self.player_textures_data.get("dead")[0]
         self.player = Player(
             position=pr.Vector2(
                 100, self.height - int(self.player_texture.height) - 20
@@ -93,17 +93,20 @@ class Game:
                     )
                 )
 
-        # update player
-        self.player.update(dt=dt, other=self.floor_rect)
-        self.player.check_collisions_enemies(
-            enemies=[x.get_rectangle() for x in self.enemy_list]
-        )
+        # check Player States
+        # print(f"{self.player.get_state()=}, {type(self.player.get_state())=}")
+        if self.player.get_state() != States.DEAD:
+            # update player
+            self.player.update(dt=dt, other=self.floor_rect)
+            self.player.check_collisions_enemies(
+                enemies=[x.get_rectangle() for x in self.enemy_list]
+            )
 
-        # updates all blocks
-        _ = [block.update(dt=dt) for block in self.enemy_list]
+            # updates all blocks
+            _ = [block.update(dt=dt) for block in self.enemy_list]
 
-        # clean list of blocks
-        self.discard_blocks()
+            # clean list of blocks
+            self.discard_blocks()
 
     def draw(self) -> None:
         dt = pr.get_frame_time()
@@ -162,12 +165,12 @@ if __name__ == "__main__":
         show_fps=True,
         show_metrics=True,
         player_textures_data={
-            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"], 
+            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"],
             "run": [
-                f"{THIS_DIR}/dino_left_leg_64x64.png", 
-                f"{THIS_DIR}/dino_right_leg_64x64.png"
-                ],
-            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"]
+                f"{THIS_DIR}/dino_left_leg_64x64.png",
+                f"{THIS_DIR}/dino_right_leg_64x64.png",
+            ],
+            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"],
         },
         enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png",
     )

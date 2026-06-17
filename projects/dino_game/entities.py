@@ -5,10 +5,12 @@ import raylib as rl
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
+
 class States(Enum):
     IDLE = 0
     WALKING = 1
     JUMPING = 2
+    DEAD = 3
 
 
 class Sprite:
@@ -87,11 +89,14 @@ class Player(Sprite):
             if pr.check_collision_recs(self.get_rectangle(), enemy):
                 print(f"{enemy.width}, {enemy.height}, {type(enemy)}")
                 print("COLLISION")
+                self.state = States.DEAD
                 # dead_texture = pr.load_texture("assets/dino/dino_dead_64x64.png")
-                # self.texture = dead_texture
+                self.texture = self.dead_texture
                 # self.dead = True
 
     def move(self, dt: float, other: pr.Rectangle):
+        # update player state
+        self.state = States.WALKING
         if pr.is_key_pressed(rl.KEY_SPACE) and self.is_grounded:
             self.vy = -self.jump_speed
             self.is_grounded = False
@@ -118,20 +123,50 @@ class Player(Sprite):
             self.is_grounded = False
 
     def draw(self, dt: float) -> None:
-        self.animation_index += len(self.running_textures) * (6*dt)
-        pr.draw_texture_v(
-            self.running_textures[int(self.animation_index % len(self.running_textures))],
-            self.position,
-            self.color,
-        )
+        if self.state != States.DEAD:
+            self.animation_index += len(self.running_textures) * (6 * dt)
+            pr.draw_texture_v(
+                self.running_textures[
+                    int(self.animation_index % len(self.running_textures))
+                ],
+                self.position,
+                self.color,
+            )
+            pr.draw_rectangle_lines(
+                int(self.position.x),
+                int(self.position.y),
+                int(
+                    self.running_textures[
+                        int(self.animation_index % len(self.running_textures))
+                    ].width
+                ),
+                int(
+                    self.running_textures[
+                        int(self.animation_index % len(self.running_textures))
+                    ].height
+                ),
+                self.debug_color,
+            )
+        else:
+            pr.draw_texture_v(self.texture, self.position, self.color)
+
         pr.draw_rectangle_lines(
             int(self.position.x),
             int(self.position.y),
-            int(self.running_textures[int(self.animation_index % len(self.running_textures))].width),
-            int(self.running_textures[int(self.animation_index % len(self.running_textures))].height),
+            int(self.texture.width),
+            int(self.texture.height),
             self.debug_color,
         )
-        pr.draw_text(str(self.state),  int(self.position.x), int(self.position.y) - 10, 10, self.debug_color)
+        pr.draw_text(
+            str(self.state),
+            int(self.position.x),
+            int(self.position.y) - 10,
+            10,
+            self.debug_color,
+        )
+
+    def get_state(self) -> States:
+        return self.state
 
 
 class Enemy(Sprite):
