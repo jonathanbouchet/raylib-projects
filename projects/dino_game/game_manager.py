@@ -17,7 +17,7 @@ class Game:
         floor_y_pos: int,
         show_fps: bool,
         show_metrics: bool,
-        player_texture_path: str,
+        player_textures_data: dict[str, str],
         enemy_texture_path: str,
     ):
         self.width = width
@@ -28,7 +28,7 @@ class Game:
         self.show_fps = show_fps
         self.floor_y_pos: int = floor_y_pos
         self.show_metrics = show_metrics
-        self.player_texture_path = player_texture_path
+        self.player_textures_data = player_textures_data
         self.enemy_texture_path = enemy_texture_path
 
         # game running time variable
@@ -53,12 +53,17 @@ class Game:
     def load_player(self) -> None:
         # init_window() needs to be called BEFORE loading any texture
         # WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
-        self.player_texture = pr.load_texture(self.player_texture_path)
+
+        self.player_texture = pr.load_texture(self.player_textures_data.get('idle')[0])
+        player_running_textures = self.player_textures_data.get('run')
+        player_dead_texture = self.player_textures_data.get('dead')[0]
         self.player = Player(
             position=pr.Vector2(
                 100, self.height - int(self.player_texture.height) - 20
             ),
             texture=self.player_texture,
+            running_textures_path=player_running_textures,
+            dead_texture_path=player_dead_texture,
             color=pr.WHITE,
             debug_color=pr.BLUE,
         )
@@ -101,11 +106,12 @@ class Game:
         self.discard_blocks()
 
     def draw(self) -> None:
+        dt = pr.get_frame_time()
         pr.begin_drawing()
         pr.clear_background(self.background_color)
 
         # draw player
-        self.player.draw()
+        self.player.draw(dt=dt)
 
         # draw block
         _ = [block.draw() for block in self.enemy_list if not block.disable]
@@ -155,7 +161,14 @@ if __name__ == "__main__":
         floor_y_pos=20,
         show_fps=True,
         show_metrics=True,
-        player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
+        player_textures_data={
+            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"], 
+            "run": [
+                f"{THIS_DIR}/dino_left_leg_64x64.png", 
+                f"{THIS_DIR}/dino_right_leg_64x64.png"
+                ],
+            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"]
+        },
         enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png",
     )
     game.init()

@@ -1,9 +1,14 @@
-import random
+from enum import Enum
 from pathlib import Path
 import pyray as pr
 import raylib as rl
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
+
+class States(Enum):
+    IDLE = 0
+    WALKING = 1
+    JUMPING = 2
 
 
 class Sprite:
@@ -27,7 +32,7 @@ class Sprite:
     def update(self, dt: float) -> None:
         self.move(dt)
 
-    def move(self, dt: float) -> None:
+    def move(self) -> None:
         pass
 
     def draw(self) -> None:
@@ -46,18 +51,29 @@ class Player(Sprite):
         self,
         position: pr.Vector2,
         texture: pr.Texture,
+        running_textures_path: list[str],
+        dead_texture_path: str,
         color: pr.Color,
         debug_color: pr.Color,
     ):
         super().__init__(
             position=position, texture=texture, color=color, debug_color=debug_color
         )
+        # other textures
+        self.running_textures_path = running_textures_path
+        self.running_textures = [pr.load_texture(x) for x in self.running_textures_path]
+        self.dead_texture_path = dead_texture_path
+        self.dead_texture = pr.load_texture(self.dead_texture_path)
+        self.animation_index: int = 0
         # Physics state
         self.vy: float = 0.0  # vertical velocity (px/s)
         self.gravity: float = 1500.0  # gravity (px/s^2) — tune to taste
         self.jump_speed: float = 500.0  # initial jump impulse (px/s)
         self.is_grounded: bool = False
-        self.dead = False
+        self.state = States.IDLE
+
+    # def load_running_textures(self) -> None:
+    #     self.running_textures = [pr.load_texture(x) for x in self.running_textures_path]
 
     def update(self, dt: float, other: pr.Rectangle) -> None:
         self.move(dt=dt, other=other)
@@ -71,9 +87,9 @@ class Player(Sprite):
             if pr.check_collision_recs(self.get_rectangle(), enemy):
                 print(f"{enemy.width}, {enemy.height}, {type(enemy)}")
                 print("COLLISION")
-                dead_texture = pr.load_texture("assets/dino/dino_dead_64x64.png")
-                self.texture = dead_texture
-                self.dead = True
+                # dead_texture = pr.load_texture("assets/dino/dino_dead_64x64.png")
+                # self.texture = dead_texture
+                # self.dead = True
 
     def move(self, dt: float, other: pr.Rectangle):
         if pr.is_key_pressed(rl.KEY_SPACE) and self.is_grounded:
@@ -100,6 +116,22 @@ class Player(Sprite):
                 self.is_grounded = False
         else:
             self.is_grounded = False
+
+    def draw(self, dt: float) -> None:
+        self.animation_index += len(self.running_textures) * (6*dt)
+        pr.draw_texture_v(
+            self.running_textures[int(self.animation_index % len(self.running_textures))],
+            self.position,
+            self.color,
+        )
+        pr.draw_rectangle_lines(
+            int(self.position.x),
+            int(self.position.y),
+            int(self.running_textures[int(self.animation_index % len(self.running_textures))].width),
+            int(self.running_textures[int(self.animation_index % len(self.running_textures))].height),
+            self.debug_color,
+        )
+        pr.draw_text(str(self.state),  int(self.position.x), int(self.position.y) - 10, 10, self.debug_color)
 
 
 class Enemy(Sprite):
