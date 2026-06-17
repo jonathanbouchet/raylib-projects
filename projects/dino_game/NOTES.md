@@ -82,6 +82,7 @@ cactus = Cactus(
 ```
 
 # 2026-06-15
+- added `GameManager` class with responsibility is to load assets, start window, updates, rendering
 - added Player class
 - needed some refactoring because initially the Player was instantiated when the Game class is instantiated. However, Raylib needs to have a game window first before using any textures
 
@@ -92,21 +93,22 @@ cactus = Cactus(
 So I needed to breakdown a bit more the game loop:
 
 ```python
-if __name__ == "__main__":
-    game = Game(
+game = Game(
         width=800,
         height=200,
         fps_target=60,
         name="app",
-        background_color=pr.Color(211, 211, 211, 255), # LIGHT GRAY
-        floor_y_pos=50,
+        background_color=pr.Color(211, 211, 211, 255),  # LIGHT GRAY
+        floor_y_pos=20,
         show_fps=True,
         show_metrics=True,
-        # player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
+        player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png",
+        enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png",
     )
     game.init()
     game.load_ground()
-    game.load_player(player_texture_path=f"{THIS_DIR}/dino_idle_64x64.png")
+    game.load_player()
+    game.load_enemy_texture()
     game.run()
     game.end()
 ```
