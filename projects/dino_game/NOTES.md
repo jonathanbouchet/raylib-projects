@@ -114,3 +114,26 @@ game = Game(
 ```
 
 <img src="../../images/dino_2.png" alt="" width="300">
+
+
+# 2026-06-16
+- moved `Player` and `Enemy` classes to separate module
+- added `Player` running and dead animations: some refactoring when instantiating `Player` class
+- added a `Player` State
+- added `Player` and `game` logic when a collision happens:
+    - 1. if collision, `Player.State` -> `DEAD`
+    - 2. load the proper texture.
+    - 3. In the game manager, I check that player state != DEAD when doing update, otherwise, all games objects are not updated
+    - 4. in that case, I don't have to modify the `draw` method from the game manager
+- added a player.State debug
+
+<figure>
+  <img src="../../images/dino_3.png" alt="Description for accessibility">
+  <figcaption>Player is running</figcaption>
+</figure>
+
+
+<figure>
+  <img src="../../images/dino_4.png" alt="Description for accessibility">
+  <figcaption>After a colliion, all textures are frozen</figcaption>
+</figure>
