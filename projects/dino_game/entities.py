@@ -214,3 +214,27 @@ class Enemy(Sprite):
             int(self.texture.height * self.scale),
             self.debug_color,
         )
+
+class Cloud(Sprite):
+    def __init__(
+        self,
+        position: pr.Vector2,
+        texture: pr.Texture,
+        speed: float,
+        color: pr.Color,
+        debug_color: pr.Color,
+    ):
+        super().__init__(
+            position=position, texture=texture, color=color, debug_color=debug_color
+        )
+        self.speed = speed
+        self.direction = pr.Vector2(-1, 0)
+        self.disable = False
+
+    def update(self, dt: float) -> None:
+        # update velocity
+        self.position.x += self.direction.x * self.speed * dt
+        self.position.y += self.direction.y * self.speed * dt
+
+        if self.position.x < 0:
+            self.disable = True

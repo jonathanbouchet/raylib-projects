@@ -1,7 +1,7 @@
 import random
 from pathlib import Path
 import pyray as pr
-from entities import Player, Enemy, States
+from entities import Player, Enemy, Cloud, States
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
@@ -19,6 +19,7 @@ class Game:
         show_metrics: bool,
         player_textures_data: dict[str, str],
         enemy_texture_path: str,
+        cloud_texture_path: str,
     ):
         self.width = width
         self.height = height
@@ -30,6 +31,7 @@ class Game:
         self.show_metrics = show_metrics
         self.player_textures_data = player_textures_data
         self.enemy_texture_path = enemy_texture_path
+        self.cloud_texture_path = cloud_texture_path
 
         # game running time variable
         self.run_time: float = 0
@@ -38,17 +40,39 @@ class Game:
         # game objects
         self.enemy_list: list[Enemy] = []
 
+        # props
+        self.cloud_list: list[Cloud] = []
+
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
 
-    def load_ground(self):
+    def load_props(self) -> None:
+        # ground
         self.floor_rect = pr.Rectangle(
             0,
             self.height - self.floor_y_pos,
             self.width,
             self.height - self.floor_y_pos,
         )
+
+        # cloud
+        self.cloud_texture = pr.load_texture(self.cloud_texture_path)
+        self.cloud = Cloud(
+            position=pr.Vector2(self.width, 20),
+            texture=self.cloud_texture,
+            color=pr.DARKGRAY,
+            debug_color=pr.YELLOW,
+            speed=20,
+        )
+
+    # def load_ground(self):
+    #     self.floor_rect = pr.Rectangle(
+    #         0,
+    #         self.height - self.floor_y_pos,
+    #         self.width,
+    #         self.height - self.floor_y_pos,
+    #     )
 
     def load_player(self) -> None:
         # init_window() needs to be called BEFORE loading any texture
@@ -72,29 +96,29 @@ class Game:
         self.enemy_texture = pr.load_texture(self.enemy_texture_path)
 
     def update(self) -> None:
-        dt = pr.get_frame_time()
-        self.frame_counter += 1
-        self.run_time = pr.get_time()
-        if self.frame_counter % 60 == 0:  # spawn a block every frame
-            if random.random() < 0.5:
-                s = pr.Vector2(10, random.randint(10, 40))
-                print(f"{s.x}, {s.y}")
-                self.enemy_list.append(
-                    Enemy(
-                        texture=self.enemy_texture,
-                        position=pr.Vector2(
-                            self.width,
-                            self.height - int(self.enemy_texture.height) - 20,
-                        ),
-                        speed=200,
-                        color=pr.WHITE,
-                        scale=random.uniform(0.8, 1.4),
-                        debug_color=pr.PINK,
-                    )
-                )
-
         # check Player State
         if self.player.get_state() != States.DEAD:
+            dt = pr.get_frame_time()
+            self.frame_counter += 1
+            self.run_time = pr.get_time()
+            if self.frame_counter % 60 == 0:  # spawn a block every frame
+                if random.random() < 0.9:
+                    s = pr.Vector2(10, random.randint(10, 40))
+                    print(f"{s.x}, {s.y}")
+                    self.enemy_list.append(
+                        Enemy(
+                            texture=self.enemy_texture,
+                            position=pr.Vector2(
+                                self.width,
+                                self.height - int(self.enemy_texture.height) - 20,
+                            ),
+                            speed=200,
+                            color=pr.WHITE,
+                            scale=random.uniform(0.8, 1.4),
+                            debug_color=pr.PINK,
+                        )
+                    )
+
 
             # update player
             self.player.update(dt=dt, other=self.floor_rect)
@@ -104,6 +128,9 @@ class Game:
 
             # updates all blocks
             _ = [block.update(dt=dt) for block in self.enemy_list]
+
+            # update cloud
+            self.cloud.update(dt=dt)
 
             # clean list of blocks
             self.discard_blocks()
@@ -131,6 +158,9 @@ class Game:
             pr.Vector2(self.width, int(self.height / 2)),
             pr.RED,
         )
+        # update cloud
+        self.cloud.draw()
+        
         if self.show_fps:
             pr.draw_fps(0, 0)
 
@@ -174,9 +204,11 @@ if __name__ == "__main__":
             "dead": [f"{THIS_DIR}/dino_dead_64x64.png"]
         },
         enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png",
+        cloud_texture_path=f"{THIS_DIR}/cloud_64x64.png",
     )
     game.init()
-    game.load_ground()
+    # game.load_ground()
+    game.load_props()
     game.load_player()
     game.load_enemy_texture()
     game.run()
