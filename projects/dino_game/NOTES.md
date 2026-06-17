@@ -128,12 +128,12 @@ game = Game(
 - added a player.State debug
 
 <figure>
-  <img src="../../images/dino_3.png" alt="Description for accessibility">
+  <img src="../../images/dino_3.png" alt="", width="300">
   <figcaption>Player is running</figcaption>
 </figure>
 
 
 <figure>
-  <img src="../../images/dino_4.png" alt="Description for accessibility">
-  <figcaption>After a colliion, all textures are frozen</figcaption>
+  <img src="../../images/dino_4.png" alt="", width="300">
+  <figcaption>After a collision, all textures are frozen</figcaption>
 </figure>

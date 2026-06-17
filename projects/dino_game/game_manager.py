@@ -54,9 +54,9 @@ class Game:
         # init_window() needs to be called BEFORE loading any texture
         # WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
 
-        self.player_texture = pr.load_texture(self.player_textures_data.get("idle")[0])
-        player_running_textures = self.player_textures_data.get("run")
-        player_dead_texture = self.player_textures_data.get("dead")[0]
+        self.player_texture = pr.load_texture(self.player_textures_data.get('idle')[0])
+        player_running_textures = self.player_textures_data.get('run')
+        player_dead_texture = self.player_textures_data.get('dead')[0]
         self.player = Player(
             position=pr.Vector2(
                 100, self.height - int(self.player_texture.height) - 20
@@ -76,7 +76,7 @@ class Game:
         self.frame_counter += 1
         self.run_time = pr.get_time()
         if self.frame_counter % 60 == 0:  # spawn a block every frame
-            if random.random() < 0.95:
+            if random.random() < 0.5:
                 s = pr.Vector2(10, random.randint(10, 40))
                 print(f"{s.x}, {s.y}")
                 self.enemy_list.append(
@@ -93,9 +93,9 @@ class Game:
                     )
                 )
 
-        # check Player States
-        # print(f"{self.player.get_state()=}, {type(self.player.get_state())=}")
+        # check Player State
         if self.player.get_state() != States.DEAD:
+
             # update player
             self.player.update(dt=dt, other=self.floor_rect)
             self.player.check_collisions_enemies(
@@ -120,6 +120,7 @@ class Game:
         _ = [block.draw() for block in self.enemy_list if not block.disable]
 
         # draw floor
+        pr.draw_rectangle_rec(self.floor_rect, pr.YELLOW)
         pr.draw_line_v(
             pr.Vector2(0, self.height - self.floor_y_pos),
             pr.Vector2(self.width, self.height - self.floor_y_pos),
@@ -165,12 +166,12 @@ if __name__ == "__main__":
         show_fps=True,
         show_metrics=True,
         player_textures_data={
-            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"],
+            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"], 
             "run": [
-                f"{THIS_DIR}/dino_left_leg_64x64.png",
-                f"{THIS_DIR}/dino_right_leg_64x64.png",
-            ],
-            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"],
+                f"{THIS_DIR}/dino_left_leg_64x64.png", 
+                f"{THIS_DIR}/dino_right_leg_64x64.png"
+                ],
+            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"]
         },
         enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png",
     )
