@@ -118,7 +118,7 @@ class Player(Sprite):
             self.is_grounded = False
 
     def draw(self, dt: float) -> None:
-        if self.state != PlayerStates.DEAD:
+        if self.state == PlayerStates.RUNNING:
             self.animation_index += len(self.running_textures) * (6 * dt)
             pr.draw_texture_v(
                 self.running_textures[

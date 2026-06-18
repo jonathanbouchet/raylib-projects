@@ -29,6 +29,7 @@ class Game:
         cloud_texture_path: str,
         level: int,
         number_avoided: int,
+        enemy_speed: int
     ):
         self.width = width
         self.height = height
@@ -44,6 +45,7 @@ class Game:
         self.level = level
         self.number_avoided = number_avoided
         self.state = GameStates.INIT
+        self.enemy_speed = enemy_speed
 
         # game running time variable
         self.run_time: float = 0
@@ -100,31 +102,36 @@ class Game:
     def load_enemy_texture(self) -> None:
         self.enemy_textures = [pr.load_texture(x) for x in self.enemy_textures_data]
 
+    def spawn_enemy(self) -> None:
+        if self.frame_counter % 60 == 0:  # spawn a block every frame
+            if random.random() < .75:
+                # randomly select one of the 2 enemy textures
+                current_texture = random.choices(self.enemy_textures)[0]
+                print(f"{current_texture=}")
+                self.enemy_list.append(
+                    Enemy(
+                        texture=current_texture,
+                        position=pr.Vector2(
+                            self.width,
+                            self.height - int(current_texture.height) - 20,
+                        ),
+                        speed=self.enemy_speed,
+                        color=pr.WHITE,
+                        scale=random.uniform(1.0, 2.0),
+                        debug_color=pr.PINK,
+                    )
+                )
+
+
     def update(self) -> None:
         # check Player State
-        if self.player.get_state() != PlayerStates.DEAD:
-            self.state = GameStates.RUN
+        if self.player.get_state() != PlayerStates.DEAD and self.state == GameStates.RUN:
+            # self.state = GameStates.RUN
             dt = pr.get_frame_time()
             self.frame_counter += 1
             self.run_time = pr.get_time()
-            if self.frame_counter % 60 == 0:  # spawn a block every frame
-                if random.random() < 0.9:
-                    # randomly select one of the 2 enemy textures
-                    current_texture = random.choices(self.enemy_textures)[0]
-                    print(f"{current_texture=}")
-                    self.enemy_list.append(
-                        Enemy(
-                            texture=current_texture,
-                            position=pr.Vector2(
-                                self.width,
-                                self.height - int(current_texture.height) - 20,
-                            ),
-                            speed=200,
-                            color=pr.WHITE,
-                            scale=random.uniform(1.0, 2.0),
-                            debug_color=pr.PINK,
-                        )
-                    )
+
+            self.spawn_enemy()
 
             # update player
             self.player.update(dt=dt, other=self.floor_rect)
@@ -149,8 +156,10 @@ class Game:
 
             # clean list of blocks
             # self.discard_blocks()
-        else:
+        elif self.player.get_state() == PlayerStates.DEAD:
             self.state = GameStates.PAUSE
+        else:
+            self.state = GameStates.INIT
 
     def draw(self) -> None:
         dt = pr.get_frame_time()
@@ -206,6 +215,29 @@ class Game:
             pr.draw_text(f"blocks:{(len(self.enemy_list))}", 0, 60, 20, pr.DARKGREEN)
             pr.draw_text(f"{self.state}", 0, 80, 20, pr.DARKGREEN)
 
+        if self.state == GameStates.PAUSE:
+            if pr.gui_button(pr.Rectangle(self.width/2 - 75, self.height/2 - 20, 150, 40), "Click to Restart"):
+                # keep track of current score 
+                self.high_score = int(self.frame_counter / 10)
+
+                # reset all variables
+                self.run_time = 0
+                self.frame_counter = 0
+                self.enemy_list = []
+                self.cloud_list = []
+                self.level = 1
+                self.number_avoided = 0
+
+                # re-instantiate player, enemy, cloud
+                self.load_player()
+                self.load_enemy_texture()
+                self.state = GameStates.RUN
+                self.update()
+
+        if self.state == GameStates.INIT:
+            if pr.gui_button(pr.Rectangle(self.width/2 - 75, self.height/2 - 20, 150, 40), "Space to start"):
+                self.state = GameStates.RUN
+
         pr.end_drawing()
 
     def run(self) -> None:
@@ -245,11 +277,13 @@ if __name__ == "__main__":
         cloud_texture_path=f"{THIS_DIR}/cloud_64x64.png",
         level=1,
         number_avoided=0,
+        enemy_speed=200
     )
     game.init()
     game.load_props()
     game.load_player()
     game.load_enemy_texture()
-    game.state = GameStates.RUN
+
+    # game.state = GameStates.RUN
     game.run()
     game.end()

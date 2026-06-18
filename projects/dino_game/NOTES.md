@@ -132,8 +132,36 @@ game = Game(
   <figcaption>Player is running</figcaption>
 </figure>
 
-
 <figure>
   <img src="../../images/dino_4.png" alt="", width="300">
   <figcaption>After a collision, all textures are frozen</figcaption>
 </figure>
+
+# 2026-06-17
+- lots of things done today 
+- added another `Cloud` texture: now there are 2 textures for the `enemy` that are picked randomly when an enemy is instantiated
+- added scoring logic: if number of enemies avoided > 10, level increases:
+    - TO DO: if level increases, enemy speed (and ?) scale increase
+- added Score GUI
+- added Game state
+- added game logic: `init` -> `run` -> `player dead` -> `restart`
+
+<figure>
+  <img src="../../images/dino_5.png" alt="", width="300">
+  <figcaption>start of the game: both and game in IDLE state ; all scores to 0</figcaption>
+</figure>
+
+<figure>
+  <img src="../../images/dino_6.png" alt="", width="300">
+  <figcaption>game is running</figcaption>
+</figure>
+
+<figure>
+  <img src="../../images/dino_7.png" alt="", width="300">
+  <figcaption>Player just has a collision with an enemy; froze texture and scores ; propose the player to restart</figcaption>
+</figure>
+
+- TO DO:
+    - implement / keep high score
+    - implement increase difficulty when level increases
+
