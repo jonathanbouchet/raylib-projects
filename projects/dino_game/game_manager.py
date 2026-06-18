@@ -11,7 +11,7 @@ class Game:
         self,
         width: int,
         height: int,
-        fps_target,
+        fps_target: int,
         name: str,
         background_color: pr.Color,
         floor_y_pos: int,
@@ -20,6 +20,9 @@ class Game:
         player_textures_data: dict[str, list[str]],
         enemy_textures_data: list[str, str],
         cloud_texture_path: str,
+        level: int,
+        number_avoided: int,
+
     ):
         self.width = width
         self.height = height
@@ -32,6 +35,8 @@ class Game:
         self.player_textures_data = player_textures_data
         self.enemy_textures_data = enemy_textures_data
         self.cloud_texture_path = cloud_texture_path
+        self.level = level
+        self.number_avoided = number_avoided
 
         # game running time variable
         self.run_time: float = 0
@@ -126,8 +131,11 @@ class Game:
             # update cloud
             self.cloud.update(dt=dt)
 
+            self.number_avoided = len([enemy for enemy in self.enemy_list if (enemy.position.x + enemy.texture.width) < self.player.position.x])
+            self.level = int(self.number_avoided / 5) + 1
+
             # clean list of blocks
-            self.discard_blocks()
+            # self.discard_blocks()
 
     def draw(self) -> None:
         dt = pr.get_frame_time()
@@ -154,6 +162,11 @@ class Game:
         )
         # update cloud
         self.cloud.draw()
+
+        # draw score
+        pr.draw_text(f"LEVEL: {self.level}", self.width - 100, 0, 10, pr.DARKGRAY)
+        pr.draw_text(f"SCORE: {int(self.frame_counter/10)}", self.width - 100, 10, 10, pr.DARKGRAY)
+        pr.draw_text(f"AVOIDED: {int(self.number_avoided)}", self.width - 100, 20, 10, pr.DARKGRAY)
         
         if self.show_fps:
             pr.draw_fps(0, 0)
@@ -202,6 +215,8 @@ if __name__ == "__main__":
             f"{THIS_DIR}/cactus_12x32.png"
         ],
         cloud_texture_path=f"{THIS_DIR}/cloud_64x64.png",
+        level=1,
+        number_avoided=0
     )
     game.init()
     game.load_props()
