@@ -6,7 +6,7 @@ import raylib as rl
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
 
-class States(Enum):
+class PlayerStates(Enum):
     IDLE = 0
     RUNNING = 1
     JUMPING = 2
@@ -72,7 +72,7 @@ class Player(Sprite):
         self.gravity: float = 1500.0  # gravity (px/s^2) — tune to taste
         self.jump_speed: float = 600.0  # initial jump impulse (px/s)
         self.is_grounded: bool = False
-        self.state = States.IDLE
+        self.state = PlayerStates.IDLE
 
     def update(self, dt: float, other: pr.Rectangle) -> None:
         self.move(dt=dt, other=other)
@@ -86,12 +86,12 @@ class Player(Sprite):
             if pr.check_collision_recs(self.get_rectangle(), enemy):
                 print(f"{enemy.width}, {enemy.height}, {type(enemy)}")
                 print("COLLISION")
-                self.state = States.DEAD
+                self.state = PlayerStates.DEAD
                 self.texture = self.dead_texture
 
     def move(self, dt: float, other: pr.Rectangle):
         # update player state
-        self.state = States.RUNNING
+        self.state = PlayerStates.RUNNING
         if pr.is_key_pressed(rl.KEY_SPACE) and self.is_grounded:
             self.vy = -self.jump_speed
             self.is_grounded = False
@@ -118,7 +118,7 @@ class Player(Sprite):
             self.is_grounded = False
 
     def draw(self, dt: float) -> None:
-        if self.state != States.DEAD:
+        if self.state != PlayerStates.DEAD:
             self.animation_index += len(self.running_textures) * (6 * dt)
             pr.draw_texture_v(
                 self.running_textures[
@@ -143,6 +143,7 @@ class Player(Sprite):
                 self.debug_color,
             )
         else:
+            # player is dead
             pr.draw_texture_v(self.texture, self.position, self.color)
 
         pr.draw_rectangle_lines(
@@ -160,7 +161,7 @@ class Player(Sprite):
             self.debug_color,
         )
 
-    def get_state(self) -> States:
+    def get_state(self) -> PlayerStates:
         return self.state
 
 

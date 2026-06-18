@@ -1,10 +1,15 @@
 import random
 from pathlib import Path
+from enum import Enum
 import pyray as pr
-from entities import Player, Enemy, Cloud, States
+from entities import Player, Enemy, Cloud, PlayerStates
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
+class GameStates(Enum):
+    INIT = 0
+    RUN = 1
+    PAUSE = 2
 
 class Game:
     def __init__(
@@ -22,7 +27,6 @@ class Game:
         cloud_texture_path: str,
         level: int,
         number_avoided: int,
-
     ):
         self.width = width
         self.height = height
@@ -37,6 +41,7 @@ class Game:
         self.cloud_texture_path = cloud_texture_path
         self.level = level
         self.number_avoided = number_avoided
+        self.state = GameStates.INIT
 
         # game running time variable
         self.run_time: float = 0
@@ -95,7 +100,8 @@ class Game:
 
     def update(self) -> None:
         # check Player State
-        if self.player.get_state() != States.DEAD:
+        if self.player.get_state() != PlayerStates.DEAD:
+            self.state = GameStates.RUN
             dt = pr.get_frame_time()
             self.frame_counter += 1
             self.run_time = pr.get_time()
@@ -136,6 +142,8 @@ class Game:
 
             # clean list of blocks
             # self.discard_blocks()
+        else:
+            self.state = GameStates.PAUSE
 
     def draw(self) -> None:
         dt = pr.get_frame_time()
@@ -172,11 +180,12 @@ class Game:
             pr.draw_fps(0, 0)
 
         if self.show_metrics:
-            pr.draw_text(f"time ellapsed:{int(self.run_time)}", 0, 20, 20, pr.GREEN)
+            pr.draw_text(f"time ellapsed:{int(self.run_time)}", 0, 20, 20, pr.DARKGREEN)
             pr.draw_text(
-                f"frame count:{(int(self.frame_counter))}", 0, 40, 20, pr.GREEN
+                f"frame count:{(int(self.frame_counter))}", 0, 40, 20, pr.DARKGREEN
             )
-            pr.draw_text(f"blocks:{(len(self.enemy_list))}", 0, 60, 20, pr.GREEN)
+            pr.draw_text(f"blocks:{(len(self.enemy_list))}", 0, 60, 20, pr.DARKGREEN)
+            pr.draw_text(f"{self.state}", 0, 80, 20, pr.DARKGREEN)
 
         pr.end_drawing()
 
@@ -222,5 +231,6 @@ if __name__ == "__main__":
     game.load_props()
     game.load_player()
     game.load_enemy_texture()
+    game.state = GameStates.RUN
     game.run()
     game.end()
