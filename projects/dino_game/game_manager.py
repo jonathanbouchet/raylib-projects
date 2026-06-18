@@ -17,8 +17,8 @@ class Game:
         floor_y_pos: int,
         show_fps: bool,
         show_metrics: bool,
-        player_textures_data: dict[str, str],
-        enemy_texture_path: str,
+        player_textures_data: dict[str, list[str]],
+        enemy_textures_data: list[str, str],
         cloud_texture_path: str,
     ):
         self.width = width
@@ -30,7 +30,7 @@ class Game:
         self.floor_y_pos: int = floor_y_pos
         self.show_metrics = show_metrics
         self.player_textures_data = player_textures_data
-        self.enemy_texture_path = enemy_texture_path
+        self.enemy_textures_data = enemy_textures_data
         self.cloud_texture_path = cloud_texture_path
 
         # game running time variable
@@ -64,15 +64,8 @@ class Game:
             color=pr.DARKGRAY,
             debug_color=pr.YELLOW,
             speed=20,
+            screen_width=self.width
         )
-
-    # def load_ground(self):
-    #     self.floor_rect = pr.Rectangle(
-    #         0,
-    #         self.height - self.floor_y_pos,
-    #         self.width,
-    #         self.height - self.floor_y_pos,
-    #     )
 
     def load_player(self) -> None:
         # init_window() needs to be called BEFORE loading any texture
@@ -93,7 +86,7 @@ class Game:
         )
 
     def load_enemy_texture(self) -> None:
-        self.enemy_texture = pr.load_texture(self.enemy_texture_path)
+        self.enemy_textures = [pr.load_texture(x) for x in self.enemy_textures_data]
 
     def update(self) -> None:
         # check Player State
@@ -103,18 +96,19 @@ class Game:
             self.run_time = pr.get_time()
             if self.frame_counter % 60 == 0:  # spawn a block every frame
                 if random.random() < 0.9:
-                    s = pr.Vector2(10, random.randint(10, 40))
-                    print(f"{s.x}, {s.y}")
+                    # randomly select one of the 2 enemy textures
+                    current_texture = random.choices(self.enemy_textures)[0]
+                    print(f"{current_texture=}")
                     self.enemy_list.append(
                         Enemy(
-                            texture=self.enemy_texture,
+                            texture=current_texture,
                             position=pr.Vector2(
                                 self.width,
-                                self.height - int(self.enemy_texture.height) - 20,
+                                self.height - int(current_texture.height) - 20,
                             ),
                             speed=200,
                             color=pr.WHITE,
-                            scale=random.uniform(0.8, 1.4),
+                            scale=random.uniform(1.0, 2.0),
                             debug_color=pr.PINK,
                         )
                     )
@@ -203,11 +197,13 @@ if __name__ == "__main__":
                 ],
             "dead": [f"{THIS_DIR}/dino_dead_64x64.png"]
         },
-        enemy_texture_path=f"{THIS_DIR}/cactus_12x32.png",
+        enemy_textures_data=[
+            f"{THIS_DIR}/cactus_2_16x32.png",
+            f"{THIS_DIR}/cactus_12x32.png"
+        ],
         cloud_texture_path=f"{THIS_DIR}/cloud_64x64.png",
     )
     game.init()
-    # game.load_ground()
     game.load_props()
     game.load_player()
     game.load_enemy_texture()

@@ -8,7 +8,7 @@ THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
 class States(Enum):
     IDLE = 0
-    WALKING = 1
+    RUNNING = 1
     JUMPING = 2
     DEAD = 3
 
@@ -70,12 +70,9 @@ class Player(Sprite):
         # Physics state
         self.vy: float = 0.0  # vertical velocity (px/s)
         self.gravity: float = 1500.0  # gravity (px/s^2) — tune to taste
-        self.jump_speed: float = 500.0  # initial jump impulse (px/s)
+        self.jump_speed: float = 600.0  # initial jump impulse (px/s)
         self.is_grounded: bool = False
         self.state = States.IDLE
-
-    # def load_running_textures(self) -> None:
-    #     self.running_textures = [pr.load_texture(x) for x in self.running_textures_path]
 
     def update(self, dt: float, other: pr.Rectangle) -> None:
         self.move(dt=dt, other=other)
@@ -90,13 +87,11 @@ class Player(Sprite):
                 print(f"{enemy.width}, {enemy.height}, {type(enemy)}")
                 print("COLLISION")
                 self.state = States.DEAD
-                # dead_texture = pr.load_texture("assets/dino/dino_dead_64x64.png")
                 self.texture = self.dead_texture
-                # self.dead = True
 
     def move(self, dt: float, other: pr.Rectangle):
         # update player state
-        self.state = States.WALKING
+        self.state = States.RUNNING
         if pr.is_key_pressed(rl.KEY_SPACE) and self.is_grounded:
             self.vy = -self.jump_speed
             self.is_grounded = False
@@ -221,6 +216,7 @@ class Cloud(Sprite):
         position: pr.Vector2,
         texture: pr.Texture,
         speed: float,
+        screen_width: int,
         color: pr.Color,
         debug_color: pr.Color,
     ):
@@ -229,6 +225,7 @@ class Cloud(Sprite):
         )
         self.speed = speed
         self.direction = pr.Vector2(-1, 0)
+        self.screen_width = screen_width
         self.disable = False
 
     def update(self, dt: float) -> None:
@@ -236,5 +233,7 @@ class Cloud(Sprite):
         self.position.x += self.direction.x * self.speed * dt
         self.position.y += self.direction.y * self.speed * dt
 
-        if self.position.x < 0:
-            self.disable = True
+        # re-spawn clouds at the right of the screen
+        if self.position.x - self.texture.width < 0:
+            self.position.x = self.screen_width
+            # self.disable = True
