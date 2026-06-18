@@ -6,10 +6,12 @@ from entities import Player, Enemy, Cloud, PlayerStates
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
+
 class GameStates(Enum):
     INIT = 0
     RUN = 1
     PAUSE = 2
+
 
 class Game:
     def __init__(
@@ -74,16 +76,16 @@ class Game:
             color=pr.DARKGRAY,
             debug_color=pr.YELLOW,
             speed=20,
-            screen_width=self.width
+            screen_width=self.width,
         )
 
     def load_player(self) -> None:
         # init_window() needs to be called BEFORE loading any texture
         # WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
 
-        self.player_texture = pr.load_texture(self.player_textures_data.get('idle')[0])
-        player_running_textures = self.player_textures_data.get('run')
-        player_dead_texture = self.player_textures_data.get('dead')[0]
+        self.player_texture = pr.load_texture(self.player_textures_data.get("idle")[0])
+        player_running_textures = self.player_textures_data.get("run")
+        player_dead_texture = self.player_textures_data.get("dead")[0]
         self.player = Player(
             position=pr.Vector2(
                 100, self.height - int(self.player_texture.height) - 20
@@ -124,7 +126,6 @@ class Game:
                         )
                     )
 
-
             # update player
             self.player.update(dt=dt, other=self.floor_rect)
             self.player.check_collisions_enemies(
@@ -137,7 +138,13 @@ class Game:
             # update cloud
             self.cloud.update(dt=dt)
 
-            self.number_avoided = len([enemy for enemy in self.enemy_list if (enemy.position.x + enemy.texture.width) < self.player.position.x])
+            self.number_avoided = len(
+                [
+                    enemy
+                    for enemy in self.enemy_list
+                    if (enemy.position.x + enemy.texture.width) < self.player.position.x
+                ]
+            )
             self.level = int(self.number_avoided / 5) + 1
 
             # clean list of blocks
@@ -173,9 +180,21 @@ class Game:
 
         # draw score
         pr.draw_text(f"LEVEL: {self.level}", self.width - 100, 0, 10, pr.DARKGRAY)
-        pr.draw_text(f"SCORE: {int(self.frame_counter/10)}", self.width - 100, 10, 10, pr.DARKGRAY)
-        pr.draw_text(f"AVOIDED: {int(self.number_avoided)}", self.width - 100, 20, 10, pr.DARKGRAY)
-        
+        pr.draw_text(
+            f"SCORE: {int(self.frame_counter / 10)}",
+            self.width - 100,
+            10,
+            10,
+            pr.DARKGRAY,
+        )
+        pr.draw_text(
+            f"AVOIDED: {int(self.number_avoided)}",
+            self.width - 100,
+            20,
+            10,
+            pr.DARKGRAY,
+        )
+
         if self.show_fps:
             pr.draw_fps(0, 0)
 
@@ -212,20 +231,20 @@ if __name__ == "__main__":
         show_fps=True,
         show_metrics=True,
         player_textures_data={
-            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"], 
+            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"],
             "run": [
-                f"{THIS_DIR}/dino_left_leg_64x64.png", 
-                f"{THIS_DIR}/dino_right_leg_64x64.png"
-                ],
-            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"]
+                f"{THIS_DIR}/dino_left_leg_64x64.png",
+                f"{THIS_DIR}/dino_right_leg_64x64.png",
+            ],
+            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"],
         },
         enemy_textures_data=[
             f"{THIS_DIR}/cactus_2_16x32.png",
-            f"{THIS_DIR}/cactus_12x32.png"
+            f"{THIS_DIR}/cactus_12x32.png",
         ],
         cloud_texture_path=f"{THIS_DIR}/cloud_64x64.png",
         level=1,
-        number_avoided=0
+        number_avoided=0,
     )
     game.init()
     game.load_props()

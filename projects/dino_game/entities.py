@@ -211,6 +211,7 @@ class Enemy(Sprite):
             self.debug_color,
         )
 
+
 class Cloud(Sprite):
     def __init__(
         self,
