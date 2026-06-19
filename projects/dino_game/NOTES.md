@@ -161,7 +161,20 @@ game = Game(
   <figcaption>Player just has a collision with an enemy; froze texture and scores ; propose the player to restart</figcaption>
 </figure>
 
-- TO DO:
-    - implement / keep high score
-    - implement increase difficulty when level increases
-
+# 2026-06-18
+- added comments
+- added `StaticSprite` class for the floor
+- added boolean flags to the Game class for objects debugging
+- refactoring needed for when game levels up
+- added sound
+- added increased difficulty: every `number_per_level=5,` objects avoided, the speed of the enemies psawned increase by 10
+- GUI: added keyboard detection when (re) starting the game:
+```python
+if self.state == GameStates.INIT:
+    space_triggered = pr.is_key_pressed(rl.KEY_SPACE)
+    if pr.gui_button(
+        pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
+        "Space to start",
+    ) or space_triggered:
+        self.state = GameStates.RUN
+```

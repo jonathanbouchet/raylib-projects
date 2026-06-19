@@ -2,6 +2,7 @@ import random
 from pathlib import Path
 from enum import Enum
 import pyray as pr
+import raylib as rl
 from entities import StaticSprite, Player, Enemy, Cloud, PlayerStates
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
@@ -14,6 +15,8 @@ class GameStates(Enum):
 
 
 class Game:
+    """this class describes all the variables of the game - kind of"""
+
     def __init__(
         self,
         width: int,  # screen width
@@ -29,6 +32,7 @@ class Game:
         cloud_texture_data: str,  # cloud texture: only 1
         level_up_sound_path: str,
         level: int,  # game level
+        speed_level_increase: int,  # the amount of the enemy speed increases every level
         number_per_level: int,  # the number of objects to avoid to increment the level
         number_avoided: int,  # number of cactus avoided
         enemy_speed: int,  # speed of cactus when spawned
@@ -52,10 +56,14 @@ class Game:
         self.cloud_texture_data = cloud_texture_data
         self.level_up_sound_path = level_up_sound_path
         self.level = level
+        self.speed_level_increase = speed_level_increase
         self.number_per_level = number_per_level
         self.number_avoided = number_avoided
         self.state = GameStates.INIT
         self.enemy_speed = enemy_speed
+        self.enemy_speed_start = (
+            enemy_speed  # keep track of the original speed when resetting the game
+        )
         self.enemy_spawn_probability = enemy_spawn_probability
         self.cloud_speed = cloud_speed
         self.player_debug = player_debug
@@ -101,6 +109,9 @@ class Game:
         # sound
         self.level_up_sound: pr.Sound = pr.load_sound(self.level_up_sound_path)
 
+        # load_enemy_textures: single and double cactus
+        self.enemy_textures = [pr.load_texture(x) for x in self.enemy_textures_data]
+
     def load_player(self) -> None:
         """load_player:
             init_window() needs to be called BEFORE loading any texture
@@ -122,10 +133,6 @@ class Game:
             debug_color=pr.BLUE,
             show_debug=self.player_debug,
         )
-
-    def load_enemy_texture(self) -> None:
-        """load_enemy_textures: single and double cactus"""
-        self.enemy_textures = [pr.load_texture(x) for x in self.enemy_textures_data]
 
     def spawn_enemy(self) -> None:
         """spawn_enemy / cactus:
@@ -161,6 +168,7 @@ class Game:
         )
         if int(self.number_avoided / self.number_per_level) + 1 > self.level:
             self.level += 1
+            self.enemy_speed += self.level * self.speed_level_increase
             pr.play_sound(self.level_up_sound)
 
     def update(self) -> None:
@@ -233,17 +241,17 @@ class Game:
         self.cloud.draw()
 
         # draw UI
-        pr.draw_text(f"LEVEL: {self.level}", self.width - 100, 0, 10, pr.DARKGRAY)
+        pr.draw_text(f"LEVEL: {self.level}", self.width - 80, 0, 10, pr.DARKGRAY)
         pr.draw_text(
             f"SCORE: {int(self.frame_counter / 10)}",
-            self.width - 100,
+            self.width - 80,
             10,
             10,
             pr.DARKGRAY,
         )
         pr.draw_text(
             f"AVOIDED: {int(self.number_avoided)}",
-            self.width - 100,
+            self.width - 80,
             20,
             10,
             pr.DARKGRAY,
@@ -259,11 +267,16 @@ class Game:
             )
             pr.draw_text(f"blocks:{(len(self.enemy_list))}", 0, 60, 20, pr.DARKGREEN)
             pr.draw_text(f"{self.state}", 0, 80, 20, pr.DARKGREEN)
+            pr.draw_text(f"{self.enemy_speed}", 0, 100, 20, pr.DARKGREEN)
 
         if self.state == GameStates.PAUSE:
-            if pr.gui_button(
-                pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
-                "Click to Restart",
+            space_triggered = pr.is_key_pressed(rl.KEY_SPACE)
+            if (
+                pr.gui_button(
+                    pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
+                    "Click to Restart",
+                )
+                or space_triggered
             ):
                 # keep track of current score
                 self.high_score = int(self.frame_counter / 10)
@@ -274,17 +287,21 @@ class Game:
                 self.enemy_list = []
                 self.level = 1
                 self.number_avoided = 0
+                self.enemy_speed = self.enemy_speed_start
 
                 # re-instantiate player, enemy, cloud
                 self.load_player()
-                self.load_enemy_texture()
                 self.state = GameStates.RUN
                 self.update()
 
         if self.state == GameStates.INIT:
-            if pr.gui_button(
-                pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
-                "Space to start",
+            space_triggered = pr.is_key_pressed(rl.KEY_SPACE)
+            if (
+                pr.gui_button(
+                    pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
+                    "Space to start",
+                )
+                or space_triggered
             ):
                 self.state = GameStates.RUN
 
@@ -337,6 +354,7 @@ if __name__ == "__main__":
         level_up_sound_path=f"{THIS_DIR}/Coin_7.wav",
         level=1,
         number_per_level=5,
+        speed_level_increase=10,
         number_avoided=0,
         enemy_speed=200,
         enemy_spawn_probability=0.75,
@@ -349,8 +367,5 @@ if __name__ == "__main__":
     game.init()
     game.load_props()
     game.load_player()
-    game.load_enemy_texture()
-
-    # game.state = GameStates.RUN
     game.run()
     game.end()

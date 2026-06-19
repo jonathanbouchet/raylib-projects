@@ -9,7 +9,7 @@ The goal is this project is to reproduce the [Chrome dinosaur game](https://dino
 - [ x ] assets pixel arts using [pixieditor](https://pixieditor.net/) ; test assets in game (maybe resizing if neede)
 - [ x ] coding gameplay, such as collision detection and props display (cloud)
 - [ x ] replace objects with textures
-- [ ] add gameplay elements: scoring, pause/restart
+- [ x ] add gameplay elements: scoring, pause/restart
 
 # Notes
 See NOTES.md for dev log

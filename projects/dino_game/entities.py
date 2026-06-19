@@ -14,6 +14,8 @@ class PlayerStates(Enum):
 
 
 class StaticSprite:
+    """base class for static texture"""
+
     def __init__(
         self, window_width: int, window_height: int, floor_y_pos: int, show_debug: bool
     ) -> None:
@@ -46,6 +48,8 @@ class StaticSprite:
 
 
 class Sprite:
+    """base class for the textures used in the game"""
+
     def __init__(
         self,
         position: pr.Vector2,
@@ -84,15 +88,17 @@ class Sprite:
 
 
 class Player(Sprite):
+    """player class"""
+
     def __init__(
         self,
-        position: pr.Vector2,
-        texture: pr.Texture,
-        running_textures_path: list[str],
-        dead_texture_path: str,
-        color: pr.Color,
-        debug_color: pr.Color,
-        show_debug: bool,
+        position: pr.Vector2,  # player position
+        texture: pr.Texture,  # player idle texture
+        running_textures_path: list[str],  # path to player running textures
+        dead_texture_path: str,  # path to player dead texture
+        color: pr.Color,  # player tint
+        debug_color: pr.Color,  # player debug color
+        show_debug: bool,  # flag to show player debug variables
     ):
         super().__init__(
             position=position,
@@ -118,9 +124,11 @@ class Player(Sprite):
         self.move(dt=dt, other=other)
 
     def check_collision(self, other: pr.Rectangle) -> bool:
+        """check collision with floor"""
         return pr.check_collision_recs(self.get_rectangle(), other)
 
     def check_collisions_enemies(self, enemies: list[pr.Rectangle]):
+        """chcekc collisions with enemies"""
         for enemy in enemies:
             # print(f"{enemy.width}, {enemy.height}, {enemy.x, enemy.y}")
             if pr.check_collision_recs(self.get_rectangle(), enemy):
@@ -158,6 +166,7 @@ class Player(Sprite):
             self.is_grounded = False
 
     def draw(self, dt: float) -> None:
+        """draw texture player"""
         if self.state == PlayerStates.RUNNING:
             self.animation_index += len(self.running_textures) * (6 * dt)
             pr.draw_texture_v(
@@ -203,19 +212,20 @@ class Player(Sprite):
             )
 
     def get_state(self) -> PlayerStates:
+        """return player state"""
         return self.state
 
 
 class Enemy(Sprite):
     def __init__(
         self,
-        position: pr.Vector2,
-        texture: pr.Texture,
-        color: pr.Color,
-        speed: float,
-        scale: float,
-        debug_color: pr.Color,
-        show_debug: bool,
+        position: pr.Vector2,  # position of the enemy
+        texture: pr.Texture,  # texture of the enemy
+        color: pr.Color,  # tint of the enemy
+        speed: float,  # enemy's speed
+        scale: float,  # enemy's texture scale
+        debug_color: pr.Color,  # enemy debug color
+        show_debug: bool,  # flag to show enemy's variables
     ):
         super().__init__(
             position=position,
@@ -229,7 +239,6 @@ class Enemy(Sprite):
         self.scale = scale
         self.disable = False
 
-    # tuning because rectangle from sprite is too wide
     def get_rectangle(self) -> pr.Rectangle:
         return pr.Rectangle(
             self.position.x, self.position.y, self.texture.width, self.texture.height
@@ -244,7 +253,6 @@ class Enemy(Sprite):
             self.disable = True
 
     def draw(self) -> None:
-        # reposition the texture after scaling, if necessary
         tmp_pos = pr.Vector2(
             self.position.x, self.position.y - (self.scale - 1) * self.texture.height
         )
@@ -262,13 +270,13 @@ class Enemy(Sprite):
 class Cloud(Sprite):
     def __init__(
         self,
-        position: pr.Vector2,
-        texture: pr.Texture,
-        speed: float,
-        screen_width: int,
-        color: pr.Color,
-        debug_color: pr.Color,
-        show_debug: bool,
+        position: pr.Vector2,  # position of the cloud
+        texture: pr.Texture,  # cloud's texture
+        speed: float,  # cloud's texture
+        screen_width: int,  # game screen width
+        color: pr.Color,  # cloud's tint
+        debug_color: pr.Color,  # cloud debug color
+        show_debug: bool,  # flag to show debug variables
     ):
         super().__init__(
             position=position,
@@ -290,4 +298,3 @@ class Cloud(Sprite):
         # re-spawn clouds at the right of the screen
         if self.position.x - self.texture.width < 0:
             self.position.x = self.screen_width
-            # self.disable = True
