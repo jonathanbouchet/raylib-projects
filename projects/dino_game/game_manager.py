@@ -27,9 +27,12 @@ class Game:
         player_textures_data: dict[str, list[str]],  # player textures: idle, run, dead
         enemy_textures_data: list[str, str],  # enemy texture: single and double cactus
         cloud_texture_data: str,  # cloud texture: only 1
+        level_up_sound_path: str,
         level: int,  # game level
+        number_per_level: int,  # the number of objects to avoid to increment the level
         number_avoided: int,  # number of cactus avoided
         enemy_speed: int,  # speed of cactus when spawned
+        enemy_spawn_probability: float,  # probability of an enemy to spawn at every second
         cloud_speed: int,  # speed of the cloud
         player_debug: bool,  # flag to show Rectangle outline of the player and its state
         enemy_debug: bool,  # flag to show Rectangle outline of the enemy
@@ -47,10 +50,13 @@ class Game:
         self.player_textures_data = player_textures_data
         self.enemy_textures_data = enemy_textures_data
         self.cloud_texture_data = cloud_texture_data
+        self.level_up_sound_path = level_up_sound_path
         self.level = level
+        self.number_per_level = number_per_level
         self.number_avoided = number_avoided
         self.state = GameStates.INIT
         self.enemy_speed = enemy_speed
+        self.enemy_spawn_probability = enemy_spawn_probability
         self.cloud_speed = cloud_speed
         self.player_debug = player_debug
         self.enemy_debug = enemy_debug
@@ -68,6 +74,7 @@ class Game:
         """create raylib window"""
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
+        pr.init_audio_device()
 
     def load_props(self) -> None:
         """load_props such as the floor needed for collision and cloud (no collision)"""
@@ -90,6 +97,9 @@ class Game:
             screen_width=self.width,
             show_debug=self.cloud_debug,
         )
+
+        # sound
+        self.level_up_sound: pr.Sound = pr.load_sound(self.level_up_sound_path)
 
     def load_player(self) -> None:
         """load_player:
@@ -122,7 +132,7 @@ class Game:
         - spawned every 60 frames = 1 second with a probability of 75%
         """
         if self.frame_counter % self.fps_target == 0:  # spawn a block every frame
-            if random.random() < 0.5:
+            if random.random() < self.enemy_spawn_probability:
                 # randomly select one of the 2 enemy textures
                 current_texture = random.choices(self.enemy_textures)[0]
                 print(f"{current_texture=}")
@@ -140,6 +150,18 @@ class Game:
                         show_debug=self.enemy_debug,
                     )
                 )
+
+    def calculate_level(self) -> None:
+        self.number_avoided = len(
+            [
+                enemy
+                for enemy in self.enemy_list
+                if (enemy.position.x + enemy.texture.width) < self.player.position.x
+            ]
+        )
+        if int(self.number_avoided / self.number_per_level) + 1 > self.level:
+            self.level += 1
+            pr.play_sound(self.level_up_sound)
 
     def update(self) -> None:
         """game update
@@ -176,15 +198,7 @@ class Game:
 
             # update cloud
             self.cloud.update(dt=dt)
-
-            self.number_avoided = len(
-                [
-                    enemy
-                    for enemy in self.enemy_list
-                    if (enemy.position.x + enemy.texture.width) < self.player.position.x
-                ]
-            )
-            self.level = int(self.number_avoided / 5) + 1
+            self.calculate_level()
 
             # clean list of blocks
             # self.discard_blocks()
@@ -287,6 +301,7 @@ class Game:
 
     def end(self) -> None:
         """end / close game window"""
+        pr.close_audio_device()
         pr.close_window()
 
     def discard_blocks(self):
@@ -319,9 +334,12 @@ if __name__ == "__main__":
             f"{THIS_DIR}/cactus_12x32.png",
         ],
         cloud_texture_data=f"{THIS_DIR}/cloud_64x64.png",
+        level_up_sound_path=f"{THIS_DIR}/Coin_7.wav",
         level=1,
+        number_per_level=5,
         number_avoided=0,
         enemy_speed=200,
+        enemy_spawn_probability=0.75,
         cloud_speed=20,
         player_debug=True,
         enemy_debug=True,
