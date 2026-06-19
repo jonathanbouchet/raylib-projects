@@ -13,6 +13,38 @@ class PlayerStates(Enum):
     DEAD = 3
 
 
+class StaticSprite:
+    def __init__(
+        self, window_width: int, window_height: int, floor_y_pos: int, show_debug: bool
+    ) -> None:
+        self.window_width = window_width
+        self.window_height = window_height
+        self.floor_y_pos = floor_y_pos
+        self.floor_rect = pr.Rectangle(
+            0,
+            self.window_height - self.floor_y_pos,
+            self.window_width,
+            self.window_height - self.floor_y_pos,
+        )
+        self.show_debug = show_debug
+
+    def draw(self) -> None:
+        # draw floor
+        if self.show_debug:
+            pr.draw_rectangle_rec(self.floor_rect, pr.YELLOW)
+            pr.draw_line_v(
+                pr.Vector2(0, self.window_height - self.floor_y_pos),
+                pr.Vector2(self.window_width, self.window_height - self.floor_y_pos),
+                pr.RED,
+            )
+        else:
+            pr.draw_line_v(
+                pr.Vector2(0, self.window_height - self.floor_y_pos),
+                pr.Vector2(self.window_width, self.window_height - self.floor_y_pos),
+                pr.BLACK,
+            )
+
+
 class Sprite:
     def __init__(
         self,
@@ -20,11 +52,13 @@ class Sprite:
         texture: pr.Texture,
         color: pr.Color,
         debug_color: pr.Color,
+        show_debug: bool,
     ):
         self.position = position
         self.texture = texture
         self.color = color
         self.debug_color = debug_color
+        self.show_debug = show_debug
 
     def get_rectangle(self) -> pr.Rectangle:
         return pr.Rectangle(
@@ -39,13 +73,14 @@ class Sprite:
 
     def draw(self) -> None:
         pr.draw_texture_v(self.texture, self.position, self.color)
-        pr.draw_rectangle_lines(
-            int(self.position.x),
-            int(self.position.y),
-            int(self.texture.width),
-            int(self.texture.height),
-            self.debug_color,
-        )
+        if self.show_debug:
+            pr.draw_rectangle_lines(
+                int(self.position.x),
+                int(self.position.y),
+                int(self.texture.width),
+                int(self.texture.height),
+                self.debug_color,
+            )
 
 
 class Player(Sprite):
@@ -57,9 +92,14 @@ class Player(Sprite):
         dead_texture_path: str,
         color: pr.Color,
         debug_color: pr.Color,
+        show_debug: bool,
     ):
         super().__init__(
-            position=position, texture=texture, color=color, debug_color=debug_color
+            position=position,
+            texture=texture,
+            color=color,
+            debug_color=debug_color,
+            show_debug=show_debug,
         )
         # other textures
         self.running_textures_path = running_textures_path
@@ -127,39 +167,40 @@ class Player(Sprite):
                 self.position,
                 self.color,
             )
-            pr.draw_rectangle_lines(
-                int(self.position.x),
-                int(self.position.y),
-                int(
-                    self.running_textures[
-                        int(self.animation_index % len(self.running_textures))
-                    ].width
-                ),
-                int(
-                    self.running_textures[
-                        int(self.animation_index % len(self.running_textures))
-                    ].height
-                ),
-                self.debug_color,
-            )
+            if self.show_debug:
+                pr.draw_rectangle_lines(
+                    int(self.position.x),
+                    int(self.position.y),
+                    int(
+                        self.running_textures[
+                            int(self.animation_index % len(self.running_textures))
+                        ].width
+                    ),
+                    int(
+                        self.running_textures[
+                            int(self.animation_index % len(self.running_textures))
+                        ].height
+                    ),
+                    self.debug_color,
+                )
         else:
             # player is dead
             pr.draw_texture_v(self.texture, self.position, self.color)
-
-        pr.draw_rectangle_lines(
-            int(self.position.x),
-            int(self.position.y),
-            int(self.texture.width),
-            int(self.texture.height),
-            self.debug_color,
-        )
-        pr.draw_text(
-            str(self.state),
-            int(self.position.x),
-            int(self.position.y) - 10,
-            10,
-            self.debug_color,
-        )
+        if self.show_debug:
+            pr.draw_rectangle_lines(
+                int(self.position.x),
+                int(self.position.y),
+                int(self.texture.width),
+                int(self.texture.height),
+                self.debug_color,
+            )
+            pr.draw_text(
+                str(self.state),
+                int(self.position.x),
+                int(self.position.y) - 10,
+                10,
+                self.debug_color,
+            )
 
     def get_state(self) -> PlayerStates:
         return self.state
@@ -174,9 +215,14 @@ class Enemy(Sprite):
         speed: float,
         scale: float,
         debug_color: pr.Color,
+        show_debug: bool,
     ):
         super().__init__(
-            position=position, texture=texture, color=color, debug_color=debug_color
+            position=position,
+            texture=texture,
+            color=color,
+            debug_color=debug_color,
+            show_debug=show_debug,
         )
         self.speed = speed
         self.direction = pr.Vector2(-1, 0)
@@ -203,13 +249,14 @@ class Enemy(Sprite):
             self.position.x, self.position.y - (self.scale - 1) * self.texture.height
         )
         pr.draw_texture_ex(self.texture, tmp_pos, 0, self.scale, self.color)
-        pr.draw_rectangle_lines(
-            int(tmp_pos.x),
-            int(tmp_pos.y),
-            int(self.texture.width * self.scale),
-            int(self.texture.height * self.scale),
-            self.debug_color,
-        )
+        if self.show_debug:
+            pr.draw_rectangle_lines(
+                int(tmp_pos.x),
+                int(tmp_pos.y),
+                int(self.texture.width * self.scale),
+                int(self.texture.height * self.scale),
+                self.debug_color,
+            )
 
 
 class Cloud(Sprite):
@@ -221,9 +268,14 @@ class Cloud(Sprite):
         screen_width: int,
         color: pr.Color,
         debug_color: pr.Color,
+        show_debug: bool,
     ):
         super().__init__(
-            position=position, texture=texture, color=color, debug_color=debug_color
+            position=position,
+            texture=texture,
+            color=color,
+            debug_color=debug_color,
+            show_debug=show_debug,
         )
         self.speed = speed
         self.direction = pr.Vector2(-1, 0)

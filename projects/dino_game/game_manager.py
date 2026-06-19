@@ -2,7 +2,7 @@ import random
 from pathlib import Path
 from enum import Enum
 import pyray as pr
-from entities import Player, Enemy, Cloud, PlayerStates
+from entities import StaticSprite, Player, Enemy, Cloud, PlayerStates
 
 THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
@@ -30,6 +30,11 @@ class Game:
         level: int,  # game level
         number_avoided: int,  # number of cactus avoided
         enemy_speed: int,  # speed of cactus when spawned
+        cloud_speed: int,  # speed of the cloud
+        player_debug: bool,  # flag to show Rectangle outline of the player and its state
+        enemy_debug: bool,  # flag to show Rectangle outline of the enemy
+        cloud_debug: bool,  # flag to show Rectangle outline of the cloud
+        floor_debug: bool,  # flag to show Rectangle outline and filled area of the floor
     ):
         self.width = width
         self.height = height
@@ -46,6 +51,11 @@ class Game:
         self.number_avoided = number_avoided
         self.state = GameStates.INIT
         self.enemy_speed = enemy_speed
+        self.cloud_speed = cloud_speed
+        self.player_debug = player_debug
+        self.enemy_debug = enemy_debug
+        self.cloud_debug = cloud_debug
+        self.floor_debug = floor_debug
 
         # game running time variable
         self.run_time: float = 0  # time in second since the app has started
@@ -62,11 +72,11 @@ class Game:
     def load_props(self) -> None:
         """load_props such as the floor needed for collision and cloud (no collision)"""
         # ground
-        self.floor_rect = pr.Rectangle(
-            0,
-            self.height - self.floor_y_pos,
-            self.width,
-            self.height - self.floor_y_pos,
+        self.ground = StaticSprite(
+            window_width=self.width,
+            window_height=self.height,
+            floor_y_pos=self.floor_y_pos,
+            show_debug=self.floor_debug,
         )
 
         # cloud
@@ -76,8 +86,9 @@ class Game:
             texture=self.cloud_texture,
             color=pr.DARKGRAY,
             debug_color=pr.YELLOW,
-            speed=20,
+            speed=self.cloud_speed,
             screen_width=self.width,
+            show_debug=self.cloud_debug,
         )
 
     def load_player(self) -> None:
@@ -99,6 +110,7 @@ class Game:
             dead_texture_path=player_dead_texture,
             color=pr.WHITE,
             debug_color=pr.BLUE,
+            show_debug=self.player_debug,
         )
 
     def load_enemy_texture(self) -> None:
@@ -125,6 +137,7 @@ class Game:
                         color=pr.WHITE,
                         scale=random.uniform(1.0, 1.5),
                         debug_color=pr.PINK,
+                        show_debug=self.enemy_debug,
                     )
                 )
 
@@ -153,7 +166,7 @@ class Game:
             self.spawn_enemy()
 
             # update player
-            self.player.update(dt=dt, other=self.floor_rect)
+            self.player.update(dt=dt, other=self.ground.floor_rect)
             self.player.check_collisions_enemies(
                 enemies=[x.get_rectangle() for x in self.enemy_list]
             )
@@ -200,17 +213,8 @@ class Game:
         _ = [enemy.draw() for enemy in self.enemy_list if not enemy.disable]
 
         # draw floor
-        pr.draw_rectangle_rec(self.floor_rect, pr.YELLOW)
-        pr.draw_line_v(
-            pr.Vector2(0, self.height - self.floor_y_pos),
-            pr.Vector2(self.width, self.height - self.floor_y_pos),
-            pr.BLUE,
-        )
-        pr.draw_line_v(
-            pr.Vector2(0, int(self.height / 2)),
-            pr.Vector2(self.width, int(self.height / 2)),
-            pr.RED,
-        )
+        self.ground.draw()
+
         # update cloud
         self.cloud.draw()
 
@@ -318,6 +322,11 @@ if __name__ == "__main__":
         level=1,
         number_avoided=0,
         enemy_speed=200,
+        cloud_speed=20,
+        player_debug=True,
+        enemy_debug=True,
+        cloud_debug=True,
+        floor_debug=True,
     )
     game.init()
     game.load_props()
