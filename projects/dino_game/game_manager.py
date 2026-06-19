@@ -8,28 +8,28 @@ THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
 
 class GameStates(Enum):
-    INIT = 0
-    RUN = 1
-    PAUSE = 2
+    INIT = 0  # start of the app
+    RUN = 1  # game is running
+    PAUSE = 2  # game is paused after a collision player <-> enemy
 
 
 class Game:
     def __init__(
         self,
-        width: int,
-        height: int,
-        fps_target: int,
-        name: str,
-        background_color: pr.Color,
-        floor_y_pos: int,
-        show_fps: bool,
-        show_metrics: bool,
-        player_textures_data: dict[str, list[str]],
-        enemy_textures_data: list[str, str],
-        cloud_texture_path: str,
-        level: int,
-        number_avoided: int,
-        enemy_speed: int
+        width: int,  # screen width
+        height: int,  # screen height
+        fps_target: int,  # target FPS
+        name: str,  # name of app
+        background_color: pr.Color,  # background color
+        floor_y_pos: int,  # offset from height to locate the 'floor'
+        show_fps: bool,  # flag for showing FPS counter
+        show_metrics: bool,  # flag to show in-game metrics
+        player_textures_data: dict[str, list[str]],  # player textures: idle, run, dead
+        enemy_textures_data: list[str, str],  # enemy texture: single and double cactus
+        cloud_texture_data: str,  # cloud texture: only 1
+        level: int,  # game level
+        number_avoided: int,  # number of cactus avoided
+        enemy_speed: int,  # speed of cactus when spawned
     ):
         self.width = width
         self.height = height
@@ -41,27 +41,26 @@ class Game:
         self.show_metrics = show_metrics
         self.player_textures_data = player_textures_data
         self.enemy_textures_data = enemy_textures_data
-        self.cloud_texture_path = cloud_texture_path
+        self.cloud_texture_data = cloud_texture_data
         self.level = level
         self.number_avoided = number_avoided
         self.state = GameStates.INIT
         self.enemy_speed = enemy_speed
 
         # game running time variable
-        self.run_time: float = 0
-        self.frame_counter: int = 0
+        self.run_time: float = 0  # time in second since the app has started
+        self.frame_counter: int = 0  # frame counter, ie every time self.run() is done
 
         # game objects
-        self.enemy_list: list[Enemy] = []
-
-        # props
-        self.cloud_list: list[Cloud] = []
+        self.enemy_list: list[Enemy] = []  # list to hold every time an enemy is spawned
 
     def init(self) -> None:
+        """create raylib window"""
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
 
     def load_props(self) -> None:
+        """load_props such as the floor needed for collision and cloud (no collision)"""
         # ground
         self.floor_rect = pr.Rectangle(
             0,
@@ -71,7 +70,7 @@ class Game:
         )
 
         # cloud
-        self.cloud_texture = pr.load_texture(self.cloud_texture_path)
+        self.cloud_texture = pr.load_texture(self.cloud_texture_data)
         self.cloud = Cloud(
             position=pr.Vector2(self.width, 20),
             texture=self.cloud_texture,
@@ -82,9 +81,12 @@ class Game:
         )
 
     def load_player(self) -> None:
-        # init_window() needs to be called BEFORE loading any texture
-        # WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
-
+        """load_player:
+            init_window() needs to be called BEFORE loading any texture
+            WARNING: GL: GPU is not ready to load data, trying to load before InitWindow()?
+        - player is spawned at 100 pixels from left (hardcoded) with the idle texture
+        - other textures are extracted for later used
+        """
         self.player_texture = pr.load_texture(self.player_textures_data.get("idle")[0])
         player_running_textures = self.player_textures_data.get("run")
         player_dead_texture = self.player_textures_data.get("dead")[0]
@@ -100,11 +102,15 @@ class Game:
         )
 
     def load_enemy_texture(self) -> None:
+        """load_enemy_textures: single and double cactus"""
         self.enemy_textures = [pr.load_texture(x) for x in self.enemy_textures_data]
 
     def spawn_enemy(self) -> None:
-        if self.frame_counter % 60 == 0:  # spawn a block every frame
-            if random.random() < .75:
+        """spawn_enemy / cactus:
+        - spawned every 60 frames = 1 second with a probability of 75%
+        """
+        if self.frame_counter % self.fps_target == 0:  # spawn a block every frame
+            if random.random() < 0.5:
                 # randomly select one of the 2 enemy textures
                 current_texture = random.choices(self.enemy_textures)[0]
                 print(f"{current_texture=}")
@@ -117,15 +123,28 @@ class Game:
                         ),
                         speed=self.enemy_speed,
                         color=pr.WHITE,
-                        scale=random.uniform(1.0, 2.0),
+                        scale=random.uniform(1.0, 1.5),
                         debug_color=pr.PINK,
                     )
                 )
 
-
     def update(self) -> None:
+        """game update
+        - if player is not dead and games is running -> update all objects (this take care of the INIT state):
+            - we spawn enemy if frame counter condition is met
+            - player is updated
+             - movement and floor detection
+             - then collision of player with enemies
+            - enemies are updated
+            - cloud is updated
+        - if player is dead, switch to PAUSE mode
+        - otherwise it means the game just start -> INIT
+        """
         # check Player State
-        if self.player.get_state() != PlayerStates.DEAD and self.state == GameStates.RUN:
+        if (
+            self.player.get_state() != PlayerStates.DEAD
+            and self.state == GameStates.RUN
+        ):
             # self.state = GameStates.RUN
             dt = pr.get_frame_time()
             self.frame_counter += 1
@@ -140,7 +159,7 @@ class Game:
             )
 
             # updates all blocks
-            _ = [block.update(dt=dt) for block in self.enemy_list]
+            _ = [enemy.update(dt=dt) for enemy in self.enemy_list]
 
             # update cloud
             self.cloud.update(dt=dt)
@@ -162,6 +181,14 @@ class Game:
             self.state = GameStates.INIT
 
     def draw(self) -> None:
+        """draw game objects
+        - first is background then player, then enemies and floor and cloud
+        - draw UI next
+        - when the game paused (collision), update is not called so that's how the textures stay frozen
+        - if the game state is either in INIT or PAUSE, repsective UI button are shown
+        - once clicked, the game state switched back to RUN and the game resumes
+
+        """
         dt = pr.get_frame_time()
         pr.begin_drawing()
         pr.clear_background(self.background_color)
@@ -170,7 +197,7 @@ class Game:
         self.player.draw(dt=dt)
 
         # draw block
-        _ = [block.draw() for block in self.enemy_list if not block.disable]
+        _ = [enemy.draw() for enemy in self.enemy_list if not enemy.disable]
 
         # draw floor
         pr.draw_rectangle_rec(self.floor_rect, pr.YELLOW)
@@ -187,7 +214,7 @@ class Game:
         # update cloud
         self.cloud.draw()
 
-        # draw score
+        # draw UI
         pr.draw_text(f"LEVEL: {self.level}", self.width - 100, 0, 10, pr.DARKGRAY)
         pr.draw_text(
             f"SCORE: {int(self.frame_counter / 10)}",
@@ -216,15 +243,17 @@ class Game:
             pr.draw_text(f"{self.state}", 0, 80, 20, pr.DARKGREEN)
 
         if self.state == GameStates.PAUSE:
-            if pr.gui_button(pr.Rectangle(self.width/2 - 75, self.height/2 - 20, 150, 40), "Click to Restart"):
-                # keep track of current score 
+            if pr.gui_button(
+                pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
+                "Click to Restart",
+            ):
+                # keep track of current score
                 self.high_score = int(self.frame_counter / 10)
 
                 # reset all variables
                 self.run_time = 0
                 self.frame_counter = 0
                 self.enemy_list = []
-                self.cloud_list = []
                 self.level = 1
                 self.number_avoided = 0
 
@@ -235,20 +264,31 @@ class Game:
                 self.update()
 
         if self.state == GameStates.INIT:
-            if pr.gui_button(pr.Rectangle(self.width/2 - 75, self.height/2 - 20, 150, 40), "Space to start"):
+            if pr.gui_button(
+                pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
+                "Space to start",
+            ):
                 self.state = GameStates.RUN
 
         pr.end_drawing()
 
     def run(self) -> None:
+        """main game loop
+        1. update all game objects
+        2. draw updated game objects
+        """
         while not pr.window_should_close():
             self.update()
             self.draw()
 
     def end(self) -> None:
+        """end / close game window"""
         pr.close_window()
 
     def discard_blocks(self):
+        """discard blocks: not used
+        - goal is not accumulate all enemies in the list after they disappear from the game screen
+        """
         self.enemy_list = [x for x in self.enemy_list if x.position.x > 0]
 
 
@@ -274,10 +314,10 @@ if __name__ == "__main__":
             f"{THIS_DIR}/cactus_2_16x32.png",
             f"{THIS_DIR}/cactus_12x32.png",
         ],
-        cloud_texture_path=f"{THIS_DIR}/cloud_64x64.png",
+        cloud_texture_data=f"{THIS_DIR}/cloud_64x64.png",
         level=1,
         number_avoided=0,
-        enemy_speed=200
+        enemy_speed=200,
     )
     game.init()
     game.load_props()
