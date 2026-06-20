@@ -178,3 +178,84 @@ if self.state == GameStates.INIT:
     ) or space_triggered:
         self.state = GameStates.RUN
 ```
+
+# 2026-06-19: Final update
+- added `highscore` logic:
+    - at the first time, the `HI` is not displayed but is displayed the sub-sequent run
+- Preparing the webassembly file for deploying on `itch.io`:
+    - I used `pygbag-raylib` package
+    - create a folder `<my_game>`with all the necessary files (`.py`, assets)
+- create the `build`:
+```bash
+pygbag --build --html <my_game>
+```
+- test the build on `localhost:8000`:
+```bash
+pygbag dino 
+```
+- if the build is ok, zip all the files in `<my_game>/build/web` that you can upload to `itch.io`
+- Notes: the game needs to run `async`, otherwise in a web browser, standard `while` loops completely block the main thread
+- changes to the code for the build:
+```python
+import asyncio
+import platform
+
+async def main():
+    game = Game(
+        width=800,
+        height=200,
+        fps_target=60,
+        name="app",
+        background_color=pr.Color(211, 211, 211, 255),  # LIGHT GRAY
+        floor_y_pos=20,
+        show_fps=False,
+        show_metrics=False,
+        player_textures_data={
+            "idle": [f"{THIS_DIR}/dino_idle_64x64.png"],
+            "run": [
+                f"{THIS_DIR}/dino_left_leg_64x64.png",
+                f"{THIS_DIR}/dino_right_leg_64x64.png",
+            ],
+            "dead": [f"{THIS_DIR}/dino_dead_64x64.png"],
+        },
+        enemy_textures_data=[
+            f"{THIS_DIR}/cactus_2_16x32.png",
+            f"{THIS_DIR}/cactus_12x32.png",
+        ],
+        cloud_texture_data=f"{THIS_DIR}/cloud_64x64.png",
+        level_up_sound_path=f"{THIS_DIR}/Coin_7.ogg",
+        level=1,
+        number_per_level=5,
+        speed_level_increase=10,
+        number_avoided=0,
+        enemy_speed=200,
+        enemy_spawn_probability=0.75,
+        cloud_speed=20,
+        player_debug=False,
+        enemy_debug=False,
+        cloud_debug=False,
+        floor_debug=False,
+    )
+    game.init()
+    game.load_props()
+    game.load_player()
+    await game.run()
+    game.end()
+
+    ...
+    
+    async def run(self) -> None:
+        """main game loop
+        1. update all game objects
+        2. draw updated game objects
+        """
+        while not pr.window_should_close():
+            self.update()
+            self.draw()
+
+            # CRITICAL: This yields control to the web browser every frame
+            await asyncio.sleep(0)
+
+# Start the async main function
+asyncio.run(main())
+```

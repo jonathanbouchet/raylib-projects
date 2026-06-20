@@ -310,7 +310,7 @@ class Game:
         if self.state == GameStates.INIT:
             space_triggered = pr.is_key_pressed(rl.KEY_SPACE)
             pr.draw_text(
-                """-level increases every 5 cactuses avoided\n-each new level, cactus's speed increases""",
+                """-level increases every 5 cactuses avoided\n-each new level, cactus's speed increases\n-Press Spacebar to jump""",
                 int(self.width / 2 - 110),
                 int(self.height / 2 + 30),
                 10,
@@ -319,9 +319,9 @@ class Game:
             pr.draw_text(
                 "GOOD LUCK",
                 int(self.width / 2 - 30),
-                int(self.height / 2 + 60),
+                int(self.height / 2 + 70),
                 10,
-                pr.DARKGRAY,
+                pr.BLACK,
             )
             if (
                 pr.gui_button(
