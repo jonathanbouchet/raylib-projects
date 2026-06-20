@@ -64,6 +64,8 @@ class Game:
         self.enemy_speed_start = (
             enemy_speed  # keep track of the original speed when resetting the game
         )
+        self.high_score = 0
+        self.has_restarted: bool = False  # keep track if the game has been restarted once (to display highscore)
         self.enemy_spawn_probability = enemy_spawn_probability
         self.cloud_speed = cloud_speed
         self.player_debug = player_debug
@@ -142,7 +144,7 @@ class Game:
             if random.random() < self.enemy_spawn_probability:
                 # randomly select one of the 2 enemy textures
                 current_texture = random.choices(self.enemy_textures)[0]
-                print(f"{current_texture=}")
+                # print(f"{current_texture=}")
                 self.enemy_list.append(
                     Enemy(
                         texture=current_texture,
@@ -241,21 +243,29 @@ class Game:
         self.cloud.draw()
 
         # draw UI
-        pr.draw_text(f"LEVEL: {self.level}", self.width - 80, 0, 10, pr.DARKGRAY)
+        # pr.draw_text(f"LEVEL: {self.level}", self.width - 80, 0, 10, pr.DARKGRAY)
         pr.draw_text(
-            f"SCORE: {int(self.frame_counter / 10)}",
-            self.width - 80,
+            f"{int(self.frame_counter / 10)}",
+            self.width - 20,
             10,
             10,
             pr.DARKGRAY,
         )
-        pr.draw_text(
-            f"AVOIDED: {int(self.number_avoided)}",
-            self.width - 80,
-            20,
-            10,
-            pr.DARKGRAY,
-        )
+        # pr.draw_text(
+        #     f"AVOIDED: {int(self.number_avoided)}",
+        #     self.width - 80,
+        #     20,
+        #     10,
+        #     pr.DARKGRAY,
+        # )
+        if self.state == GameStates.PAUSE or self.has_restarted:
+            pr.draw_text(
+                f"HI {int(self.high_score)}",
+                self.width - 60,
+                10,
+                10,
+                pr.DARKGRAY,
+            )
 
         if self.show_fps:
             pr.draw_fps(0, 0)
@@ -273,13 +283,16 @@ class Game:
             space_triggered = pr.is_key_pressed(rl.KEY_SPACE)
             if (
                 pr.gui_button(
-                    pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
-                    "Click to Restart",
+                    pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
+                    "Click here or Press Space to start",
                 )
                 or space_triggered
             ):
                 # keep track of current score
-                self.high_score = int(self.frame_counter / 10)
+                if int(self.frame_counter / 10) > self.high_score:
+                    self.high_score = int(self.frame_counter / 10)
+
+                self.has_restarted = True
 
                 # reset all variables
                 self.run_time = 0
@@ -296,10 +309,24 @@ class Game:
 
         if self.state == GameStates.INIT:
             space_triggered = pr.is_key_pressed(rl.KEY_SPACE)
+            pr.draw_text(
+                """-level increases every 5 cactuses avoided\n-each new level, cactus's speed increases""",
+                int(self.width / 2 - 110),
+                int(self.height / 2 + 30),
+                10,
+                pr.DARKGRAY,
+            )
+            pr.draw_text(
+                "GOOD LUCK",
+                int(self.width / 2 - 30),
+                int(self.height / 2 + 60),
+                10,
+                pr.DARKGRAY,
+            )
             if (
                 pr.gui_button(
-                    pr.Rectangle(self.width / 2 - 75, self.height / 2 - 20, 150, 40),
-                    "Space to start",
+                    pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
+                    "Click here or Press Space to start",
                 )
                 or space_triggered
             ):
@@ -336,8 +363,8 @@ if __name__ == "__main__":
         name="app",
         background_color=pr.Color(211, 211, 211, 255),  # LIGHT GRAY
         floor_y_pos=20,
-        show_fps=True,
-        show_metrics=True,
+        show_fps=False,
+        show_metrics=False,
         player_textures_data={
             "idle": [f"{THIS_DIR}/dino_idle_64x64.png"],
             "run": [
@@ -359,10 +386,10 @@ if __name__ == "__main__":
         enemy_speed=200,
         enemy_spawn_probability=0.75,
         cloud_speed=20,
-        player_debug=True,
-        enemy_debug=True,
-        cloud_debug=True,
-        floor_debug=True,
+        player_debug=False,
+        enemy_debug=False,
+        cloud_debug=False,
+        floor_debug=False,
     )
     game.init()
     game.load_props()
