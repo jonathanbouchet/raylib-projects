@@ -11,6 +11,7 @@ pr.set_target_fps(60)
 
 background_texture = pr.load_texture(f"{THIS_DIR}/background.png")
 player_texture = pr.load_texture(f"{THIS_DIR}/0.png")
+player_speed = 10
 
 player_pos = pr.Vector2(
     int(width / 2 - player_texture.width / 2),
@@ -24,15 +25,12 @@ loc_shader = pr.get_shader_location(shader, "test")
 
 while not pr.window_should_close():
     # logic
-    dt = pr.get_frame_time()
-    if pr.is_key_down(rl.KEY_RIGHT):
-        player_pos.x += 10
-    if pr.is_key_down(rl.KEY_LEFT):
-        player_pos.x -= 10
-    if pr.is_key_down(rl.KEY_DOWN):
-        player_pos.y += 10
-    if pr.is_key_down(rl.KEY_UP):
-        player_pos.y -= 10
+    player_pos.x += int(pr.is_key_down(rl.KEY_RIGHT) * player_speed) - int(
+        pr.is_key_down(rl.KEY_LEFT) * player_speed
+    )
+    player_pos.y += int(pr.is_key_down(rl.KEY_DOWN) * player_speed) - int(
+        pr.is_key_down(rl.KEY_UP) * player_speed
+    )
 
     # rendering
     pr.begin_drawing()
