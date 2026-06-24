@@ -53,4 +53,24 @@ class GameManager:
         self.fps_target = fps_target
         self.name = name
         self.background_color = background_color
-``` 
+```
+
+## 2026-06-23
+- tiny reboot in this project as I was prototyping my game manager + resourcer class
+- final idea is to stick with the original concept, i.e using `raylib` primitive shapes and not load any textures
+- the goal of these `small game` is to make a contained experiment to work on a given feature
+- Goal:
+    - destroy all asteroids in the time allocated
+    - if successful -> go to next wave:
+        - at the begining of the next wave: 2 choices are presented to the player:
+            1. increased number of enemies, same allocated time
+            2. same number of enemies, decreased allocated time
+- visuals:
+    - player: triangular shape
+        - laser: either a `line` or very fine `rectangle` (maybe the later is better for collision)
+    - asteroids: rectangular shape:
+        - add random rotation, speed and shape
+        - can the asteroids be split into smaller ones after collision with laser ?
+    - background: parallax using 1 layer of random rectangles scrolling down and another 1 layer with a slightly higher speed and shapes
+        - use raylib primitive 
+     
