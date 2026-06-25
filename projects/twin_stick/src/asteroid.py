@@ -10,7 +10,7 @@ class Asteroid(BaseSprite):
         direction: pr.Vector2,
         size: pr.Vector2,
         speed: float,
-        rotation_speed: float,
+        angular_speed: float,
         scale: float,
         color: pr.Color,
         debug: bool,
@@ -18,14 +18,14 @@ class Asteroid(BaseSprite):
     ) -> None:
         super().__init__(
             position=position,
-            direction=direction,
             speed=speed,
-            rotation_speed=rotation_speed,
+            angular_speed=angular_speed,
             scale=scale,
             color=color,
             debug=debug,
             debug_color=debug_color,
         )
+        self.direction=direction
         self.size = size
         self.rotation = 0
 
@@ -39,7 +39,7 @@ class Asteroid(BaseSprite):
         self.move(dt)
 
     def move(self, dt: float) -> None:
-        self.rotation += self.rotation_speed * dt
+        self.rotation += self.angular_speed * dt
         self.position.x += self.direction.x * self.speed * dt
         self.position.y += self.direction.y * self.speed * dt
 

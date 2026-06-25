@@ -33,7 +33,7 @@ class GameManager:
             size=pr.Vector2(20, 20),
             direction=pr.Vector2(10, 10),
             speed=0,
-            rotation_speed=90,
+            angular_speed=90,
             scale=1,
             color=pr.WHITE,
             debug=True,
@@ -41,14 +41,14 @@ class GameManager:
         )
         self.player = Player(
             position=pr.Vector2(self.width / 2, 500),
-            direction=pr.Vector2(),
-            v1=pr.Vector3(self.width / 2 - 20, 100 + self.height / 2, 0),  # bottom left
+            window_size=pr.Vector2(self.width, self.height),
+            v1=pr.Vector3(self.width / 2 - 15, 100 + self.height / 2, 0),  # bottom left
             v2=pr.Vector3(
-                self.width / 2 + 20, 100 + self.height / 2, 0
+                self.width / 2 + 15, 100 + self.height / 2, 0
             ),  # bottom right
             v3=pr.Vector3(self.width / 2, 100 + self.height / 2 - 40, 0),  # top center,
             speed=10,
-            rotation_speed=0,
+            angular_speed=150,
             color=pr.WHITE,
             scale=1.0,
             debug=False,

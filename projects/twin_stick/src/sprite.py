@@ -5,18 +5,16 @@ class BaseSprite:
     def __init__(
         self,
         position: pr.Vector2,
-        direction: pr.Vector2,
         speed: float,
-        rotation_speed: float,
+        angular_speed: float,
         scale: float,
         color: pr.Color,
         debug: bool,
         debug_color,
     ) -> None:
         self.position = position
-        self.direction = direction
         self.speed = speed
-        self.rotation_speed = rotation_speed
+        self.angular_speed = angular_speed
         self.scale = scale
         self.color = color
         self.debug = debug
