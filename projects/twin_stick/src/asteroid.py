@@ -55,6 +55,7 @@ class Asteroid(BaseSprite):
         origin = self.get_origin()
         rect = self.get_rectangle()
         pr.draw_rectangle_pro(rect, origin, self.rotation, self.color)
+        # pr.draw_rectangle_lines_ex(rect, 1, self.color)
         # debug: rotated outline
         if self.debug:
             center_world = pr.Vector2(rect.x + origin.x, rect.y + origin.y)

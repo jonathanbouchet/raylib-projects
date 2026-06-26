@@ -2,6 +2,7 @@ import math
 import pyray as pr
 import raylib as rl
 from .sprite import BaseSprite
+from .laser import Laser
 
 
 class Player(BaseSprite):
@@ -42,6 +43,7 @@ class Player(BaseSprite):
         self.velocity = pr.Vector2(0, 0)
         self.thrust = 400
         self.drag = 0.5  # damping
+        self.lasers: list[Laser] = []
 
     def update(self, dt: float) -> None:
         self.move(dt)
@@ -81,6 +83,24 @@ class Player(BaseSprite):
         if self.position.y < 0:
             self.position.y = self.window_size.y
 
+        # check if laser is shoot
+        if pr.is_key_pressed(rl.KEY_SPACE):
+            ang_rad = math.radians(self.angle)
+            # forward = pr.Vector2(math.cos(ang_rad - math.pi/2), math.sin(ang_rad - math.pi/2))
+            c, s = math.cos(ang_rad), math.sin(ang_rad)
+
+            world = [
+                pr.Vector2(
+                    self.position.x + (lv.x * c - lv.y * s),
+                    self.position.y + (lv.x * s + lv.y * c),
+                )
+                for lv in self.local
+            ]
+
+            tip_world = world[2]  # top vertex (same order as local)
+            laser = Laser(position=tip_world, direction=forward, speed=50)
+            self.lasers.append(laser)
+
         # for global_pos in self.global_pos:
         #     global_pos.x += int(pr.is_key_down(rl.KEY_RIGHT) * self.speed) - int(
         #         pr.is_key_down(rl.KEY_LEFT) * self.speed
@@ -101,7 +121,8 @@ class Player(BaseSprite):
             for lv in self.local
         ]
         world_3d = [pr.Vector3(w.x, w.y, 0) for w in world]
-        pr.draw_triangle_3d(world_3d[0], world_3d[1], world_3d[2], self.color)
+        pr.draw_triangle_lines(world[0], world[1], world[2] , self.color)
+        # pr.draw_triangle_3d(world_3d[0], world_3d[1], world_3d[2], self.color)
         # pr.draw_triangle_3d(self.v1, self.v2, self.v3, self.color)
         # world = [pr.Vector2(self.position.x, self.position.y ) for vect in self.local]
         # pr.draw_triangle_lines(world[0], world[1], world[2], self.color)

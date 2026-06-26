@@ -36,7 +36,7 @@ class GameManager:
             angular_speed=90,
             scale=1,
             color=pr.WHITE,
-            debug=True,
+            debug=False,
             debug_color=pr.YELLOW,
         )
         self.player = Player(
@@ -60,9 +60,16 @@ class GameManager:
         pr.set_target_fps(self.fps_target)
 
     def update(self) -> None:
+        # logic
         dt = pr.get_frame_time()
+        # update player
         self.player.update(dt=dt)
+        # update asteroids
         self.asteroid.update(dt=dt)
+        # update lasers
+        if len(self.player.lasers) > 0:
+            _ = [l.update(dt=dt) for l in self.player.lasers]
+
 
     async def run(self) -> None:
         self.state = GameStates.RUN
@@ -75,6 +82,7 @@ class GameManager:
         pr.draw_text(f"{self.state}", 0, 20, 20, pr.DARKGREEN)
         pr.draw_text(f"ENEMIES: {self.scorer.number_enemies}", 0, 40, 20, pr.DARKGREEN)
         pr.draw_text(f"TIME: {self.scorer.remaining_time}", 0, 60, 20, pr.DARKGREEN)
+        pr.draw_text(f"LASERS: {len(self.player.lasers)}", 0, 80, 20, pr.DARKGREEN)
         pr.draw_line(0, self.height // 2, self.width, self.height // 2, pr.RED)
         pr.draw_line(self.width // 2, 0, self.width // 2, self.height, pr.RED)
 
@@ -82,8 +90,12 @@ class GameManager:
         dt = pr.get_frame_time()
         pr.begin_drawing()
         pr.clear_background(self.background_color)
+        # draw player
         self.player.draw(dt=dt)
+        # draw asteroids
         self.asteroid.draw(dt=dt)
+        # draw lasers
+        _ = [laser.draw() for laser in self.player.lasers]
         self.draw_debug()
         pr.end_drawing()
 

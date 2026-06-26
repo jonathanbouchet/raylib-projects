@@ -73,4 +73,46 @@ class GameManager:
         - can the asteroids be split into smaller ones after collision with laser ?
     - background: parallax using 1 layer of random rectangles scrolling down and another 1 layer with a slightly higher speed and shapes
         - use raylib primitive 
-     
+
+## 2026-06-24
+- another change in the overall visual ; I plan to also change the asteroids to only rectangle, not filled shape
+- collision laser-asteroid: this may be tricky because the laser is a `line` and the asteroid a `rectangle`. `Raylib` has a `check_coliision_point_rect` to check if a point is inside a rectangle but it may miss the collision if the laser travels too fast
+- also I'm still not satisfied with the current inheritance from `Sprite` -> `asteroid` | `player`. At the end to want to have inheritance for the different classes makes things more complicated
+- TO DO: resurrect the `ResourceManager` to define the `player` and other objects parameters. Right now this is still ugly:
+
+```python
+self.player = Player(
+            position=pr.Vector2(self.width / 2, 500),
+            window_size=pr.Vector2(self.width, self.height),
+            v1=pr.Vector3(self.width / 2 - 15, 100 + self.height / 2, 0),  # bottom left
+            v2=pr.Vector3(
+                self.width / 2 + 15, 100 + self.height / 2, 0
+            ),  # bottom right
+            v3=pr.Vector3(self.width / 2, 100 + self.height / 2 - 40, 0),  # top center,
+            speed=10,
+            angular_speed=150,
+            color=pr.WHITE,
+            scale=1.0,
+            debug=False,
+            debug_color=pr.BLUE,
+        )
+```
+but the original idea of the `ResourceManager` was to actually to take care of this. So I need to define a `JSON` from which the `ResourceManager` will read the parameter
+- current status of the game:
+
+<img src="../../images/ts_0.png" alt="" width="200">
+
+```bash
+├── NOTES.md
+├── README.md
+├── main.py
+└── src
+    ├── __init__.py
+    ├── asteroid.py
+    ├── game_manager.py
+    ├── laser.py
+    ├── player.py
+    ├── proto.py
+    ├── scorer.py
+    └── sprite.py
+```
