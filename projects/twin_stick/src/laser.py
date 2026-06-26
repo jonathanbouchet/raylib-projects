@@ -1,5 +1,6 @@
 import pyray as pr
 
+
 class Laser:
     def __init__(self, position: pr.Vector2, direction: pr.Vector2, speed: float):
         self.position = position

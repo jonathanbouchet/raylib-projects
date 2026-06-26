@@ -3,6 +3,7 @@ import pyray as pr
 from .asteroid import Asteroid
 from .player import Player
 from .scorer import Scorer
+from .resource_manager import ResourceManager
 
 
 class GameStates(Enum):
@@ -13,31 +14,25 @@ class GameStates(Enum):
 
 
 class GameManager:
-    def __init__(
-        self,
-        width: int,
-        height: int,
-        fps_target: int,
-        name: str,
-        background_color: pr.Color,
-    ):
-        self.width = width
-        self.height = height
-        self.fps_target = fps_target
-        self.name = name
-        self.background_color = background_color
+    def __init__(self, resources_manager):
+        self.resources_manager: ResourceManager = resources_manager
+        self.width: int = self.resources_manager.game_data().get("width")
+        self.height: int = self.resources_manager.game_data().get("width")
+        self.fps_target: int = self.resources_manager.game_data().get("fps")
+        self.background_color: pr.Color = (
+            pr.BLACK
+            if self.resources_manager.game_data().get("background_color")
+            else pr.DARKGRAY
+        )
+        self.name: str = self.resources_manager.game_data().get("name")
+
         self.state = GameStates.INIT
         self.scorer = Scorer(number_enemies=10, remaining_time=60)
         self.asteroid = Asteroid(
             position=pr.Vector2(self.width / 2, self.height / 2),
-            size=pr.Vector2(20, 20),
             direction=pr.Vector2(10, 10),
-            speed=0,
-            angular_speed=90,
-            scale=1,
+            size=pr.Vector2(20, 20),
             color=pr.WHITE,
-            debug=False,
-            debug_color=pr.YELLOW,
         )
         self.player = Player(
             position=pr.Vector2(self.width / 2, 500),
@@ -69,7 +64,6 @@ class GameManager:
         # update lasers
         if len(self.player.lasers) > 0:
             _ = [l.update(dt=dt) for l in self.player.lasers]
-
 
     async def run(self) -> None:
         self.state = GameStates.RUN

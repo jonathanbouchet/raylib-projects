@@ -1,15 +1,16 @@
-import pyray as pr
+from pathlib import Path
 import asyncio
 from src.game_manager import GameManager
+from src.resource_manager import ResourceManager
+
+THIS_DIR = (Path(__file__).parent / "src").resolve()
 
 
 async def main() -> None:
+    resources_manager = ResourceManager(resources_path=f"{THIS_DIR}/resources.json")
+    resources_manager.print_game_data()
     game = GameManager(
-        width=600,
-        height=600,
-        fps_target=60,
-        name="app",
-        background_color=pr.BLACK,
+        resources_manager = resources_manager
     )
     game.init()
     await game.run()

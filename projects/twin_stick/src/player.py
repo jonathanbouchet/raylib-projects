@@ -121,7 +121,7 @@ class Player(BaseSprite):
             for lv in self.local
         ]
         world_3d = [pr.Vector3(w.x, w.y, 0) for w in world]
-        pr.draw_triangle_lines(world[0], world[1], world[2] , self.color)
+        pr.draw_triangle_lines(world[0], world[1], world[2], self.color)
         # pr.draw_triangle_3d(world_3d[0], world_3d[1], world_3d[2], self.color)
         # pr.draw_triangle_3d(self.v1, self.v2, self.v3, self.color)
         # world = [pr.Vector2(self.position.x, self.position.y ) for vect in self.local]
