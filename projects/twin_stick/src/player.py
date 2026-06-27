@@ -3,13 +3,14 @@ import pyray as pr
 import raylib as rl
 from .sprite import BaseSprite
 from .laser import Laser
+from .utils import wrap_borders
 
 
 class Player(BaseSprite):
     def __init__(
         self,
         position: pr.Vector2,
-        window_size: pr.Vector2,
+        window_borders: pr.Vector2,
         v1: pr.Vector3,
         v2: pr.Vector3,
         v3: pr.Vector3,
@@ -29,7 +30,7 @@ class Player(BaseSprite):
             debug=debug,
             debug_color=debug_color,
         )
-        self.window_size = window_size
+        self.window_borders = window_borders
         self.v1 = v1
         self.v2 = v2
         self.v3 = v3
@@ -74,14 +75,11 @@ class Player(BaseSprite):
         self.position.y += self.velocity.y * dt
 
         # check borders to re-appear on the other side of the screen
-        if self.position.x > self.window_size.x:
-            self.position.x = 0
-        if self.position.x < 0:
-            self.position.x = self.window_size.x
-        if self.position.y > self.window_size.y:
-            self.position.y = 0
-        if self.position.y < 0:
-            self.position.y = self.window_size.y
+        self.position = wrap_borders(
+            position=self.position,
+            width=self.window_borders.x,
+            height=self.window_borders.y,
+        )
 
         # check if laser is shoot
         if pr.is_key_pressed(rl.KEY_SPACE):
@@ -98,7 +96,7 @@ class Player(BaseSprite):
             ]
 
             tip_world = world[2]  # top vertex (same order as local)
-            laser = Laser(position=tip_world, direction=forward, speed=50)
+            laser = Laser(position=tip_world, direction=forward, speed=200)
             self.lasers.append(laser)
 
         # for global_pos in self.global_pos:
