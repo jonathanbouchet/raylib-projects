@@ -15,6 +15,7 @@ dependencies = [
     "mkdocstrings-python>=2.0.3",
     "numpy>=2.4.6",
     "pathfinding>=1.0.21",
+    "polygoncollision>=0.0.6",
     "pydantic>=2.13.4",
     "pymunk>=7.2.0",
     "pytest>=9.0.3",

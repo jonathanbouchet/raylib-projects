@@ -555,6 +555,15 @@ wheels = [
 ]
 
 [[package]]
+name = "polygoncollision"
+version = "0.0.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ba/2d/c0f77bb8b080c90a9a6f4bedf71bfd66590934d99e60bfa376d141c96285/PolygonCollision-0.0.6.tar.gz", hash = "sha256:4645f577508b47810755ccf5e502a6556ffbcd4080e4166e37d1d5cb0d6d3d2c", size = 3968, upload-time = "2023-11-13T22:05:01.363Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5f/37/57c1ee9b28f211e21ff3fdb097ddf61ff4def559c15e5fcab3b8a32d70c8/PolygonCollision-0.0.6-py3-none-any.whl", hash = "sha256:131d005b49bfb9812b8a626347dea76aa90de7b57abbb97d6d187cccbb016b18", size = 4687, upload-time = "2023-11-13T22:04:59.708Z" },
+]
+
+[[package]]
 name = "pycparser"
 version = "3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -801,6 +810,7 @@ dependencies = [
     { name = "mkdocstrings-python" },
     { name = "numpy" },
     { name = "pathfinding" },
+    { name = "polygoncollision" },
     { name = "pydantic" },
     { name = "pymunk" },
     { name = "pytest" },
@@ -822,6 +832,7 @@ requires-dist = [
     { name = "mkdocstrings-python", specifier = ">=2.0.3" },
     { name = "numpy", specifier = ">=2.4.6" },
     { name = "pathfinding", specifier = ">=1.0.21" },
+    { name = "polygoncollision", specifier = ">=0.0.6" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pymunk", specifier = ">=7.2.0" },
     { name = "pytest", specifier = ">=9.0.3" },

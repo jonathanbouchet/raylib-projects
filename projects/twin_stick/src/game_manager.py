@@ -1,10 +1,12 @@
 import random
+import PolygonCollision
 from enum import Enum
 import pyray as pr
 from .asteroid import Asteroid
 from .player import Player
 from .scorer import Scorer
 from .resource_manager import ResourceManager
+from .timer import Timer
 
 
 class GameStates(Enum):
@@ -45,7 +47,33 @@ class GameManager:
             debug=self.resources_manager.player_data().get("debug"),
             debug_color=self.resources_manager.player_data().get("debug_color"),
         )
-        self.asteroids: list[Asteroid] = [
+        self.asteroids_wave_timer = Timer(
+            duration=5, # testing: create wave of 2 asteroids every 2 seconds
+            repeat=True,
+            autostart=True,
+            func=self.create_asteroid_wave,
+        )
+        self.asteroids: list[Asteroid] = []
+        # self.asteroids: list[Asteroid] = [
+        #     Asteroid(
+        #         position=pr.Vector2(
+        #             random.randint(0, self.width), random.randint(0, self.height)
+        #         ),
+        #         direction=pr.Vector2(
+        #             random.randint(-100, 100), random.randint(-100, 100)
+        #         ),
+        #         window_borders=pr.Vector2(self.width, self.height),
+        #         size=pr.Vector2(20, 20),
+        #         color=pr.WHITE,
+        #     )
+        # ]
+
+    def init(self) -> None:
+        pr.init_window(self.width, self.height, self.name)
+        pr.set_target_fps(self.fps_target)
+
+    def create_asteroid_wave(self) -> None:
+        self.asteroids.extend([
             Asteroid(
                 position=pr.Vector2(
                     random.randint(0, self.width), random.randint(0, self.height)
@@ -56,37 +84,45 @@ class GameManager:
                 window_borders=pr.Vector2(self.width, self.height),
                 size=pr.Vector2(20, 20),
                 color=pr.WHITE,
-            )
-        ]
+            ) for _ in range(2)
+        ])
 
-    def init(self) -> None:
-        pr.init_window(self.width, self.height, self.name)
-        pr.set_target_fps(self.fps_target)
+    def check_collisions(self) -> None:
+        """check any collision between asteroids and lasers"""
+        for laser in self.player.lasers:
+            for asteroid in self.asteroids:
+                # pylygoncollision
+                asteroid_rect = asteroid.get_rectangle()
+                laser_rect = laser.get_rectangle()
+                asteroid_polygon = PolygonCollision.shape.Shape(vertices = [tuple([r.x, r.y]) for r in asteroid_rect])
+                laser_polygon = PolygonCollision.shape.Shape(vertices = [tuple([r.x, r.y]) for r in laser_rect])
+                if asteroid_polygon.collide(laser_polygon):
+                    print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
+                    asteroid.discard = True # checking if discard works ; the laser should not be rendered (--> YES, it works)
 
-    def spawn_asteroid(self) -> None:
-        pass
 
     def update(self) -> None:
         # logic
         dt = pr.get_frame_time()
         self.frame_counter += 1
-        # if self.frame_counter > 0 and self.frame_counter % (2 * self.fps_target) == 0:
-        if False:
-            asteroids: list[Asteroid] = [
-                Asteroid(
-                    position=pr.Vector2(
-                        random.randint(0, self.width), random.randint(0, self.height)
-                    ),
-                    direction=pr.Vector2(
-                        random.randint(-100, 100), random.randint(-100, 100)
-                    ),
-                    window_borders=pr.Vector2(self.width, self.height),
-                    size=pr.Vector2(20, 20),
-                    color=pr.WHITE,
-                )
-                for i in range(2)
-            ]
-            self.asteroids.extend(asteroids)
+        self.asteroids_wave_timer.update()
+        # # if self.frame_counter > 0 and self.frame_counter % (2 * self.fps_target) == 0:
+        # # if False:
+        #     asteroids: list[Asteroid] = [
+        #         Asteroid(
+        #             position=pr.Vector2(
+        #                 random.randint(0, self.width), random.randint(0, self.height)
+        #             ),
+        #             direction=pr.Vector2(
+        #                 random.randint(-100, 100), random.randint(-100, 100)
+        #             ),
+        #             window_borders=pr.Vector2(self.width, self.height),
+        #             size=pr.Vector2(20, 20),
+        #             color=pr.WHITE,
+        #         )
+        #         for i in range(2)
+        #     ]
+        #     self.asteroids.extend(asteroids)
 
         # update player
         self.player.update(dt=dt)
@@ -97,6 +133,9 @@ class GameManager:
         # update lasers
         if len(self.player.lasers) > 0:
             _ = [l.update(dt=dt) for l in self.player.lasers]
+
+        # check laser-asteroid collision
+        self.check_collisions()
 
     async def run(self) -> None:
         self.state = GameStates.RUN

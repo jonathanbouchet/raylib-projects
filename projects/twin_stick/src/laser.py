@@ -1,5 +1,6 @@
 import math
 import pyray as pr
+from .utils import rotate_point
 
 
 class Laser:
@@ -19,6 +20,25 @@ class Laser:
     def update(self, dt) -> None:
         self.position.x += self.direction.x * self.speed * dt
         self.position.y += self.direction.y * self.speed * dt
+
+    def get_rectangle(self) -> list[pr.Vector2]:
+        center = pr.Vector2(
+            self.position.x + self.size.x / 2, self.position.y + self.size.y / 2
+        )
+        half = pr.Vector2(self.size.x / 2, self.size.y / 2)
+        tl = pr.Vector2(center.x - half.x, center.y - half.y)
+        tr = pr.Vector2(center.x + half.x, center.y - half.y)
+        br = pr.Vector2(center.x + half.x, center.y + half.y)
+        bl = pr.Vector2(center.x - half.x, center.y + half.y)
+
+        angle = math.degrees(math.atan(self.direction.y / self.direction.x))
+
+        tl = rotate_point(tl, center, angle)
+        tr = rotate_point(tr, center, angle)
+        br = rotate_point(br, center, angle)
+        bl = rotate_point(bl, center, angle)
+
+        return [tl, tr, br, bl]
 
     def draw(self) -> None:
         # print(f"{self.direction.x}, {self.direction.y}")

@@ -35,8 +35,22 @@ class Asteroid:
             height=self.window_borders.y,
         )
 
-    def get_rectangle(self) -> pr.Rectangle:
-        pass
+    def get_rectangle(self) -> list[pr.Vector2]:
+        center = pr.Vector2(
+            self.position.x + self.size.x / 2, self.position.y + self.size.y / 2
+        )
+        half = pr.Vector2(self.size.x / 2, self.size.y / 2)
+        tl = pr.Vector2(center.x - half.x, center.y - half.y)
+        tr = pr.Vector2(center.x + half.x, center.y - half.y)
+        br = pr.Vector2(center.x + half.x, center.y + half.y)
+        bl = pr.Vector2(center.x - half.x, center.y + half.y)
+
+        tl = rotate_point(tl, center, self.angle)
+        tr = rotate_point(tr, center, self.angle)
+        br = rotate_point(br, center, self.angle)
+        bl = rotate_point(bl, center, self.angle)
+
+        return [tl, tr, br, bl]
 
     def draw(self, dt: float) -> None:
         center = pr.Vector2(

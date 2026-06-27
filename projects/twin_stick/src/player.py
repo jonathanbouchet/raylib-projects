@@ -99,10 +99,11 @@ class Player(BaseSprite):
             laser = Laser(
                 position=tip_world,
                 direction=forward,
-                size=pr.Vector2(30, 1.5),
+                size=pr.Vector2(30, 5.0),
                 speed=200,
             )
             self.lasers.append(laser)
+            
 
         # for global_pos in self.global_pos:
         #     global_pos.x += int(pr.is_key_down(rl.KEY_RIGHT) * self.speed) - int(
@@ -137,3 +138,7 @@ class Player(BaseSprite):
         # pr.draw_triangle_3d(
         #     self.global_pos[0], self.global_pos[1], self.global_pos[2], self.color
         # )
+
+    def get_lasers(self) -> list[Laser]:
+        """return a list of all lasers instantiated"""
+        return self.lasers
