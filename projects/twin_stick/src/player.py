@@ -96,7 +96,12 @@ class Player(BaseSprite):
             ]
 
             tip_world = world[2]  # top vertex (same order as local)
-            laser = Laser(position=tip_world, direction=forward, speed=200)
+            laser = Laser(
+                position=tip_world,
+                direction=forward,
+                size=pr.Vector2(30, 1.5),
+                speed=200,
+            )
             self.lasers.append(laser)
 
         # for global_pos in self.global_pos:
@@ -107,7 +112,7 @@ class Player(BaseSprite):
         #         pr.is_key_down(rl.KEY_UP) * self.speed
         #     )
 
-    def draw(self, dt: float):
+    def draw(self, dt: float) -> None:
         a = math.radians(self.angle)
         c, s = math.cos(a), math.sin(a)
         # rotate local -> world and draw

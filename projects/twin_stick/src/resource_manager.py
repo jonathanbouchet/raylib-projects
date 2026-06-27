@@ -2,7 +2,7 @@ import json
 
 
 class ResourceManager:
-    def __init__(self, resources_path: str):
+    def __init__(self, resources_path: str) -> None:
         self.resources_path = resources_path
         self.resources_data = {}
 
@@ -11,7 +11,7 @@ class ResourceManager:
 
     def game_data(self) -> dict[str : int | str]:
         return self.resources_data.get("game")
-    
+
     def player_data(self) -> dict[str : int | str]:
         return self.resources_data.get("player")
 

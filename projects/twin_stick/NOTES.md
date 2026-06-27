@@ -113,6 +113,9 @@ but the original idea of the `ResourceManager` was to actually to take care of t
     ├── laser.py
     ├── player.py
     ├── proto.py
+    ├── resource_manager.py
+    ├── resources.json
     ├── scorer.py
-    └── sprite.py
+    ├── sprite.py
+    └── utils.py
 ```

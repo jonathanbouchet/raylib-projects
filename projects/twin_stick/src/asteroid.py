@@ -12,7 +12,7 @@ class Asteroid:
         window_borders: pr.Vector2,
         size: pr.Vector2,
         color: pr.Color,
-    ):
+    ) -> None:
         self.position = position
         self.direction = direction
         self.window_borders = window_borders
@@ -22,6 +22,7 @@ class Asteroid:
         self.angle = 0.0
         self.speed = 2.0  # pixels/sec
         self._rotating = False  # set with SPACE
+        self.discard: bool = False
 
     def update(self, dt: float) -> None:
         self.position.x += self.direction.x * self.speed * dt
@@ -34,7 +35,10 @@ class Asteroid:
             height=self.window_borders.y,
         )
 
-    def draw(self, dt: float):
+    def get_rectangle(self) -> pr.Rectangle:
+        pass
+
+    def draw(self, dt: float) -> None:
         center = pr.Vector2(
             self.position.x + self.size.x / 2, self.position.y + self.size.y / 2
         )

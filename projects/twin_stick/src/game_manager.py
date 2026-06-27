@@ -15,20 +15,23 @@ class GameStates(Enum):
 
 
 class GameManager:
-    def __init__(self, resources_manager):
+    def __init__(self, resources_manager) -> None:
         self.resources_manager: ResourceManager = resources_manager
         self.width: int = self.resources_manager.game_data().get("width")
         self.height: int = self.resources_manager.game_data().get("width")
         self.fps_target: int = self.resources_manager.game_data().get("fps")
-        self.background_color: pr.Color = tuple(self.resources_manager.game_data().get("background_color"))
+        self.background_color: pr.Color = tuple(
+            self.resources_manager.game_data().get("background_color")
+        )
         self.name: str = self.resources_manager.game_data().get("name")
         self.state = GameStates.INIT
         self.scorer = Scorer(number_enemies=10, remaining_time=60)
         self.frame_counter: int = 0
         self.player = Player(
             position=pr.Vector2(
-                self.resources_manager.player_data().get("position")[0], 
-                self.resources_manager.player_data().get("position")[1]),
+                self.resources_manager.player_data().get("position")[0],
+                self.resources_manager.player_data().get("position")[1],
+            ),
             window_borders=pr.Vector2(self.width, self.height),
             v1=pr.Vector3(self.width / 2 - 15, 100 + self.height / 2, 0),  # bottom left
             v2=pr.Vector3(
@@ -42,20 +45,33 @@ class GameManager:
             debug=self.resources_manager.player_data().get("debug"),
             debug_color=self.resources_manager.player_data().get("debug_color"),
         )
-        self.asteroids: list[Asteroid] = []
+        self.asteroids: list[Asteroid] = [
+            Asteroid(
+                position=pr.Vector2(
+                    random.randint(0, self.width), random.randint(0, self.height)
+                ),
+                direction=pr.Vector2(
+                    random.randint(-100, 100), random.randint(-100, 100)
+                ),
+                window_borders=pr.Vector2(self.width, self.height),
+                size=pr.Vector2(20, 20),
+                color=pr.WHITE,
+            )
+        ]
 
-    def init(self):
+    def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
 
-    def spawn_asteroid(self):
+    def spawn_asteroid(self) -> None:
         pass
 
     def update(self) -> None:
         # logic
         dt = pr.get_frame_time()
         self.frame_counter += 1
-        if self.frame_counter > 0 and self.frame_counter % (2 * self.fps_target) == 0:
+        # if self.frame_counter > 0 and self.frame_counter % (2 * self.fps_target) == 0:
+        if False:
             asteroids: list[Asteroid] = [
                 Asteroid(
                     position=pr.Vector2(
@@ -109,10 +125,12 @@ class GameManager:
         self.player.draw(dt=dt)
 
         # draw asteroids
-        _ = [asteroid.draw(dt=dt) for asteroid in self.asteroids]
+        _ = [
+            asteroid.draw(dt=dt) for asteroid in self.asteroids if not asteroid.discard
+        ]
 
         # draw lasers
-        _ = [laser.draw() for laser in self.player.lasers]
+        _ = [laser.draw() for laser in self.player.lasers if not laser.discard]
 
         self.draw_debug()
         pr.end_drawing()
