@@ -4,7 +4,17 @@
         "width": 600,
         "height": 600,
         "fps": 60,
-        "background_color": "black",
+        "background_color": [0, 0, 0, 255],
         "name": "asteroid app"
+    },
+    "player":
+    {
+        "position": [300, 500],
+        "speed": 10,
+        "angular_speed":150,
+        "color": [255, 255, 255, 255],
+        "scale": 1.0,
+        "debug": false,
+        "debug_color": [0, 0, 255, 255]
     }
 }

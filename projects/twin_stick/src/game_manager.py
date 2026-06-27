@@ -20,30 +20,27 @@ class GameManager:
         self.width: int = self.resources_manager.game_data().get("width")
         self.height: int = self.resources_manager.game_data().get("width")
         self.fps_target: int = self.resources_manager.game_data().get("fps")
-        self.background_color: pr.Color = (
-            pr.BLACK
-            if self.resources_manager.game_data().get("background_color")
-            else pr.DARKGRAY
-        )
+        self.background_color: pr.Color = tuple(self.resources_manager.game_data().get("background_color"))
         self.name: str = self.resources_manager.game_data().get("name")
-
         self.state = GameStates.INIT
         self.scorer = Scorer(number_enemies=10, remaining_time=60)
         self.frame_counter: int = 0
         self.player = Player(
-            position=pr.Vector2(self.width / 2, 500),
+            position=pr.Vector2(
+                self.resources_manager.player_data().get("position")[0], 
+                self.resources_manager.player_data().get("position")[1]),
             window_borders=pr.Vector2(self.width, self.height),
             v1=pr.Vector3(self.width / 2 - 15, 100 + self.height / 2, 0),  # bottom left
             v2=pr.Vector3(
                 self.width / 2 + 15, 100 + self.height / 2, 0
             ),  # bottom right
             v3=pr.Vector3(self.width / 2, 100 + self.height / 2 - 40, 0),  # top center,
-            speed=10,
-            angular_speed=150,
-            color=pr.WHITE,
-            scale=1.0,
-            debug=False,
-            debug_color=pr.BLUE,
+            speed=self.resources_manager.player_data().get("speed"),
+            angular_speed=self.resources_manager.player_data().get("angular_speed"),
+            color=self.resources_manager.player_data().get("color"),
+            scale=self.resources_manager.player_data().get("scale"),
+            debug=self.resources_manager.player_data().get("debug"),
+            debug_color=self.resources_manager.player_data().get("debug_color"),
         )
         self.asteroids: list[Asteroid] = []
 

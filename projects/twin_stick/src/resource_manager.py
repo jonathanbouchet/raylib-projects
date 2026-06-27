@@ -11,6 +11,9 @@ class ResourceManager:
 
     def game_data(self) -> dict[str : int | str]:
         return self.resources_data.get("game")
+    
+    def player_data(self) -> dict[str : int | str]:
+        return self.resources_data.get("player")
 
-    def print_game_data(self) -> dict[str : int | str]:
+    def print_game_data(self) -> str:
         print(self.resources_data.get("game"))
