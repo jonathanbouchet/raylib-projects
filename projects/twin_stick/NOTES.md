@@ -14,7 +14,7 @@ This file is to document the day to day development
 ## 2026-06-21
 - prototype idea
 
-<img src="../../images/ts_proto.png" alt="" width="200">
+<img src="../../images/ts_proto.png" alt="" width="300">
 
 - not decided yet on either to use a simple triangle shape or use a texture
 - experimented with contols: 2 choices:
@@ -74,6 +74,8 @@ class GameManager:
     - background: parallax using 1 layer of random rectangles scrolling down and another 1 layer with a slightly higher speed and shapes
         - use raylib primitive 
 
+<img src="../../images/ts_0.png" alt="" width="300">
+
 ## 2026-06-24
 - another change in the overall visual ; I plan to also change the asteroids to only rectangle, not filled shape
 - collision laser-asteroid: this may be tricky because the laser is a `line` and the asteroid a `rectangle`. `Raylib` has a `check_coliision_point_rect` to check if a point is inside a rectangle but it may miss the collision if the laser travels too fast
@@ -100,8 +102,6 @@ self.player = Player(
 but the original idea of the `ResourceManager` was to actually to take care of this. So I need to define a `JSON` from which the `ResourceManager` will read the parameter
 - current status of the game:
 
-<img src="../../images/ts_0.png" alt="" width="200">
-
 ```bash
 ├── NOTES.md
 ├── README.md
@@ -119,3 +119,21 @@ but the original idea of the `ResourceManager` was to actually to take care of t
     ├── sprite.py
     └── utils.py
 ```
+
+## 2026-06-26
+
+<img src="../../images/ts_1.png" alt="" width="300">
+
+- refactoring again
+- re-introduced the `ResourceManager`
+- added `Asteroids` to game_manager and code for spawning waves of asteroid
+- fixed Asteroid rotation: because this is now a raylib primitive shape, there's no method to draw a rectangle oultined and rotated. So instead I collect the 4 points of the asteroid and rotate in their local frame
+- Laser: switch from Laser as a line to Laser = rectangle
+- prototyped the collision detection: `pr.checks_collision_rects` works only for Axis-Aligned Bounding Boxes (AABB), not for Oriented Bounding Boxes (OBB)
+    - got an OBB working but also found a py package doing the exact same thing: [polygoncollision](https://github.com/vertmit/PolygonCollision)
+- the OBB method is using the Separating Axis Theorem  (SAT): The Separating Axis Theorem is a technique for solving convex polygon collision problems.  The Theorem postulates if a line can be drawn between two convex (and not concave) polygons the Polyhedra are not colliding.
+
+Some related docs:
+- https://code.tutsplus.com/collision-detection-using-the-separating-axis-theorem--gamedev-169t
+- https://programmerart.weebly.com/separating-axis-theorem.html
+- https://dev.to/pratyush_mohanty_6b8f2749/the-math-behind-bounding-box-collision-detection-aabb-vs-obbseparate-axis-theorem-1gdn
