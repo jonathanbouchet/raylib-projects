@@ -1,6 +1,4 @@
-import math
 import pyray as pr
-from .sprite import BaseSprite
 from .utils import rotate_point, wrap_borders
 
 

@@ -1,12 +1,11 @@
 import math
 import pyray as pr
 import raylib as rl
-from .sprite import BaseSprite
 from .laser import Laser
 from .utils import wrap_borders
 
 
-class Player(BaseSprite):
+class Player:
     def __init__(
         self,
         position: pr.Vector2,
@@ -21,15 +20,13 @@ class Player(BaseSprite):
         debug: bool,
         debug_color,
     ) -> None:
-        super().__init__(
-            position=position,
-            speed=speed,
-            angular_speed=angular_speed,
-            scale=scale,
-            color=color,
-            debug=debug,
-            debug_color=debug_color,
-        )
+        self.position = position
+        self.speed = speed
+        self.angular_speed = angular_speed
+        self.scale = scale
+        self.color = color
+        self.debug = debug
+        self.debug_color = debug_color
         self.window_borders = window_borders
         self.v1 = v1
         self.v2 = v2
@@ -103,15 +100,6 @@ class Player(BaseSprite):
                 speed=200,
             )
             self.lasers.append(laser)
-            
-
-        # for global_pos in self.global_pos:
-        #     global_pos.x += int(pr.is_key_down(rl.KEY_RIGHT) * self.speed) - int(
-        #         pr.is_key_down(rl.KEY_LEFT) * self.speed
-        #     )
-        #     global_pos.y += int(pr.is_key_down(rl.KEY_DOWN) * self.speed) - int(
-        #         pr.is_key_down(rl.KEY_UP) * self.speed
-        #     )
 
     def draw(self, dt: float) -> None:
         a = math.radians(self.angle)
@@ -124,20 +112,8 @@ class Player(BaseSprite):
             )
             for lv in self.local
         ]
-        world_3d = [pr.Vector3(w.x, w.y, 0) for w in world]
+        # world_3d = [pr.Vector3(w.x, w.y, 0) for w in world]
         pr.draw_triangle_lines(world[0], world[1], world[2], self.color)
-        # pr.draw_triangle_3d(world_3d[0], world_3d[1], world_3d[2], self.color)
-        # pr.draw_triangle_3d(self.v1, self.v2, self.v3, self.color)
-        # world = [pr.Vector2(self.position.x, self.position.y ) for vect in self.local]
-        # pr.draw_triangle_lines(world[0], world[1], world[2], self.color)
-        # add a 3rd dimension for this method, z=0
-        # world_3d = [pr.Vector3(w.x, w.y ,0) for w in world]
-        # print(f"{world_3d[0].x},{world_3d[0].y},{world_3d[1].x},{world_3d[1].y}, {world_3d[2].x},{world_3d[2].y}")
-        # pr.draw_triangle_3d(world_3d[0], world_3d[1], world_3d[2], self.color)
-
-        # pr.draw_triangle_3d(
-        #     self.global_pos[0], self.global_pos[1], self.global_pos[2], self.color
-        # )
 
     def get_lasers(self) -> list[Laser]:
         """return a list of all lasers instantiated"""
