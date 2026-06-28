@@ -49,7 +49,7 @@ class GameManager:
             laser_data=self.resources_manager.laser_data()
         )
         self.asteroids_wave_timer = Timer(
-            duration=5,  # testing: create wave of 2 asteroids every 2 seconds
+            duration=self.resources_manager.timer_game_data().get("duration"),
             repeat=True,
             autostart=True,
             func=self.create_asteroid_wave,
@@ -65,14 +65,22 @@ class GameManager:
             [
                 Asteroid(
                     position=pr.Vector2(
-                        random.randint(0, self.width), random.randint(0, self.height)
+                        random.randint(
+                            self.resources_manager.asteroid_data().get("position")[0], 
+                            self.resources_manager.asteroid_data().get("position")[1]
+                            ), 
+                        random.randint(
+                            self.resources_manager.asteroid_data().get("position")[0], 
+                            self.resources_manager.asteroid_data().get("position")[1])
                     ),
                     direction=pr.Vector2(
                         random.randint(-100, 100), random.randint(-100, 100)
                     ),
                     window_borders=pr.Vector2(self.width, self.height),
-                    size=pr.Vector2(20, 20),
-                    color=pr.WHITE,
+                    size=pr.Vector2(
+                        self.resources_manager.asteroid_data().get("size")[0], 
+                        self.resources_manager.asteroid_data().get("size")[1]),
+                    color=tuple(self.resources_manager.asteroid_data().get("color")),
                 )
                 for _ in range(2)
             ]

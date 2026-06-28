@@ -18,5 +18,11 @@ class ResourceManager:
     def laser_data(self) -> dict[str: int | str]:
         return self.resources_data.get("laser")
 
+    def asteroid_data(self) -> dict[str: int | str]:
+        return self.resources_data.get("asteroid")
+    
+    def timer_game_data(self) -> dict[str: int | str]:
+        return self.resources_data.get("timer_game")
+
     def print_game_data(self) -> str:
         print(self.resources_data.get("game"))
