@@ -16,5 +16,11 @@
         "scale": 1.0,
         "debug": false,
         "debug_color": [0, 0, 255, 255]
+    },
+    "laser":
+    {
+        "size": [30, 5],
+        "speed": 200,
+        "color": [255, 255, 255, 255]
     }
 }

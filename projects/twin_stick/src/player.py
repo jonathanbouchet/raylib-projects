@@ -18,7 +18,8 @@ class Player:
         scale: float,
         color: pr.Color,
         debug: bool,
-        debug_color,
+        debug_color: pr.Color,
+        laser_data: dict[str, str | int]
     ) -> None:
         self.position = position
         self.speed = speed
@@ -28,6 +29,7 @@ class Player:
         self.debug = debug
         self.debug_color = debug_color
         self.window_borders = window_borders
+        self.laser_data = laser_data
         self.v1 = v1
         self.v2 = v2
         self.v3 = v3
@@ -96,8 +98,14 @@ class Player:
             laser = Laser(
                 position=tip_world,
                 direction=forward,
-                size=pr.Vector2(30, 5.0),
-                speed=200,
+                size=pr.Vector2(
+                    self.laser_data.get("size")[0], 
+                    self.laser_data.get("size")[1]
+                ),
+                speed=self.laser_data.get("speed"),
+                color=tuple(self.laser_data.get("color"))
+                # size=pr.Vector2(30, 5.0),
+                # speed=200,
             )
             self.lasers.append(laser)
 

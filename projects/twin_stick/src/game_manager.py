@@ -42,10 +42,11 @@ class GameManager:
             v3=pr.Vector3(self.width / 2, 100 + self.height / 2 - 40, 0),  # top center,
             speed=self.resources_manager.player_data().get("speed"),
             angular_speed=self.resources_manager.player_data().get("angular_speed"),
-            color=self.resources_manager.player_data().get("color"),
+            color=tuple(self.resources_manager.player_data().get("color")),
             scale=self.resources_manager.player_data().get("scale"),
             debug=self.resources_manager.player_data().get("debug"),
-            debug_color=self.resources_manager.player_data().get("debug_color"),
+            debug_color=tuple(self.resources_manager.player_data().get("debug_color")),
+            laser_data=self.resources_manager.laser_data()
         )
         self.asteroids_wave_timer = Timer(
             duration=5,  # testing: create wave of 2 asteroids every 2 seconds

@@ -10,12 +10,14 @@ class Laser:
         direction: pr.Vector2,
         size: pr.Vector2,
         speed: float,
+        color: pr.Color
     ):
         self.position = position
         self.direction = direction
         self.size = size
         self.speed = speed
         self.discard = False
+        self.color = color
 
     def update(self, dt) -> None:
         self.position.x += self.direction.x * self.speed * dt
@@ -31,7 +33,7 @@ class Laser:
         br = pr.Vector2(center.x + half.x, center.y + half.y)
         bl = pr.Vector2(center.x - half.x, center.y + half.y)
 
-        angle = math.degrees(math.atan(self.direction.y / self.direction.x))
+        angle = math.degrees(math.atan2(self.direction.y, self.direction.x))
 
         tl = rotate_point(tl, center, angle)
         tr = rotate_point(tr, center, angle)
@@ -48,6 +50,6 @@ class Laser:
         pr.draw_rectangle_pro(
             laser_rect,
             pr.Vector2(self.size.x // 2, self.size.y // 2),
-            math.degrees(math.atan(self.direction.y / self.direction.x)),
-            pr.WHITE,
+            math.degrees(math.atan2(self.direction.y, self.direction.x)),
+            self.color,
         )
