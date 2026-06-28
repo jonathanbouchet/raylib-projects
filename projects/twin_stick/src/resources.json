@@ -11,7 +11,7 @@
     {
         "position": [300, 500],
         "speed": 10,
-        "angular_speed":150,
+        "angular_speed": 150,
         "color": [255, 255, 255, 255],
         "scale": 1.0,
         "debug": false,
@@ -21,13 +21,13 @@
     {
         "position": [0, 600],
         "direction": [-100, 100],
-        "size": [20, 20],
+        "size": [40, 40],
         "color": [255, 255, 255, 255]
     },
     "laser":
     {
         "size": [30, 5],
-        "speed": 200,
+        "speed": 500,
         "color": [255, 255, 255, 255]
     },
     "scorer":

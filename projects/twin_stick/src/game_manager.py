@@ -1,3 +1,4 @@
+from pathlib import Path
 import random
 import PolygonCollision
 from enum import Enum
@@ -7,6 +8,8 @@ from .player import Player
 from .scorer import Scorer
 from .resource_manager import ResourceManager
 from .timer import Timer
+
+THIS_DIR = (Path(__file__).parent.parent / "assets").resolve()
 
 
 class GameStates(Enum):
@@ -54,11 +57,33 @@ class GameManager:
             autostart=True,
             func=self.create_asteroid_wave,
         )
-        self.asteroids: list[Asteroid] = []
+        self.asteroids: list[Asteroid] = [Asteroid(
+                    position=pr.Vector2(
+                        random.randint(
+                            self.resources_manager.asteroid_data().get("position")[0], 
+                            self.resources_manager.asteroid_data().get("position")[1]
+                            ), 
+                        random.randint(
+                            self.resources_manager.asteroid_data().get("position")[0], 
+                            self.resources_manager.asteroid_data().get("position")[1])
+                    ),
+                    direction=pr.Vector2(
+                        random.randint(-100, 100), random.randint(-100, 100)
+                    ),
+                    window_borders=pr.Vector2(self.width, self.height),
+                    size=pr.Vector2(
+                        self.resources_manager.asteroid_data().get("size")[0], 
+                        self.resources_manager.asteroid_data().get("size")[1]),
+                    color=tuple(self.resources_manager.asteroid_data().get("color")),
+                )
+                for _ in range(2)]
 
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
+        # load shader
+        self.target = pr.load_render_texture(pr.get_screen_width(), pr.get_screen_height())
+        self.shader = pr.load_shader(pr.ffi.NULL, f"{THIS_DIR}/bloom.fs") # Point to your downloaded shader file
 
     def create_asteroid_wave(self) -> None:
         self.asteroids.extend(
@@ -107,7 +132,7 @@ class GameManager:
         # logic
         dt = pr.get_frame_time()
         self.frame_counter += 1
-        self.asteroids_wave_timer.update()
+        # self.asteroids_wave_timer.update()
 
         # update player
         self.player.update(dt=dt)
@@ -142,6 +167,9 @@ class GameManager:
 
     def draw(self) -> None:
         dt = pr.get_frame_time()
+         # --- RENDER SCENE TO TEXTURE ---
+        # pr.begin_texture_mode(self.target)
+
         pr.begin_drawing()
         pr.clear_background(self.background_color)
 
@@ -157,6 +185,21 @@ class GameManager:
         _ = [laser.draw() for laser in self.player.lasers if not laser.discard]
 
         self.draw_debug()
+        # pr.end_texture_mode()
+
+        # --- DRAW AND APPLY GLOW ---
+        # pr.begin_drawing()
+        # pr.clear_background(pr.RAYWHITE)
+        
+        # pr.begin_shader_mode(self.shader)
+        # # Draw the rendered texture with the bloom shader applied
+        # pr.draw_texture_rec(
+        #     self.target.texture, 
+        #     pr.Rectangle(0, 0, pr.get_screen_width(), -pr.get_screen_height()), 
+        #     pr.Vector2(0, 0), 
+        #     pr.WHITE
+        # )
+        # pr.end_shader_mode()
         pr.end_drawing()
 
     def end(self) -> None:

@@ -18,14 +18,14 @@ class Asteroid:
         self.color = color
         self.lineThick = 2
         self.angle = 0.0
-        self.speed = 2.0  # pixels/sec
+        self.speed = 0.0  # pixels/sec
         self._rotating = False  # set with SPACE
         self.discard: bool = False
 
     def update(self, dt: float) -> None:
         self.position.x += self.direction.x * self.speed * dt
         self.position.y += self.direction.y * self.speed * dt
-        self.angle += 180.0 * dt  # degrees/sec
+        self.angle += 90.0 * dt  # degrees/sec
 
         self.position = wrap_borders(
             position=self.position,
