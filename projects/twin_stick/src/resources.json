@@ -5,7 +5,8 @@
         "height": 600,
         "fps": 60,
         "background_color": [0, 0, 0, 255],
-        "name": "asteroid app"
+        "name": "asteroid app",
+        "use_shader": true
     },
     "player":
     {
@@ -15,7 +16,9 @@
         "color": [255, 255, 255, 255],
         "scale": 1.0,
         "debug": false,
-        "debug_color": [0, 0, 255, 255]
+        "debug_color": [0, 0, 255, 255],
+        "shoot_cooldown": 0.5,
+        "shoot_timer": 0.0
     },
     "asteroid":
     {
@@ -32,11 +35,15 @@
     },
     "scorer":
     {
-        "number_enemies": 10,
+        "number_enemies": 2,
         "remaining_time": 60
     },
     "timer_game":
     {
         "duration": 5
+    },
+    "shader":
+    {
+        "bloom": "bloom.fs"
     }
 }

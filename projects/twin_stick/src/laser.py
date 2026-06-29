@@ -10,7 +10,7 @@ class Laser:
         direction: pr.Vector2,
         size: pr.Vector2,
         speed: float,
-        color: pr.Color
+        color: pr.Color,
     ):
         self.position = position
         self.direction = direction

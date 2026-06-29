@@ -14,15 +14,21 @@ class ResourceManager:
 
     def player_data(self) -> dict[str : int | str]:
         return self.resources_data.get("player")
-    
-    def laser_data(self) -> dict[str: int | str]:
+
+    def laser_data(self) -> dict[str : int | str]:
         return self.resources_data.get("laser")
 
-    def asteroid_data(self) -> dict[str: int | str]:
+    def asteroid_data(self) -> dict[str : int | str]:
         return self.resources_data.get("asteroid")
-    
-    def timer_game_data(self) -> dict[str: int | str]:
+
+    def timer_game_data(self) -> dict[str : int | str]:
         return self.resources_data.get("timer_game")
 
+    def scorer_data(self) -> dict[str:int]:
+        return self.resources_data.get("scorer")
+
+    def shaders(self) -> dict[str, str]:
+        return self.resources_data.get("shader")
+
     def print_game_data(self) -> str:
-        print(self.resources_data.get("game"))
+        print(self.resources_data.get("scorer"))

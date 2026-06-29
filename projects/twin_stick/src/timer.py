@@ -39,6 +39,6 @@ class Timer:
         if self.active:
             if pr.get_time() - self.start_time >= self.duration:
                 if self.func:
-                # if self.func and self.start_time:
+                    # if self.func and self.start_time:
                     self.func()
                 self.deactivate()

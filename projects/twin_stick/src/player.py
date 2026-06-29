@@ -19,7 +19,9 @@ class Player:
         color: pr.Color,
         debug: bool,
         debug_color: pr.Color,
-        laser_data: dict[str, str | int]
+        laser_data: dict[str, str | int],
+        shoot_cooldown: float,
+        shoot_timer: float,
     ) -> None:
         self.position = position
         self.speed = speed
@@ -45,8 +47,8 @@ class Player:
         self.drag = 0.5  # damping
         self.lasers: list[Laser] = []
         # testing
-        self.shoot_cooldown = 0.5  # tune (s)
-        self.shoot_timer = 0.0
+        self.shoot_cooldown = shoot_cooldown
+        self.shoot_timer = shoot_timer
 
     def update(self, dt: float) -> None:
         self.move(dt)
@@ -55,7 +57,8 @@ class Player:
         # 1) apply rotation from current input
         self.angle += (
             (int(pr.is_key_down(rl.KEY_RIGHT)) - int(pr.is_key_down(rl.KEY_LEFT)))
-            * self.angular_speed * dt
+            * self.angular_speed
+            * dt
         )
 
         # 1.5 testing
@@ -70,8 +73,7 @@ class Player:
         # 2) compute forward ONCE from the updated angle
         ang_rad = math.radians(self.angle)
         forward = pr.Vector2(
-            math.cos(ang_rad - math.pi / 2),
-            math.sin(ang_rad - math.pi / 2)
+            math.cos(ang_rad - math.pi / 2), math.sin(ang_rad - math.pi / 2)
         )
 
         # 3) thrust uses the same forward
@@ -107,7 +109,9 @@ class Player:
             ]
             tip_world = world[2]
 
-            dir_vec = pr.Vector2(tip_world.x - self.position.x, tip_world.y - self.position.y)
+            dir_vec = pr.Vector2(
+                tip_world.x - self.position.x, tip_world.y - self.position.y
+            )
             mag = math.hypot(dir_vec.x, dir_vec.y) or 1.0
             dir_vec.x /= mag
             dir_vec.y /= mag
@@ -117,11 +121,10 @@ class Player:
                 direction=dir_vec,
                 # direction=forward,   # <-- guaranteed synced with this frame’s angle
                 size=pr.Vector2(
-                    self.laser_data.get("size")[0],
-                    self.laser_data.get("size")[1]
+                    self.laser_data.get("size")[0], self.laser_data.get("size")[1]
                 ),
                 speed=self.laser_data.get("speed"),
-                color=tuple(self.laser_data.get("color"))
+                color=tuple(self.laser_data.get("color")),
             )
             self.lasers.append(laser)
 
@@ -233,7 +236,7 @@ class Player:
     #             position=tip_world,
     #             direction=forward,
     #             size=pr.Vector2(
-    #                 self.laser_data.get("size")[0], 
+    #                 self.laser_data.get("size")[0],
     #                 self.laser_data.get("size")[1]
     #             ),
     #             speed=self.laser_data.get("speed"),
@@ -255,17 +258,14 @@ class Player:
         # world_3d = [pr.Vector3(w.x, w.y, 0) for w in world]
         pr.draw_triangle_lines(world[0], world[1], world[2], self.color)
 
-        # draw a line in the forward direction to help the user 
+        # draw a line in the forward direction to help the user
         ang_rad = math.radians(self.angle)
         forward = pr.Vector2(
             math.cos(ang_rad - math.pi / 2), math.sin(ang_rad - math.pi / 2)
         )
         # print(f"{forward.x=}, {forward.y=}")
         start = world[2]
-        end = pr.Vector2(
-            start.x + forward.x * 1000,
-            start.y + forward.y * 1000
-)
+        end = pr.Vector2(start.x + forward.x * 1000, start.y + forward.y * 1000)
         pr.draw_line_ex(start, end, 1, pr.GREEN)
 
     def get_lasers(self) -> list[Laser]:
