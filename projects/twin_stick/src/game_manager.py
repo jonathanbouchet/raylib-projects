@@ -33,10 +33,6 @@ class GameManager:
         self.name: str = self.resources_manager.game_data().get("name")
         self.use_shader: str = self.resources_manager.game_data().get("use_shader")
 
-        self.frame_counter: int = 0
-
-        self.state = GameStates.INIT
-
         # scorer
         self.scorer = Scorer(
             number_enemies=self.resources_manager.scorer_data().get("number_enemies"),
@@ -105,6 +101,8 @@ class GameManager:
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
+        self.frame_counter: int = 0
+        self.state = GameStates.INIT
         # load shader
         if self.use_shader:
             self.target = pr.load_render_texture(
@@ -113,6 +111,7 @@ class GameManager:
             self.shader = pr.load_shader(
                 pr.ffi.NULL, f"{THIS_DIR}/{self.shader_bloom}"
             )  # Point to your downloaded shader file
+
 
     def create_asteroid_wave(self) -> None:
         self.asteroids.extend(
@@ -158,6 +157,7 @@ class GameManager:
                 if asteroid_polygon.collide(laser_polygon):
                     print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
                     asteroid.discard = True  # checking if discard works ; the laser should not be rendered (--> YES, it works)
+                    self.scorer.number_enemies -= 1
 
     def update(self) -> None:
         # logic
@@ -179,24 +179,38 @@ class GameManager:
         self.check_collisions()
 
     async def run(self) -> None:
-        self.state = GameStates.RUN
         while not pr.window_should_close():
-            self.update()
-            if self.use_shader:
-                self.draw_with_shader()
+            # draw start screen
+            if pr.gui_button(
+                pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
+                "Start the game") or self.state == GameStates.RUN:
+                self.state = GameStates.RUN
+                self.update()
+                if self.use_shader:
+                    self.draw_with_shader()
+                else:
+                    self.draw()
             else:
-                self.draw()
+                self.draw_blanck()
+                self.draw_debug()
+
+    def draw_blanck(self) -> None:
+        pr.begin_drawing()
+        pr.clear_background(self.background_color)
+        pr.end_drawing()
+
 
     def draw_debug(self) -> None:
         pr.draw_fps(0, 0)
-        pr.draw_text(f"{self.state}", 0, 20, 20, pr.DARKGREEN)
-        pr.draw_text(f"ASTEROIDS: {len(self.asteroids)}", 0, 40, 20, pr.DARKGREEN)
-        pr.draw_text(f"TIME: {self.scorer.remaining_time}", 0, 60, 20, pr.DARKGREEN)
-        pr.draw_text(f"LASERS: {len(self.player.lasers)}", 0, 80, 20, pr.DARKGREEN)
+        pr.draw_text(f"{self.state}", 0, 20, 20, pr.GREEN)
+        pr.draw_text(f"ASTEROIDS: {self.scorer.number_enemies}", 0, 40, 20, pr.GREEN)
+        pr.draw_text(f"TIME: {self.scorer.remaining_time}", 0, 60, 20, pr.GREEN)
+        pr.draw_text(f"LASERS: {len(self.player.lasers)}", 0, 80, 20, pr.GREEN)
         pr.draw_text(
             f"{str(int(pr.get_time()))}, {self.frame_counter}", 0, 100, 20, pr.GREEN
         )
         pr.draw_text(f"USE SHADER: {str(self.use_shader)}", 0, 120, 20, pr.GREEN)
+        pr.draw_text(f"WAVE: {str(self.scorer.wave)}", 0, 140, 20, pr.GREEN)
         pr.draw_line(0, self.height // 2, self.width, self.height // 2, pr.RED)
         pr.draw_line(self.width // 2, 0, self.width // 2, self.height, pr.RED)
 

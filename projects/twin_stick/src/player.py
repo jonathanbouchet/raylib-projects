@@ -266,7 +266,7 @@ class Player:
         # print(f"{forward.x=}, {forward.y=}")
         start = world[2]
         end = pr.Vector2(start.x + forward.x * 1000, start.y + forward.y * 1000)
-        pr.draw_line_ex(start, end, 1, pr.GREEN)
+        pr.draw_line_ex(start, end, 1, pr.SKYBLUE)
 
     def get_lasers(self) -> list[Laser]:
         """return a list of all lasers instantiated"""
