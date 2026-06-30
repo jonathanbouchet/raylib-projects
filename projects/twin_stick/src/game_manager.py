@@ -5,6 +5,7 @@ from enum import Enum
 import pyray as pr
 from .asteroid import Asteroid
 from .player import Player
+from .laser import Laser
 from .scorer import Scorer
 from .resource_manager import ResourceManager
 from .timer import Timer
@@ -141,6 +142,12 @@ class GameManager:
             ]
         )
 
+    def discard_asteroids(self) -> None:
+        self.asteroids = [asteroid for asteroid in self.asteroids if not asteroid.discard]
+
+    def discard_lasers(self) -> None:
+        self.player.lasers = [laser for laser in self.player.lasers if not laser.discard]
+
     def check_collisions(self) -> None:
         """check any collision between asteroids and lasers"""
         for laser in self.player.lasers:
@@ -156,8 +163,11 @@ class GameManager:
                 )
                 if asteroid_polygon.collide(laser_polygon):
                     print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
-                    asteroid.discard = True  # checking if discard works ; the laser should not be rendered (--> YES, it works)
-                    self.scorer.number_enemies -= 1
+                    asteroid.discard = True  # checking if discard works ; the asteroid should not be rendered (--> YES, it works)
+                    laser.discard = True # checking if discard works ; the laser should not be rendered (--> YES, it works)
+                    self.discard_asteroids()
+                    self.discard_lasers()
+                    # self.scorer.number_enemies -= 1
 
     def update(self) -> None:
         # logic
@@ -203,7 +213,7 @@ class GameManager:
     def draw_debug(self) -> None:
         pr.draw_fps(0, 0)
         pr.draw_text(f"{self.state}", 0, 20, 20, pr.GREEN)
-        pr.draw_text(f"ASTEROIDS: {self.scorer.number_enemies}", 0, 40, 20, pr.GREEN)
+        pr.draw_text(f"ASTEROIDS: {len(self.asteroids)}", 0, 40, 20, pr.GREEN)
         pr.draw_text(f"TIME: {self.scorer.remaining_time}", 0, 60, 20, pr.GREEN)
         pr.draw_text(f"LASERS: {len(self.player.lasers)}", 0, 80, 20, pr.GREEN)
         pr.draw_text(
