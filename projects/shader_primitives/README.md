@@ -1,4 +1,4 @@
-- This scriot shows how to apply a shader to a `raylib` primitive shape (Rectangle, circle)
+- This script shows how to apply a shader to a `raylib` primitive shape (Rectangle, circle)
 - the idea is to apply the shader to the whole screen so all objects outside the `pr.begin_shader_mode(shader)` <--> `pr.end_shader_mode()` will not be affected by it
 - note that the `game window` should match the definition in the shader file:
 
