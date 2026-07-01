@@ -5,7 +5,6 @@ from enum import Enum
 import pyray as pr
 from .asteroid import Asteroid
 from .player import Player
-from .laser import Laser
 from .scorer import Scorer
 from .resource_manager import ResourceManager
 from .timer import Timer
@@ -113,7 +112,6 @@ class GameManager:
                 pr.ffi.NULL, f"{THIS_DIR}/{self.shader_bloom}"
             )  # Point to your downloaded shader file
 
-
     def create_asteroid_wave(self) -> None:
         self.asteroids.extend(
             [
@@ -143,10 +141,14 @@ class GameManager:
         )
 
     def discard_asteroids(self) -> None:
-        self.asteroids = [asteroid for asteroid in self.asteroids if not asteroid.discard]
+        self.asteroids = [
+            asteroid for asteroid in self.asteroids if not asteroid.discard
+        ]
 
     def discard_lasers(self) -> None:
-        self.player.lasers = [laser for laser in self.player.lasers if not laser.discard]
+        self.player.lasers = [
+            laser for laser in self.player.lasers if not laser.discard
+        ]
 
     def check_collisions(self) -> None:
         """check any collision between asteroids and lasers"""
@@ -164,7 +166,7 @@ class GameManager:
                 if asteroid_polygon.collide(laser_polygon):
                     print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
                     asteroid.discard = True  # checking if discard works ; the asteroid should not be rendered (--> YES, it works)
-                    laser.discard = True # checking if discard works ; the laser should not be rendered (--> YES, it works)
+                    laser.discard = True  # checking if discard works ; the laser should not be rendered (--> YES, it works)
                     self.discard_asteroids()
                     self.discard_lasers()
                     # self.scorer.number_enemies -= 1
@@ -191,9 +193,13 @@ class GameManager:
     async def run(self) -> None:
         while not pr.window_should_close():
             # draw start screen
-            if pr.gui_button(
-                pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
-                "Start the game") or self.state == GameStates.RUN:
+            if (
+                pr.gui_button(
+                    pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
+                    "Start the game",
+                )
+                or self.state == GameStates.RUN
+            ):
                 self.state = GameStates.RUN
                 self.update()
                 if self.use_shader:
@@ -208,7 +214,6 @@ class GameManager:
         pr.begin_drawing()
         pr.clear_background(self.background_color)
         pr.end_drawing()
-
 
     def draw_debug(self) -> None:
         pr.draw_fps(0, 0)

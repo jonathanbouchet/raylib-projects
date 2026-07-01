@@ -156,3 +156,8 @@ const vec2 size = vec2(800, 450);   // Framebuffer size
 ```
 
 <img src="../../images/shader_primitive.png" alt="" width="300">
+
+- status of the game
+<img src="../../images/ts_2.png" alt="" width="300">
+
+<img src="../../images/ts_3.png" alt="" width="300">
