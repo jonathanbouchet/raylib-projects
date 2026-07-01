@@ -137,3 +137,22 @@ Some related docs:
 - https://code.tutsplus.com/collision-detection-using-the-separating-axis-theorem--gamedev-169t
 - https://programmerart.weebly.com/separating-axis-theorem.html
 - https://dev.to/pratyush_mohanty_6b8f2749/the-math-behind-bounding-box-collision-detection-aabb-vs-obbseparate-axis-theorem-1gdn
+
+## 2026-06-29
+- added resources for scorer, shaders and sync with existing codes; added switch to use shader
+- added a start screen and associated gamestates logic; begin to update Scorer with asteroids destroyed [wip]
+- added logic to discard laser and asteroid if collision
+- the idea is to apply the shader to the whole screen so all objects outside the `pr.begin_shader_mode(shader)` <--> `pr.end_shader_mode()` will not be affected by it
+- note that the `game window` should match the definition in the shader file:
+
+```py
+# py game
+pr.init_window(800, 450, "pyray Glow Effect")
+```
+
+```cpp
+// shader file
+const vec2 size = vec2(800, 450);   // Framebuffer size
+```
+
+<img src="../../images/shader_primitive.png" alt="" width="300">
