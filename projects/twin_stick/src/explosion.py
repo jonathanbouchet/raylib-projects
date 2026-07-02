@@ -19,6 +19,8 @@ class MiniAsteroid:
         width: int,
         height: int,
         speed: int,
+        lifetime: int,
+        color: pr.Color,
     ) -> None:
         self.id = id
         self.x = position.x
@@ -28,10 +30,10 @@ class MiniAsteroid:
         self.width = width
         self.height = height
         self.speed = speed
-        self.color = pr.WHITE
+        self.lifetime: int = lifetime
+        self.color = color
         self.angle = math.degrees(math.atan2(self.dy, self.dx))
         self.creation_time = pr.get_time()
-        self.lifetime: int = 2
         self.discard = False
 
     def update(self, dt: float) -> None:
@@ -58,19 +60,21 @@ class Explosion:
     """
 
     def __init__(
-        self, position: pr.Vector2, max_size: pr.Vector2, children: int, speed: int
+        self, position: pr.Vector2, max_size: pr.Vector2, children: int, speed: int, lifetime: int, color: pr.Color
     ) -> None:
-        self.position = position
-        self.max_size = max_size
-        self.children = children
-        self.speed = speed
+        self.position = position # position where the Explosion is spawned
+        self.max_size = max_size # array if (min, max) values for the remnants
+        self.children = children # number of remnants
+        self.speed = speed # speed of the remnant
+        self.lifetime=lifetime # life time of the remnant, ie. after lifetime, the remnants is discarded
+        self.color=color # color of the remnant
         self.remnants: list[MiniAsteroid] = self.create_children()
 
     def create_children(self) -> list[MiniAsteroid]:
         tmp = []
         for i in range(0, self.children):
-            width = 10  # random.randint(10, int(self.max_size.x))
-            height = 10  # random.randint(10, int(self.max_size.y))
+            width = random.randint(int(self.max_size.x), int(self.max_size.y))
+            height = random.randint(int(self.max_size.x), int(self.max_size.y))
             direction = pr.Vector2(random.uniform(-1.0, 1.0), random.uniform(-1.0, 1.0))
             # normalize direction (avoid zero-length)
             length = math.hypot(direction.x, direction.y)
@@ -87,6 +91,8 @@ class Explosion:
                     width=width,
                     height=height,
                     speed=speed,
+                    lifetime=self.lifetime,
+                    color=self.color
                 )
             )
         return tmp

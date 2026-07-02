@@ -162,3 +162,66 @@ const vec2 size = vec2(800, 450);   // Framebuffer size
 <img src="../../images/ts_2.png" alt="" width="300">
 
 <img src="../../images/ts_3.png" alt="" width="300">
+
+## 2026-07-02
+- refactored some of the logic bettwen the `Scorer` and the `Timer`
+- each wave now depends on these 2 parameters:
+
+```python
+"scorer":
+    {
+        "number_enemies": 2,
+        "remaining_time": 10
+    },
+```
+- logic is coded in the `Scorer`:
+
+```python
+if self.number_enemies == 0 and self.remaining_time > 0:
+            self.wave_state = WaveStates.SUCCESS
+        elif self.remaining_time <= 0 and self.number_enemies > 0:
+            self.wave_state = WaveStates.FAIL
+        else:
+            self.wave_state = WaveStates.ONGOING
+```
+
+- added more debug infos at the screen
+- added `Explosion` data to the `ResourceManager`
+- added the `Explosion` mechanism:
+    - check there was a collision
+    - spawn an `Explosion` object 
+    - discard both the asteroid and laser -> they will not be remove from their current list
+
+```python
+if asteroid_polygon.collide(laser_polygon):
+    asteroid.discard = True 
+    laser.discard = True 
+    # create an explosion
+    self.explosions.append(
+        Explosion(
+            position=asteroid.position,
+            max_size=pr.Vector2(
+                self.resources_manager.explosion_data().get("size")[0], 
+                self.resources_manager.explosion_data().get("size")[1]),
+            children=self.resources_manager.explosion_data().get("children"),
+            speed=self.resources_manager.explosion_data().get("speed"),
+            lifetime=self.resources_manager.explosion_data().get("lifetime"),
+            color=tuple(self.resources_manager.explosion_data().get("color")),
+        )
+    )
+    self.discard_asteroids()
+    self.discard_lasers()
+```
+- The `Explosion` class itself is just a container to spawn `children` small asteroids (`pr.Rectangle`) with random size and directions
+
+- discarding asteroid example
+```python
+def discard_asteroids(self) -> None:
+    self.asteroids = [
+        asteroid for asteroid in self.asteroids if not asteroid.discard
+    ]
+```
+
+<img src="../../images/ts_4.png" alt="" width="300">
+
+<img src="../../images/ts_5.png" alt="" width="300">

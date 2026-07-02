@@ -27,6 +27,7 @@ class GameManager:
         )
         self.name: str = self.resources_manager.game_data().get("name")
         self.use_shader: str = self.resources_manager.game_data().get("use_shader")
+        self.debug: bool = self.resources_manager.game_data().get("debug")
 
         # scorer
         self.scorer = Scorer(
@@ -108,7 +109,7 @@ class GameManager:
             )
             self.shader = pr.load_shader(
                 pr.ffi.NULL, f"{THIS_DIR}/{self.shader_bloom}"
-            )  # Point to your downloaded shader file
+            )
 
     def create_asteroid_wave(self) -> None:
         self.asteroids.extend(
@@ -166,14 +167,18 @@ class GameManager:
                 if asteroid_polygon.collide(laser_polygon):
                     print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
                     asteroid.discard = True  # checking if discard works ; the asteroid should not be rendered (--> YES, it works)
-                    laser.discard = True  # checking if discard works ; the laser should not be rendered (--> YES, it works)
+                    laser.discard = True     # checking if discard works ; the laser should not be rendered (--> YES, it works)
                     # create an explosion
                     self.explosions.append(
                         Explosion(
                             position=asteroid.position,
-                            max_size=pr.Vector2(30, 30),
-                            children=3,
-                            speed=40,
+                            max_size=pr.Vector2(
+                                self.resources_manager.explosion_data().get("size")[0], 
+                                self.resources_manager.explosion_data().get("size")[1]),
+                            children=self.resources_manager.explosion_data().get("children"),
+                            speed=self.resources_manager.explosion_data().get("speed"),
+                            lifetime=self.resources_manager.explosion_data().get("lifetime"),
+                            color=tuple(self.resources_manager.explosion_data().get("color")),
                         )
                     )
                     self.discard_asteroids()
@@ -238,7 +243,8 @@ class GameManager:
                     self.draw()
             else:
                 self.draw_blanck()
-                self.draw_debug()
+                if self.debug:
+                    self.draw_debug()
 
     def draw_blanck(self) -> None:
         pr.begin_drawing()
@@ -293,7 +299,9 @@ class GameManager:
         # draw explosions
         _ = [explosion.draw() for explosion in self.explosions]
 
-        self.draw_debug()
+        if self.debug:
+            self.draw_debug()
+
         pr.end_texture_mode()
 
         # --- DRAW AND APPLY GLOW ---
@@ -331,7 +339,8 @@ class GameManager:
         # draw explosions
         _ = [explosion.draw() for explosion in self.explosions]
 
-        self.draw_debug()
+        if self.debug:
+            self.draw_debug()
         pr.end_drawing()
 
     def end(self) -> None:

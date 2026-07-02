@@ -6,7 +6,8 @@
         "fps": 60,
         "background_color": [0, 0, 0, 255],
         "name": "asteroid app",
-        "use_shader": true
+        "use_shader": true,
+        "debug": true
     },
     "player":
     {
@@ -41,5 +42,13 @@
     "shader":
     {
         "bloom": "bloom.fs"
+    },
+    "explosion":
+    {
+        "lifetime": 2,
+        "color": [255, 255, 255, 255],
+        "size" :[5, 10],
+        "children": 3,
+        "speed": 40
     }
 }
