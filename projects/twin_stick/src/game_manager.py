@@ -1,22 +1,15 @@
 from pathlib import Path
 import random
 import PolygonCollision
-from enum import Enum
 import pyray as pr
 from .asteroid import Asteroid
 from .player import Player
 from .scorer import Scorer
 from .resource_manager import ResourceManager
 from .timer import Timer
+from .states import GameStates, WaveStates
 
 THIS_DIR = (Path(__file__).parent.parent / "assets").resolve()
-
-
-class GameStates(Enum):
-    INIT = 0  # start of the app
-    RUN = 1  # game is running
-    PAUSE = 2  # game is paused
-    OVER = 3  # game is over
 
 
 class GameManager:
@@ -94,7 +87,7 @@ class GameManager:
         self.asteroids_wave_timer = Timer(
             duration=self.resources_manager.timer_game_data().get("duration"),
             repeat=True,
-            autostart=True,
+            autostart=False,
             func=self.create_asteroid_wave,
         )
 
@@ -136,7 +129,9 @@ class GameManager:
                     ),
                     color=tuple(self.resources_manager.asteroid_data().get("color")),
                 )
-                for _ in range(2)
+                for _ in range(
+                    self.resources_manager.scorer_data().get("number_enemies")
+                )
             ]
         )
 
@@ -190,6 +185,12 @@ class GameManager:
         # check laser-asteroid collision
         self.check_collisions()
 
+        # update scorer
+        self.scorer.update(
+            current_wave_number_enemies=len(self.asteroids),
+            current_wave_time=self.asteroids_wave_timer.get_wave_time(),
+        )
+
     async def run(self) -> None:
         while not pr.window_should_close():
             # draw start screen
@@ -200,7 +201,13 @@ class GameManager:
                 )
                 or self.state == GameStates.RUN
             ):
+                if self.state != GameStates.RUN:
+                    # start the wave timer at the very first init
+                    self.asteroids_wave_timer.activate()
+                    self.scorer.wave_state = WaveStates.ONGOING
+
                 self.state = GameStates.RUN
+
                 self.update()
                 if self.use_shader:
                     self.draw_with_shader()
@@ -217,15 +224,27 @@ class GameManager:
 
     def draw_debug(self) -> None:
         pr.draw_fps(0, 0)
-        pr.draw_text(f"{self.state}", 0, 20, 20, pr.GREEN)
-        pr.draw_text(f"ASTEROIDS: {len(self.asteroids)}", 0, 40, 20, pr.GREEN)
-        pr.draw_text(f"TIME: {self.scorer.remaining_time}", 0, 60, 20, pr.GREEN)
-        pr.draw_text(f"LASERS: {len(self.player.lasers)}", 0, 80, 20, pr.GREEN)
         pr.draw_text(
-            f"{str(int(pr.get_time()))}, {self.frame_counter}", 0, 100, 20, pr.GREEN
+            f"{self.state}, USE SHADER: {str(self.use_shader)}", 0, 20, 20, pr.GREEN
         )
-        pr.draw_text(f"USE SHADER: {str(self.use_shader)}", 0, 120, 20, pr.GREEN)
-        pr.draw_text(f"WAVE: {str(self.scorer.wave)}", 0, 140, 20, pr.GREEN)
+        pr.draw_text(
+            f"ASTEROIDS: {self.scorer.number_enemies} TIME: {self.scorer.remaining_time}",
+            0,
+            40,
+            20,
+            pr.GREEN,
+        )
+        pr.draw_text(f"LASERS: {len(self.player.lasers)}", 0, 60, 20, pr.GREEN)
+        pr.draw_text(
+            f"{str(int(pr.get_time()))}, {self.frame_counter}", 0, 80, 20, pr.GREEN
+        )
+        pr.draw_text(
+            f"WAVE: {str(self.scorer.wave)} {self.scorer.wave_state}",
+            0,
+            100,
+            20,
+            pr.GREEN,
+        )
         pr.draw_line(0, self.height // 2, self.width, self.height // 2, pr.RED)
         pr.draw_line(self.width // 2, 0, self.width // 2, self.height, pr.RED)
 

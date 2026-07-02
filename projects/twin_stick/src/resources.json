@@ -40,7 +40,7 @@
     },
     "timer_game":
     {
-        "duration": 5
+        "duration": 60
     },
     "shader":
     {

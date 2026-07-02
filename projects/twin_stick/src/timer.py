@@ -7,7 +7,7 @@ class Timer:
         self,
         duration: int,
         repeat: bool = False,
-        autostart: bool = True,
+        autostart: bool = False,
         func: Any = None,
     ) -> None:
         self.duration = (
@@ -34,6 +34,9 @@ class Timer:
         self.start_time = 0
         if self.repeat:
             self.activate()
+
+    def get_wave_time(self) -> int:
+        return int(self.duration - (pr.get_time() - self.start_time))
 
     def update(self) -> None:
         if self.active:
