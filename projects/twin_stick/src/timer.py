@@ -1,5 +1,6 @@
 from typing import Any
 import pyray as pr
+from .states import WaveStates
 
 
 class Timer:
@@ -35,7 +36,9 @@ class Timer:
         if self.repeat:
             self.activate()
 
-    def get_wave_time(self) -> int:
+    def get_wave_time(self, wave_state: WaveStates) -> int:
+        # if wave_state == WaveStates.SUCCESS:
+        #     return -1
         return int(self.duration - (pr.get_time() - self.start_time))
 
     def update(self) -> None:

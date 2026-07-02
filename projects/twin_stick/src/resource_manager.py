@@ -21,9 +21,6 @@ class ResourceManager:
     def asteroid_data(self) -> dict[str : int | str]:
         return self.resources_data.get("asteroid")
 
-    def timer_game_data(self) -> dict[str : int | str]:
-        return self.resources_data.get("timer_game")
-
     def scorer_data(self) -> dict[str:int]:
         return self.resources_data.get("scorer")
 

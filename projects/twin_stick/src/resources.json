@@ -36,11 +36,7 @@
     "scorer":
     {
         "number_enemies": 2,
-        "remaining_time": 60
-    },
-    "timer_game":
-    {
-        "duration": 60
+        "remaining_time": 10
     },
     "shader":
     {

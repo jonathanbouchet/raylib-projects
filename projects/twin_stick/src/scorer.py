@@ -10,15 +10,22 @@ class Scorer:
 
     def update(
         self, current_wave_number_enemies: int, current_wave_time: float
-    ) -> None:
-        self.number_enemies = current_wave_number_enemies
-        self.remaining_time = current_wave_time
+    ) -> WaveStates:
+        # self.number_enemies = current_wave_number_enemies
+        # self.remaining_time = current_wave_time
+
         if self.number_enemies == 0 and self.remaining_time > 0:
             self.wave_state = WaveStates.SUCCESS
         elif self.remaining_time <= 0 and self.number_enemies > 0:
             self.wave_state = WaveStates.FAIL
         else:
             self.wave_state = WaveStates.ONGOING
+            self.number_enemies = current_wave_number_enemies
+            self.remaining_time = current_wave_time
+        return self.wave_state
+
+    def get_wave_state(self) -> WaveStates:
+        return self.wave_state
 
     def next_wave(self, user_choice) -> None:
         """

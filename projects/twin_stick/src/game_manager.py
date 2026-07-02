@@ -2,12 +2,14 @@ from pathlib import Path
 import random
 import PolygonCollision
 import pyray as pr
+import raylib as rl
 from .asteroid import Asteroid
 from .player import Player
 from .scorer import Scorer
 from .resource_manager import ResourceManager
 from .timer import Timer
 from .states import GameStates, WaveStates
+from .explosion import Explosion
 
 THIS_DIR = (Path(__file__).parent.parent / "assets").resolve()
 
@@ -85,11 +87,14 @@ class GameManager:
         ]
 
         self.asteroids_wave_timer = Timer(
-            duration=self.resources_manager.timer_game_data().get("duration"),
-            repeat=True,
+            duration=self.resources_manager.scorer_data().get("remaining_time"),
+            repeat=False,
             autostart=False,
             func=self.create_asteroid_wave,
         )
+
+        # explosions
+        self.explosions: list[Explosion] = []
 
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
@@ -162,15 +167,22 @@ class GameManager:
                     print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
                     asteroid.discard = True  # checking if discard works ; the asteroid should not be rendered (--> YES, it works)
                     laser.discard = True  # checking if discard works ; the laser should not be rendered (--> YES, it works)
+                    # create an explosion
+                    self.explosions.append(
+                        Explosion(
+                            position=asteroid.position,
+                            max_size=pr.Vector2(30, 30),
+                            children=3,
+                            speed=40,
+                        )
+                    )
                     self.discard_asteroids()
                     self.discard_lasers()
-                    # self.scorer.number_enemies -= 1
 
     def update(self) -> None:
         # logic
         dt = pr.get_frame_time()
         self.frame_counter += 1
-        # self.asteroids_wave_timer.update()
 
         # update player
         self.player.update(dt=dt)
@@ -185,14 +197,24 @@ class GameManager:
         # check laser-asteroid collision
         self.check_collisions()
 
+        # update explosions
+        _ = [explosion.update(dt=dt) for explosion in self.explosions]
+
         # update scorer
-        self.scorer.update(
+        if self.scorer.update(
             current_wave_number_enemies=len(self.asteroids),
-            current_wave_time=self.asteroids_wave_timer.get_wave_time(),
-        )
+            current_wave_time=self.asteroids_wave_timer.get_wave_time(
+                wave_state=self.scorer.wave_state
+            ),
+        ) in [WaveStates.SUCCESS, WaveStates.FAIL]:
+            self.asteroids_wave_timer.deactivate()
+        else:
+            # update asteroid timer
+            self.asteroids_wave_timer.update()
 
     async def run(self) -> None:
         while not pr.window_should_close():
+            enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
             # draw start screen
             if (
                 pr.gui_button(
@@ -200,6 +222,7 @@ class GameManager:
                     "Start the game",
                 )
                 or self.state == GameStates.RUN
+                or enter_triggered
             ):
                 if self.state != GameStates.RUN:
                     # start the wave timer at the very first init
@@ -207,8 +230,8 @@ class GameManager:
                     self.scorer.wave_state = WaveStates.ONGOING
 
                 self.state = GameStates.RUN
-
                 self.update()
+
                 if self.use_shader:
                     self.draw_with_shader()
                 else:
@@ -267,6 +290,9 @@ class GameManager:
         # draw lasers
         _ = [laser.draw() for laser in self.player.lasers if not laser.discard]
 
+        # draw explosions
+        _ = [explosion.draw() for explosion in self.explosions]
+
         self.draw_debug()
         pr.end_texture_mode()
 
@@ -301,6 +327,9 @@ class GameManager:
 
         # draw lasers
         _ = [laser.draw() for laser in self.player.lasers if not laser.discard]
+
+        # draw explosions
+        _ = [explosion.draw() for explosion in self.explosions]
 
         self.draw_debug()
         pr.end_drawing()

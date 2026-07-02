@@ -30,8 +30,13 @@ class MiniAsteroid:
         self.speed = speed
         self.color = pr.WHITE
         self.angle = math.degrees(math.atan2(self.dy, self.dx))
+        self.creation_time = pr.get_time()
+        self.lifetime: int = 2
+        self.discard = False
 
     def update(self, dt: float) -> None:
+        if pr.get_time() - self.creation_time > self.lifetime:
+            self.discard = True
         self.x += self.dx * self.speed * dt
         self.y += self.dy * self.speed * dt
 
@@ -90,7 +95,7 @@ class Explosion:
         _ = [remnant.update(dt) for remnant in self.remnants]
 
     def draw(self) -> None:
-        _ = [remnant.draw() for remnant in self.remnants]
+        _ = [remnant.draw() for remnant in self.remnants if not remnant.discard]
 
     def debug(self) -> None:
         print(f"created {self.children} mini asteroids")
