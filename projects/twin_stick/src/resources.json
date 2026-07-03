@@ -23,7 +23,7 @@
     },
     "asteroid":
     {
-        "position": [0, 600],
+        "position": [50, 550],
         "direction": [-100, 100],
         "size": [40, 40],
         "color": [255, 255, 255, 255]
@@ -37,7 +37,7 @@
     "scorer":
     {
         "number_enemies": 2,
-        "remaining_time": 10
+        "remaining_time": 20
     },
     "shader":
     {

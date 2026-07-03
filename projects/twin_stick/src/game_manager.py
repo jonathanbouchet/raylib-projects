@@ -84,7 +84,7 @@ class GameManager:
                 ),
                 color=tuple(self.resources_manager.asteroid_data().get("color")),
             )
-            for _ in range(self.resources_manager.scorer_data().get("number_enemies"))
+            for _ in range(self.scorer.number_enemies)
         ]
 
         self.asteroids_wave_timer = Timer(
@@ -136,7 +136,7 @@ class GameManager:
                     color=tuple(self.resources_manager.asteroid_data().get("color")),
                 )
                 for _ in range(
-                    self.resources_manager.scorer_data().get("number_enemies")
+                    self.scorer.number_enemies
                 )
             ]
         )
@@ -217,34 +217,143 @@ class GameManager:
             # update asteroid timer
             self.asteroids_wave_timer.update()
 
+    def draw_init(self) -> None:
+         # draw start screen
+        enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
+        if (
+            pr.gui_button(
+                pr.Rectangle(self.width / 2 - 150, self.height / 2 - 20, 300, 60),
+                "Start the game\nleft, top, right arrow to control the ship\nspace to shoot",
+            )
+            or enter_triggered
+        ):
+            self.state = GameStates.RUN
+            self.asteroids_wave_timer.activate()
+            self.scorer.wave_state = WaveStates.ONGOING
+
+            self.draw_blanck()
+            if self.debug:
+                self.draw_debug()
+
+
+    def draw_sucess_wave(self) -> None:
+        if self.state == GameStates.PAUSE:
+            # pr.draw_text("next wave ?", self.width//2 - 20, self.height//2 -20, 20, pr.GREEN)
+            # option_1 = pr.Rectangle(self.width//2, self.height//2, 30, 30)
+            # option_2 = pr.Rectangle(self.width//2 + 50, self.height//2, 30, 30)
+
+            # pr.draw_rectangle_lines_ex(option_1, 2, pr.BLUE)
+            # pr.draw_rectangle_lines_ex(option_2, 2, pr.BLUE)
+
+            # if pr.check_collision_point_rec(pr.get_mouse_position(), option_1):
+            #     print("option1")
+
+            # if pr.check_collision_point_rec(pr.get_mouse_position(), option_2):
+                # print("option2")
+    
+            res = pr.gui_message_box(
+                pr.Rectangle(self.width//2 - 150, self.height//2 - 40, 300, 80),
+                "", "next wave",
+                "asteroids increased;time decreased")
+            if res > 0:
+
+                if res == 1:
+                    print("asteroids increased")
+                    self.scorer.next_wave(user_choice=1)
+                elif res == 2:
+                    print("time decreased")
+                    self.scorer.next_wave(user_choice=2)
+                self.asteroids_wave_timer.set_duration(self.scorer.remaining_time)
+                self.asteroids_wave_timer.activate()
+                self.create_asteroid_wave()
+                self.state = GameStates.RUN
+                self.scorer.wave_state = WaveStates.ONGOING
+        
+
+    def fail_wave_screen(self) -> None:
+        pass
+
+    # async def run(self) -> None:
+    #     while not pr.window_should_close():
+    #         enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
+    #         # draw start screen
+    #         if (
+    #             pr.gui_button(
+    #                 pr.Rectangle(self.width / 2 - 150, self.height / 2 - 20, 300, 60),
+    #                 "Start the game\nleft, top, right arrow to control the ship\nspace to shoot",
+    #             )
+    #             or self.state == GameStates.RUN
+    #             or enter_triggered
+    #         ):
+    #             if self.state != GameStates.RUN:
+    #                 # start the wave timer at the very first init
+    #                 self.asteroids_wave_timer.activate()
+    #                 self.scorer.wave_state = WaveStates.ONGOING
+
+    #             # if self.scorer.get_wave_state() == WaveStates.SUCCESS:
+    #             #       res = pr.gui_message_box(pr.Rectangle(85, 70, 250, 100),
+    #             #         "#150", "next wave", 
+    #             #         "yes;no")
+    #             # else:
+    #             self.state = GameStates.RUN
+    #             self.update()
+
+    #             if self.use_shader:
+    #                 self.draw_with_shader()
+    #             else:
+    #                 self.draw()
+    #         else:
+    #             self.draw_blanck()
+    #             if self.debug:
+    #                 self.draw_debug()
+
     async def run(self) -> None:
         while not pr.window_should_close():
-            enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
-            # draw start screen
-            if (
-                pr.gui_button(
-                    pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
-                    "Start the game",
-                )
-                or self.state == GameStates.RUN
-                or enter_triggered
-            ):
-                if self.state != GameStates.RUN:
-                    # start the wave timer at the very first init
-                    self.asteroids_wave_timer.activate()
-                    self.scorer.wave_state = WaveStates.ONGOING
+            if self.state == GameStates.RUN and self.scorer.wave_state == WaveStates.SUCCESS or self.state == GameStates.PAUSE:
+                self.state = GameStates.PAUSE
+                self.draw_sucess_wave()
 
-                self.state = GameStates.RUN
+            if self.state == GameStates.RUN:
                 self.update()
 
                 if self.use_shader:
                     self.draw_with_shader()
                 else:
                     self.draw()
+            
             else:
                 self.draw_blanck()
                 if self.debug:
                     self.draw_debug()
+            
+            if self.state == GameStates.INIT:
+                self.draw_init()
+            # enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
+            # draw start screen
+            # if (
+            #     pr.gui_button(
+            #         pr.Rectangle(self.width / 2 - 150, self.height / 2 - 20, 300, 60),
+            #         "Start the game\nleft, top, right arrow to control the ship\nspace to shoot",
+            #     )
+            #     or self.state == GameStates.RUN
+            #     or enter_triggered
+            # ):
+            #     if self.state != GameStates.RUN:
+            #         # start the wave timer at the very first init
+            #         self.asteroids_wave_timer.activate()
+            #         self.scorer.wave_state = WaveStates.ONGOING
+
+            #     self.state = GameStates.RUN
+            #     self.update()
+
+            #     if self.use_shader:
+            #         self.draw_with_shader()
+            #     else:
+            #         self.draw()
+            # else:
+            #     self.draw_blanck()
+            #     if self.debug:
+            #         self.draw_debug()
 
     def draw_blanck(self) -> None:
         pr.begin_drawing()
@@ -279,6 +388,13 @@ class GameManager:
 
     def draw_with_shader(self) -> None:
         dt = pr.get_frame_time()
+        # testing 
+        # if self.scorer.get_wave_state() == WaveStates.SUCCESS:
+        #     if pr.gui_message_box(pr.Rectangle(85, 70, 250, 100),
+        #                              "#150", "next wave", 
+        #                              "yes;no"):
+        #         print("here")
+            
         # --- RENDER SCENE TO TEXTURE ---
         pr.begin_texture_mode(self.target)
 

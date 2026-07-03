@@ -24,6 +24,9 @@ class Timer:
         if self.autostart:
             self.activate()
 
+    def set_duration(self, new_duration: int) -> None:
+        self.duration = new_duration
+
     def activate(self) -> None:
         """active only live until current time < duration"""
         self.active = True
