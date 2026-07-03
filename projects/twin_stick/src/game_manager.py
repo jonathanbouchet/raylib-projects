@@ -97,9 +97,17 @@ class GameManager:
         # explosions
         self.explosions: list[Explosion] = []
 
+    def load_sound_effects(self) -> None:
+        """needs to be done AFTER raylib is initialized"""
+        # sound effect
+        self.laser_sound: pr.Sound = pr.load_sound(f"{THIS_DIR}/{self.resources_manager.sound_effect_data().get("laser")}")
+        self.explosion_sound: pr.Sound = pr.load_sound(f"{THIS_DIR}/{self.resources_manager.sound_effect_data().get("explosion")}")
+
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
+        pr.init_audio_device()
+        self.load_sound_effects()
         self.frame_counter: int = 0
         self.state = GameStates.INIT
         # load shader
@@ -181,6 +189,8 @@ class GameManager:
                             color=tuple(self.resources_manager.explosion_data().get("color")),
                         )
                     )
+                    # play explosion sound effect
+                    pr.play_sound(self.explosion_sound)
                     self.discard_asteroids()
                     self.discard_lasers()
 
@@ -463,4 +473,5 @@ class GameManager:
         if self.use_shader:
             pr.unload_render_texture(self.target)
             pr.unload_shader(self.shader)
+        pr.close_audio_device()
         pr.close_window()

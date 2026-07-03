@@ -50,5 +50,10 @@
         "size" :[5, 10],
         "children": 3,
         "speed": 40
+    },
+    "sound_effect":
+    {
+        "laser": "Shoot_1.wav",
+        "explosion": "Explosion_6.wav"
     }
 }
