@@ -9,6 +9,7 @@ class Scorer:
         self.original_remaining_time = remaining_time
         self.wave = 1
         self.wave_state = WaveStates.INIT
+        self.player_has_shot: int = 0
 
     def update(
         self, current_wave_number_enemies: int, current_wave_time: float
@@ -25,6 +26,9 @@ class Scorer:
 
     def get_wave_state(self) -> WaveStates:
         return self.wave_state
+    
+    def get_player_current_score(self) -> int:
+        return self.player_has_shot
 
     def next_wave(self, user_choice: int) -> None:
         """

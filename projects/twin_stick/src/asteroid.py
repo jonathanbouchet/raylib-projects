@@ -9,6 +9,7 @@ class Asteroid:
         direction: pr.Vector2,
         window_borders: pr.Vector2,
         size: pr.Vector2,
+        speed: int,
         color: pr.Color,
     ) -> None:
         self.position = position
@@ -18,7 +19,7 @@ class Asteroid:
         self.color = color
         self.lineThick = 2
         self.angle = 0.0
-        self.speed = 0.0  # pixels/sec
+        self.speed = speed  # pixels/sec
         self._rotating = False  # set with SPACE
         self.discard: bool = False
 

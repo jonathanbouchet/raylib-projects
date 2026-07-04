@@ -50,6 +50,9 @@ class Player:
         self.shoot_cooldown = shoot_cooldown
         self.shoot_timer = shoot_timer
 
+    def load_laser_sound(self, sound: pr.Sound) -> None:
+        self.laser_sound: pr.Sound = sound
+
     def update(self, dt: float) -> None:
         self.move(dt)
 
@@ -127,6 +130,7 @@ class Player:
                 color=tuple(self.laser_data.get("color")),
             )
             self.lasers.append(laser)
+            pr.play_sound(self.laser_sound)
 
     # def move(self, dt: float) -> None:
     #     # 1) update angle first

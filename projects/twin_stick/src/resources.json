@@ -25,6 +25,7 @@
     {
         "position": [50, 550],
         "direction": [-100, 100],
+        "speed": 0,
         "size": [40, 40],
         "color": [255, 255, 255, 255]
     },
@@ -37,7 +38,7 @@
     "scorer":
     {
         "number_enemies": 2,
-        "remaining_time": 20
+        "remaining_time": 5
     },
     "shader":
     {

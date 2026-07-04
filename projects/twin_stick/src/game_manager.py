@@ -77,6 +77,7 @@ class GameManager:
                 direction=pr.Vector2(
                     random.randint(-100, 100), random.randint(-100, 100)
                 ),
+                speed=self.resources_manager.asteroid_data().get("speed"),
                 window_borders=pr.Vector2(self.width, self.height),
                 size=pr.Vector2(
                     self.resources_manager.asteroid_data().get("size")[0],
@@ -108,6 +109,7 @@ class GameManager:
         pr.set_target_fps(self.fps_target)
         pr.init_audio_device()
         self.load_sound_effects()
+        self.player.load_laser_sound(self.laser_sound)
         self.frame_counter: int = 0
         self.state = GameStates.INIT
         # load shader
@@ -136,6 +138,7 @@ class GameManager:
                     direction=pr.Vector2(
                         random.randint(-100, 100), random.randint(-100, 100)
                     ),
+                    speed=self.resources_manager.asteroid_data().get("speed"),
                     window_borders=pr.Vector2(self.width, self.height),
                     size=pr.Vector2(
                         self.resources_manager.asteroid_data().get("size")[0],
@@ -176,6 +179,8 @@ class GameManager:
                     print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
                     asteroid.discard = True  # checking if discard works ; the asteroid should not be rendered (--> YES, it works)
                     laser.discard = True     # checking if discard works ; the laser should not be rendered (--> YES, it works)
+                    # increment player score
+                    self.scorer.player_has_shot += 1
                     # create an explosion
                     self.explosions.append(
                         Explosion(
@@ -228,7 +233,8 @@ class GameManager:
             self.asteroids_wave_timer.update()
 
     def draw_init(self) -> None:
-         # draw start screen
+        # draw start screen
+        self.draw_score()
         enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
         if (
             pr.gui_button(
@@ -241,12 +247,13 @@ class GameManager:
             self.asteroids_wave_timer.activate()
             self.scorer.wave_state = WaveStates.ONGOING
 
-            self.draw_blanck()
-            if self.debug:
-                self.draw_debug()
+        # self.draw_blanck()
+        if self.debug:
+            self.draw_debug()
 
 
     def draw_sucess_wave(self) -> None:
+        self.draw_score()
         if self.state == GameStates.PAUSE:
             # pr.draw_text("next wave ?", self.width//2 - 20, self.height//2 -20, 20, pr.GREEN)
             # option_1 = pr.Rectangle(self.width//2, self.height//2, 30, 30)
@@ -273,15 +280,29 @@ class GameManager:
                 elif res == 2:
                     print("time decreased")
                     self.scorer.next_wave(user_choice=2)
+
+                # reset player current score:
+                self.scorer.player_has_shot = 0
                 self.asteroids_wave_timer.set_duration(self.scorer.remaining_time)
                 self.asteroids_wave_timer.activate()
                 self.create_asteroid_wave()
                 self.state = GameStates.RUN
                 self.scorer.wave_state = WaveStates.ONGOING
+
+                self.draw_score()
         
 
     def fail_wave_screen(self) -> None:
-        pass
+        self.draw_score()
+        enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
+        if (pr.gui_button(pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),"Restart",)
+                or enter_triggered
+            ):
+            print("game is restarting")
+
+        # self.draw_blanck()
+        if self.debug:
+            self.draw_debug()
 
     # async def run(self) -> None:
     #     while not pr.window_should_close():
@@ -325,12 +346,14 @@ class GameManager:
 
             if self.state == GameStates.RUN:
                 self.update()
-
                 if self.use_shader:
                     self.draw_with_shader()
                 else:
                     self.draw()
-            
+            # if self.scorer.wave_state == WaveStates.FAIL:
+            #     print("here")
+            #     self.state = GameStates.OVER
+            #     self.fail_wave_screen()
             else:
                 self.draw_blanck()
                 if self.debug:
@@ -364,6 +387,12 @@ class GameManager:
             #     self.draw_blanck()
             #     if self.debug:
             #         self.draw_debug()
+
+    def draw_score(self) -> None:
+        # player UI
+        pr.draw_text(f"WAVE {str(self.scorer.wave)}", 500, 0, 10, pr.RED)
+        pr.draw_text(f"ASTEROIDS: {self.scorer.player_has_shot} / {self.scorer.original_number_enemies}", 500, 10, 10,pr.RED)
+        pr.draw_text(f"TIME: {self.scorer.remaining_time}", 500, 20, 10,pr.RED)
 
     def draw_blanck(self) -> None:
         pr.begin_drawing()
@@ -424,6 +453,9 @@ class GameManager:
 
         # draw explosions
         _ = [explosion.draw() for explosion in self.explosions]
+
+        # draw UI
+        self.draw_score()
 
         if self.debug:
             self.draw_debug()
