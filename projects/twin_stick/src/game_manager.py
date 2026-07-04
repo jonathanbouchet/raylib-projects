@@ -175,7 +175,7 @@ class GameManager:
                     vertices=[tuple([r.x, r.y]) for r in laser_rect]
                 )
                 if asteroid_polygon.collide(laser_polygon):
-                    print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
+                    # print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
                     asteroid.discard = True  # checking if discard works ; the asteroid should not be rendered (--> YES, it works)
                     laser.discard = True  # checking if discard works ; the laser should not be rendered (--> YES, it works)
                     # increment player score
@@ -267,12 +267,12 @@ class GameManager:
                 "ASTEROIDS INCREASE;TIME DECREASES",
             )
             if res > 0:
+                current_remaining_time = self.scorer.remaining_time
+                current_asteroids = self.scorer.original_number_enemies
                 if res == 1:
-                    print("asteroids increased")
-                    self.scorer.next_wave(user_choice=1)
+                    self.scorer.next_wave(user_choice=1, current_asteroids=current_asteroids, current_remaining_time=current_remaining_time)
                 elif res == 2:
-                    print("time decreased")
-                    self.scorer.next_wave(user_choice=2)
+                    self.scorer.next_wave(user_choice=2,current_asteroids=current_asteroids, current_remaining_time=current_remaining_time)
 
                 # reset player current score:
                 self.scorer.player_has_shot = 0

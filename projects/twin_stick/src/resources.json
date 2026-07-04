@@ -6,25 +6,25 @@
         "fps": 60,
         "background_color": [0, 0, 0, 255],
         "name": "asteroid app",
-        "debug": true
+        "debug": false
     },
     "player":
     {
         "position": [300, 500],
-        "speed": 10,
-        "angular_speed": 150,
+        "speed": 20,
+        "angular_speed": 200,
         "color": [255, 255, 255, 255],
         "scale": 1.0,
         "debug": false,
         "debug_color": [0, 0, 255, 255],
-        "shoot_cooldown": 0.5,
+        "shoot_cooldown": 0.25,
         "shoot_timer": 0.0
     },
     "asteroid":
     {
         "position": [50, 550],
         "direction": [-100, 100],
-        "speed": 0,
+        "speed": 1,
         "size": [40, 40],
         "color": [255, 255, 255, 255]
     },
@@ -36,7 +36,7 @@
     },
     "scorer":
     {
-        "number_enemies": 2,
+        "number_enemies": 4,
         "remaining_time": 10
     },
     "shader":

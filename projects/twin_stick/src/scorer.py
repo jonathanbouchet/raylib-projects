@@ -30,9 +30,8 @@ class Scorer:
         return self.wave_state
 
     def reset_score(self) -> None:
-        print(self)
         self.number_enemies = self.init_game_number_enemies
-        self.remaining_time = self.init_game_remaining_time
+        self.remaining_time = self.init_game_remaining_time + 1
         self.original_number_enemies = self.number_enemies
         self.original_remaining_time = self.remaining_time
         self.wave = 1
@@ -40,7 +39,7 @@ class Scorer:
     def get_player_current_score(self) -> int:
         return self.player_has_shot
 
-    def next_wave(self, user_choice: int) -> None:
+    def next_wave(self, user_choice: int, current_asteroids: int, current_remaining_time: int) -> None:
         """
         - placeholder for next wave
         - 2 choices are presented to the player:
@@ -52,14 +51,15 @@ class Scorer:
         """
         self.wave += 1
         if user_choice == 1:
-            self.number_enemies = self.original_number_enemies + 1
-            self.remaining_time = self.original_remaining_time
+            self.number_enemies = current_asteroids + 1#self.original_number_enemies + 1
+            self.remaining_time = current_remaining_time + current_asteroids +1#self.original_remaining_time
         elif user_choice == 2:
-            self.remaining_time = self.original_remaining_time - 1
-            self.number_enemies = self.original_number_enemies
+            self.remaining_time = current_remaining_time + current_asteroids - 1 + 1#self.original_remaining_time# - 1
+            # self.remaining_time -= 1
+            self.number_enemies = current_asteroids#self.original_number_enemies
+
         self.original_number_enemies = self.number_enemies
         self.original_remaining_time = self.remaining_time
-        print(self)
 
     def __repr__(self) -> str:
         return f"state: {self.wave_state}, wave #: {self.wave}, # ast: ({self.number_enemies}), time:{self.remaining_time}"
