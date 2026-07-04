@@ -60,14 +60,20 @@ class Explosion:
     """
 
     def __init__(
-        self, position: pr.Vector2, max_size: pr.Vector2, children: int, speed: int, lifetime: int, color: pr.Color
+        self,
+        position: pr.Vector2,
+        max_size: pr.Vector2,
+        children: int,
+        speed: int,
+        lifetime: int,
+        color: pr.Color,
     ) -> None:
-        self.position = position # position where the Explosion is spawned
-        self.max_size = max_size # array if (min, max) values for the remnants
-        self.children = children # number of remnants
-        self.speed = speed # speed of the remnant
-        self.lifetime=lifetime # life time of the remnant, ie. after lifetime, the remnants is discarded
-        self.color=color # color of the remnant
+        self.position = position  # position where the Explosion is spawned
+        self.max_size = max_size  # array if (min, max) values for the remnants
+        self.children = children  # number of remnants
+        self.speed = speed  # speed of the remnant
+        self.lifetime = lifetime  # life time of the remnant, ie. after lifetime, the remnants is discarded
+        self.color = color  # color of the remnant
         self.remnants: list[MiniAsteroid] = self.create_children()
 
     def create_children(self) -> list[MiniAsteroid]:
@@ -92,7 +98,7 @@ class Explosion:
                     height=height,
                     speed=speed,
                     lifetime=self.lifetime,
-                    color=self.color
+                    color=self.color,
                 )
             )
         return tmp

@@ -26,7 +26,7 @@ class Scorer:
 
     def get_wave_state(self) -> WaveStates:
         return self.wave_state
-    
+
     def get_player_current_score(self) -> int:
         return self.player_has_shot
 
@@ -53,4 +53,3 @@ class Scorer:
 
     def __repr__(self) -> str:
         return f"state: {self.wave_state}, wave #: {self.wave}, # ast: ({self.number_enemies}), time:{self.remaining_time}"
-

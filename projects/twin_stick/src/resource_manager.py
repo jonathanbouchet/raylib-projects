@@ -3,6 +3,7 @@ import json
 
 class ResourceManager:
     """this class reads the resources.json and provides access to its keys"""
+
     def __init__(self, resources_path: str) -> None:
         self.resources_path = resources_path
         self.resources_data = {}
@@ -37,7 +38,7 @@ class ResourceManager:
     # extract explosion data
     def explosion_data(self) -> dict[str, str]:
         return self.resources_data.get("explosion")
-    
+
     # extract sound effect data
     def sound_effect_data(self) -> dict[str, str]:
         return self.resources_data.get("sound_effect")

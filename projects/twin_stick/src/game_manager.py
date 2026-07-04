@@ -26,7 +26,7 @@ class GameManager:
             self.resources_manager.game_data().get("background_color")
         )
         self.name: str = self.resources_manager.game_data().get("name")
-        self.use_shader: str = self.resources_manager.game_data().get("use_shader")
+        # self.use_shader: str = self.resources_manager.game_data().get("use_shader")
         self.debug: bool = self.resources_manager.game_data().get("debug")
 
         # scorer
@@ -101,8 +101,12 @@ class GameManager:
     def load_sound_effects(self) -> None:
         """needs to be done AFTER raylib is initialized"""
         # sound effect
-        self.laser_sound: pr.Sound = pr.load_sound(f"{THIS_DIR}/{self.resources_manager.sound_effect_data().get("laser")}")
-        self.explosion_sound: pr.Sound = pr.load_sound(f"{THIS_DIR}/{self.resources_manager.sound_effect_data().get("explosion")}")
+        self.laser_sound: pr.Sound = pr.load_sound(
+            f"{THIS_DIR}/{self.resources_manager.sound_effect_data().get('laser')}"
+        )
+        self.explosion_sound: pr.Sound = pr.load_sound(
+            f"{THIS_DIR}/{self.resources_manager.sound_effect_data().get('explosion')}"
+        )
 
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
@@ -113,13 +117,10 @@ class GameManager:
         self.frame_counter: int = 0
         self.state = GameStates.INIT
         # load shader
-        if self.use_shader:
-            self.target = pr.load_render_texture(
-                pr.get_screen_width(), pr.get_screen_height()
-            )
-            self.shader = pr.load_shader(
-                pr.ffi.NULL, f"{THIS_DIR}/{self.shader_bloom}"
-            )
+        self.target = pr.load_render_texture(
+            pr.get_screen_width(), pr.get_screen_height()
+        )
+        self.shader = pr.load_shader(pr.ffi.NULL, f"{THIS_DIR}/{self.shader_bloom}")
 
     def create_asteroid_wave(self) -> None:
         self.asteroids.extend(
@@ -146,9 +147,7 @@ class GameManager:
                     ),
                     color=tuple(self.resources_manager.asteroid_data().get("color")),
                 )
-                for _ in range(
-                    self.scorer.number_enemies
-                )
+                for _ in range(self.scorer.number_enemies)
             ]
         )
 
@@ -178,7 +177,7 @@ class GameManager:
                 if asteroid_polygon.collide(laser_polygon):
                     print(f"COLLISION between :{asteroid_polygon} and {laser_polygon}")
                     asteroid.discard = True  # checking if discard works ; the asteroid should not be rendered (--> YES, it works)
-                    laser.discard = True     # checking if discard works ; the laser should not be rendered (--> YES, it works)
+                    laser.discard = True  # checking if discard works ; the laser should not be rendered (--> YES, it works)
                     # increment player score
                     self.scorer.player_has_shot += 1
                     # create an explosion
@@ -186,12 +185,19 @@ class GameManager:
                         Explosion(
                             position=asteroid.position,
                             max_size=pr.Vector2(
-                                self.resources_manager.explosion_data().get("size")[0], 
-                                self.resources_manager.explosion_data().get("size")[1]),
-                            children=self.resources_manager.explosion_data().get("children"),
+                                self.resources_manager.explosion_data().get("size")[0],
+                                self.resources_manager.explosion_data().get("size")[1],
+                            ),
+                            children=self.resources_manager.explosion_data().get(
+                                "children"
+                            ),
                             speed=self.resources_manager.explosion_data().get("speed"),
-                            lifetime=self.resources_manager.explosion_data().get("lifetime"),
-                            color=tuple(self.resources_manager.explosion_data().get("color")),
+                            lifetime=self.resources_manager.explosion_data().get(
+                                "lifetime"
+                            ),
+                            color=tuple(
+                                self.resources_manager.explosion_data().get("color")
+                            ),
                         )
                     )
                     # play explosion sound effect
@@ -251,7 +257,6 @@ class GameManager:
         if self.debug:
             self.draw_debug()
 
-
     def draw_sucess_wave(self) -> None:
         self.draw_score()
         if self.state == GameStates.PAUSE:
@@ -266,14 +271,15 @@ class GameManager:
             #     print("option1")
 
             # if pr.check_collision_point_rec(pr.get_mouse_position(), option_2):
-                # print("option2")
-    
-            res = pr.gui_message_box(
-                pr.Rectangle(self.width//2 - 150, self.height//2 - 40, 300, 80),
-                "", "next wave",
-                "asteroids increased;time decreased")
-            if res > 0:
+            # print("option2")
 
+            res = pr.gui_message_box(
+                pr.Rectangle(self.width // 2 - 150, self.height // 2 - 40, 300, 80),
+                "",
+                "next wave",
+                "asteroids increased;time decreased",
+            )
+            if res > 0:
                 if res == 1:
                     print("asteroids increased")
                     self.scorer.next_wave(user_choice=1)
@@ -290,14 +296,17 @@ class GameManager:
                 self.scorer.wave_state = WaveStates.ONGOING
 
                 self.draw_score()
-        
 
     def fail_wave_screen(self) -> None:
         self.draw_score()
         enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
-        if (pr.gui_button(pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),"Restart",)
-                or enter_triggered
-            ):
+        if (
+            pr.gui_button(
+                pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
+                "Restart",
+            )
+            or enter_triggered
+        ):
             print("game is restarting")
 
         # self.draw_blanck()
@@ -323,7 +332,7 @@ class GameManager:
 
     #             # if self.scorer.get_wave_state() == WaveStates.SUCCESS:
     #             #       res = pr.gui_message_box(pr.Rectangle(85, 70, 250, 100),
-    #             #         "#150", "next wave", 
+    #             #         "#150", "next wave",
     #             #         "yes;no")
     #             # else:
     #             self.state = GameStates.RUN
@@ -340,16 +349,20 @@ class GameManager:
 
     async def run(self) -> None:
         while not pr.window_should_close():
-            if self.state == GameStates.RUN and self.scorer.wave_state == WaveStates.SUCCESS or self.state == GameStates.PAUSE:
+            if (
+                self.state == GameStates.RUN
+                and self.scorer.wave_state == WaveStates.SUCCESS
+                or self.state == GameStates.PAUSE
+            ):
                 self.state = GameStates.PAUSE
                 self.draw_sucess_wave()
 
             if self.state == GameStates.RUN:
                 self.update()
-                if self.use_shader:
-                    self.draw_with_shader()
-                else:
-                    self.draw()
+                # if self.use_shader:
+                self.draw()
+                # else:
+                #     self.draw()
             # if self.scorer.wave_state == WaveStates.FAIL:
             #     print("here")
             #     self.state = GameStates.OVER
@@ -358,41 +371,21 @@ class GameManager:
                 self.draw_blanck()
                 if self.debug:
                     self.draw_debug()
-            
+
             if self.state == GameStates.INIT:
                 self.draw_init()
-            # enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
-            # draw start screen
-            # if (
-            #     pr.gui_button(
-            #         pr.Rectangle(self.width / 2 - 150, self.height / 2 - 20, 300, 60),
-            #         "Start the game\nleft, top, right arrow to control the ship\nspace to shoot",
-            #     )
-            #     or self.state == GameStates.RUN
-            #     or enter_triggered
-            # ):
-            #     if self.state != GameStates.RUN:
-            #         # start the wave timer at the very first init
-            #         self.asteroids_wave_timer.activate()
-            #         self.scorer.wave_state = WaveStates.ONGOING
-
-            #     self.state = GameStates.RUN
-            #     self.update()
-
-            #     if self.use_shader:
-            #         self.draw_with_shader()
-            #     else:
-            #         self.draw()
-            # else:
-            #     self.draw_blanck()
-            #     if self.debug:
-            #         self.draw_debug()
 
     def draw_score(self) -> None:
         # player UI
         pr.draw_text(f"WAVE {str(self.scorer.wave)}", 500, 0, 10, pr.RED)
-        pr.draw_text(f"ASTEROIDS: {self.scorer.player_has_shot} / {self.scorer.original_number_enemies}", 500, 10, 10,pr.RED)
-        pr.draw_text(f"TIME: {self.scorer.remaining_time}", 500, 20, 10,pr.RED)
+        pr.draw_text(
+            f"ASTEROIDS: {self.scorer.player_has_shot} / {self.scorer.original_number_enemies}",
+            500,
+            10,
+            10,
+            pr.RED,
+        )
+        pr.draw_text(f"TIME: {self.scorer.remaining_time}", 500, 20, 10, pr.RED)
 
     def draw_blanck(self) -> None:
         pr.begin_drawing()
@@ -401,9 +394,7 @@ class GameManager:
 
     def draw_debug(self) -> None:
         pr.draw_fps(0, 0)
-        pr.draw_text(
-            f"{self.state}, USE SHADER: {str(self.use_shader)}", 0, 20, 20, pr.GREEN
-        )
+        pr.draw_text(f"{self.state}", 0, 20, 20, pr.GREEN)
         pr.draw_text(
             f"ASTEROIDS: {self.scorer.number_enemies} TIME: {self.scorer.remaining_time}",
             0,
@@ -425,15 +416,8 @@ class GameManager:
         pr.draw_line(0, self.height // 2, self.width, self.height // 2, pr.RED)
         pr.draw_line(self.width // 2, 0, self.width // 2, self.height, pr.RED)
 
-    def draw_with_shader(self) -> None:
+    def draw(self) -> None:
         dt = pr.get_frame_time()
-        # testing 
-        # if self.scorer.get_wave_state() == WaveStates.SUCCESS:
-        #     if pr.gui_message_box(pr.Rectangle(85, 70, 250, 100),
-        #                              "#150", "next wave", 
-        #                              "yes;no"):
-        #         print("here")
-            
         # --- RENDER SCENE TO TEXTURE ---
         pr.begin_texture_mode(self.target)
 
@@ -477,33 +461,9 @@ class GameManager:
         pr.end_shader_mode()
         pr.end_drawing()
 
-    def draw(self) -> None:
-        dt = pr.get_frame_time()
-
-        pr.begin_drawing()
-        pr.clear_background(self.background_color)
-
-        # draw player
-        self.player.draw(dt=dt)
-
-        # draw asteroids
-        _ = [
-            asteroid.draw(dt=dt) for asteroid in self.asteroids if not asteroid.discard
-        ]
-
-        # draw lasers
-        _ = [laser.draw() for laser in self.player.lasers if not laser.discard]
-
-        # draw explosions
-        _ = [explosion.draw() for explosion in self.explosions]
-
-        if self.debug:
-            self.draw_debug()
-        pr.end_drawing()
-
     def end(self) -> None:
-        if self.use_shader:
-            pr.unload_render_texture(self.target)
-            pr.unload_shader(self.shader)
+        # if self.use_shader:
+        pr.unload_render_texture(self.target)
+        pr.unload_shader(self.shader)
         pr.close_audio_device()
         pr.close_window()

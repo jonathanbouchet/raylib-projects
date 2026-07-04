@@ -6,7 +6,6 @@
         "fps": 60,
         "background_color": [0, 0, 0, 255],
         "name": "asteroid app",
-        "use_shader": true,
         "debug": true
     },
     "player":
@@ -38,7 +37,7 @@
     "scorer":
     {
         "number_enemies": 2,
-        "remaining_time": 5
+        "remaining_time": 10
     },
     "shader":
     {
