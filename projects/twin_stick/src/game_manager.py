@@ -77,7 +77,10 @@ class GameManager:
                 direction=pr.Vector2(
                     random.randint(-100, 100), random.randint(-100, 100)
                 ),
-                speed=self.resources_manager.asteroid_data().get("speed"),
+                speed=random.uniform(
+                    self.resources_manager.asteroid_data().get("speed")[0],
+                    self.resources_manager.asteroid_data().get("speed")[1],
+                ),
                 window_borders=pr.Vector2(self.width, self.height),
                 size=pr.Vector2(
                     self.resources_manager.asteroid_data().get("size")[0],
@@ -139,7 +142,10 @@ class GameManager:
                     direction=pr.Vector2(
                         random.randint(-100, 100), random.randint(-100, 100)
                     ),
-                    speed=self.resources_manager.asteroid_data().get("speed"),
+                    speed=random.uniform(
+                        self.resources_manager.asteroid_data().get("speed")[0],
+                        self.resources_manager.asteroid_data().get("speed")[1],
+                    ),
                     window_borders=pr.Vector2(self.width, self.height),
                     size=pr.Vector2(
                         self.resources_manager.asteroid_data().get("size")[0],
@@ -244,8 +250,11 @@ class GameManager:
         enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
         if (
             pr.gui_button(
-                pr.Rectangle(self.width / 2 - 150, self.height / 2 - 20, 300, 60),
-                "Start the game\nleft, top, right arrow to control the ship\nspace to shoot",
+                pr.Rectangle(self.width / 2 - 250, self.height / 2 - 20, 500, 80),
+                "GOAL: DESTROY ALL ASTEROIDS WITHIN TIMER\n"
+                "RULES: AT EACH WAVE, CHOOSE BETWEEN MORE ASTEROIDS OR LESS TIME\n"
+                "REWARD FOR EACH WAVE = ASTEROIDS DESTROYED\n"
+                "CONTROLS: < ^ > TO MOVE THE SHIP, SPACE TO SHOOT\n",
             )
             or enter_triggered
         ):
@@ -270,9 +279,17 @@ class GameManager:
                 current_remaining_time = self.scorer.remaining_time
                 current_asteroids = self.scorer.original_number_enemies
                 if res == 1:
-                    self.scorer.next_wave(user_choice=1, current_asteroids=current_asteroids, current_remaining_time=current_remaining_time)
+                    self.scorer.next_wave(
+                        user_choice=1,
+                        current_asteroids=current_asteroids,
+                        current_remaining_time=current_remaining_time,
+                    )
                 elif res == 2:
-                    self.scorer.next_wave(user_choice=2,current_asteroids=current_asteroids, current_remaining_time=current_remaining_time)
+                    self.scorer.next_wave(
+                        user_choice=2,
+                        current_asteroids=current_asteroids,
+                        current_remaining_time=current_remaining_time,
+                    )
 
                 # reset player current score:
                 self.scorer.player_has_shot = 0

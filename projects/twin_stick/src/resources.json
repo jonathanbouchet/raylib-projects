@@ -11,7 +11,7 @@
     "player":
     {
         "position": [300, 500],
-        "speed": 20,
+        "speed": 100,
         "angular_speed": 200,
         "color": [255, 255, 255, 255],
         "scale": 1.0,
@@ -24,7 +24,7 @@
     {
         "position": [50, 550],
         "direction": [-100, 100],
-        "speed": 1,
+        "speed": [2.0, 3.0],
         "size": [40, 40],
         "color": [255, 255, 255, 255]
     },
@@ -37,7 +37,7 @@
     "scorer":
     {
         "number_enemies": 4,
-        "remaining_time": 10
+        "remaining_time": 60
     },
     "shader":
     {
