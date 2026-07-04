@@ -260,24 +260,11 @@ class GameManager:
     def draw_sucess_wave(self) -> None:
         self.draw_score()
         if self.state == GameStates.PAUSE:
-            # pr.draw_text("next wave ?", self.width//2 - 20, self.height//2 -20, 20, pr.GREEN)
-            # option_1 = pr.Rectangle(self.width//2, self.height//2, 30, 30)
-            # option_2 = pr.Rectangle(self.width//2 + 50, self.height//2, 30, 30)
-
-            # pr.draw_rectangle_lines_ex(option_1, 2, pr.BLUE)
-            # pr.draw_rectangle_lines_ex(option_2, 2, pr.BLUE)
-
-            # if pr.check_collision_point_rec(pr.get_mouse_position(), option_1):
-            #     print("option1")
-
-            # if pr.check_collision_point_rec(pr.get_mouse_position(), option_2):
-            # print("option2")
-
             res = pr.gui_message_box(
                 pr.Rectangle(self.width // 2 - 150, self.height // 2 - 40, 300, 80),
                 "",
-                "next wave",
-                "asteroids increased;time decreased",
+                "WAVE SUCCESSFULL, CHOOSE :",
+                "ASTEROIDS INCREASE;TIME DECREASES",
             )
             if res > 0:
                 if res == 1:
@@ -303,49 +290,24 @@ class GameManager:
         if (
             pr.gui_button(
                 pr.Rectangle(self.width / 2 - 100, self.height / 2 - 20, 200, 40),
-                "Restart",
+                "WAVE FAILED, RESTART",
             )
             or enter_triggered
         ):
-            print("game is restarting")
+            # clear list of lasers
+            self.asteroids = []
+            # reset all
+            self.scorer.player_has_shot = 0
+            self.scorer.reset_score()
+            self.asteroids_wave_timer.set_duration(self.scorer.remaining_time)
+            self.asteroids_wave_timer.activate()
+            self.create_asteroid_wave()
+            self.state = GameStates.RUN
+            self.scorer.wave_state = WaveStates.ONGOING
 
         # self.draw_blanck()
         if self.debug:
             self.draw_debug()
-
-    # async def run(self) -> None:
-    #     while not pr.window_should_close():
-    #         enter_triggered = pr.is_key_pressed(rl.KEY_ENTER)
-    #         # draw start screen
-    #         if (
-    #             pr.gui_button(
-    #                 pr.Rectangle(self.width / 2 - 150, self.height / 2 - 20, 300, 60),
-    #                 "Start the game\nleft, top, right arrow to control the ship\nspace to shoot",
-    #             )
-    #             or self.state == GameStates.RUN
-    #             or enter_triggered
-    #         ):
-    #             if self.state != GameStates.RUN:
-    #                 # start the wave timer at the very first init
-    #                 self.asteroids_wave_timer.activate()
-    #                 self.scorer.wave_state = WaveStates.ONGOING
-
-    #             # if self.scorer.get_wave_state() == WaveStates.SUCCESS:
-    #             #       res = pr.gui_message_box(pr.Rectangle(85, 70, 250, 100),
-    #             #         "#150", "next wave",
-    #             #         "yes;no")
-    #             # else:
-    #             self.state = GameStates.RUN
-    #             self.update()
-
-    #             if self.use_shader:
-    #                 self.draw_with_shader()
-    #             else:
-    #                 self.draw()
-    #         else:
-    #             self.draw_blanck()
-    #             if self.debug:
-    #                 self.draw_debug()
 
     async def run(self) -> None:
         while not pr.window_should_close():
@@ -357,16 +319,13 @@ class GameManager:
                 self.state = GameStates.PAUSE
                 self.draw_sucess_wave()
 
+            if self.scorer.wave_state == WaveStates.FAIL:
+                self.state = GameStates.OVER
+                self.fail_wave_screen()
+
             if self.state == GameStates.RUN:
                 self.update()
-                # if self.use_shader:
                 self.draw()
-                # else:
-                #     self.draw()
-            # if self.scorer.wave_state == WaveStates.FAIL:
-            #     print("here")
-            #     self.state = GameStates.OVER
-            #     self.fail_wave_screen()
             else:
                 self.draw_blanck()
                 if self.debug:
