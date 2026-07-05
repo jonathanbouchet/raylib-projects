@@ -225,3 +225,32 @@ def discard_asteroids(self) -> None:
 <img src="../../images/ts_4.png" alt="" width="300">
 
 <img src="../../images/ts_5.png" alt="" width="300">
+
+## 2026-07-05
+- added some rogue-like gameplay elements. The logic is at each new wave, the player has 2 choices:
+    - increase the number of asteroids by 1
+    - decrease the time to complete the wave by 1s
+    - also as a reward, the time is increased by the number of asteroids (in the current wave) destroyed
+
+<img src="../../images/ts_11.png" alt="" width="300">
+
+- as the game was finished and after tuning, I spent the last 2 days trying to make the built for `itch.io` 
+- This is still not working unfortunately ; I'm using `pygbag` but I'm encountering several issues:
+    - the whole `texture_shader` for the full game screen does not work
+    - I have issues with the collision detection using `PolygonCollision` package. Luckily my `OBB` implementation was a good backup
+    - I have issues when the code is structured in modules, e.g a `src` folder, etc ...
+- I tried `pyinstaller` but unfortunately it doesn't produce the `html` file needed
+
+- The `shader` issue is a shame because it's a nice effect:
+<img src="../../images/ts_10.png" alt="" width="300">
+
+
+### Screenshot for the final built (w/o shader)
+
+<img src="../../images/ts_6.png" alt="" width="300">
+
+<img src="../../images/ts_7.png" alt="" width="300">
+
+<img src="../../images/ts_8.png" alt="" width="300">
+
+ <img src="../../images/ts_9.png" alt="" width="300">

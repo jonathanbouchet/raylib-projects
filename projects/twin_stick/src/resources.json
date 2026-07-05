@@ -6,7 +6,7 @@
         "fps": 60,
         "background_color": [0, 0, 0, 255],
         "name": "asteroid app",
-        "debug": false
+        "debug": true
     },
     "player":
     {
