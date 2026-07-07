@@ -1,0 +1,1 @@
+- This folder is just to gather the same code as `/src`, slightly modified to build the `html` needed to upload the project to `itch.io`, namely to package to `WASM`
