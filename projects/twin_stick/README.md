@@ -9,6 +9,12 @@ The goal is this project is to make a twin stick shooter
 # Notes
 See NOTES.md for dev log
 
+# Itch.io
+- game is on itch.io
+- https://jonathanbouchet.itch.io/survoid
+
+<img src="../../images/ts_12.png" alt="" width="400">
+
 # What I learned so far with this project
 - trying to fit the game objects in a predefined framework is not always the most efficient: I wanted to have a base class `Sprite` then having the player inheriting from it, etc ... but it slowed down some implementations
 - the `ResourceManager` class is super helpful becuase I can just change the game parameters from the `JSON` and see the effects immediately, so super helpful for iterating / finetuning
