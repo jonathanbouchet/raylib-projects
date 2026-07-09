@@ -40,7 +40,7 @@ class ChoiceContainer:
     def draw(self) -> None:
         # outline
         rect = pr.Rectangle(self.position.x, self.position.y, 360, 120)
-        pr.draw_rectangle_lines_ex(rect, 4, pr.WHITE)
+        pr.draw_rectangle_lines_ex(rect, 1, pr.WHITE)
 
         start = self.position.x
 

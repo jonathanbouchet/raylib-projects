@@ -50,20 +50,25 @@ async def main():
         outline_color=pr.WHITE,
         base_color=pr.RED,
     )
-    green_container = ColorContainer(
-        position=pr.Vector2(260, 400),
-        value=100,
-        outline_color=pr.WHITE,
-        base_color=pr.GREEN,
-    )
-    blue_container = ColorContainer(
-        position=pr.Vector2(480, 400),
-        value=100,
-        outline_color=pr.WHITE,
-        base_color=pr.BLUE,
-    )
+    # green_container = ColorContainer(
+    #     position=pr.Vector2(260, 400),
+    #     value=100,
+    #     outline_color=pr.WHITE,
+    #     base_color=pr.GREEN,
+    # )
+    # blue_container = ColorContainer(
+    #     position=pr.Vector2(480, 400),
+    #     value=100,
+    #     outline_color=pr.WHITE,
+    #     base_color=pr.BLUE,
+    # )
 
     while not pr.window_should_close():
+        # logic
+        dt = pr.get_frame_time()
+        red_container.update()
+
+        # rendering
         pr.begin_drawing()
         pr.clear_background(pr.BLACK)
 
@@ -98,8 +103,8 @@ async def main():
         # draw candidate container
         candidate.draw()
         red_container.draw()
-        green_container.draw()
-        blue_container.draw()
+        # green_container.draw()
+        # blue_container.draw()
 
         # draw axis
         pr.draw_line(0, height // 2, width, height // 2, pr.RED)
