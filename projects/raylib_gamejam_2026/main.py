@@ -1,6 +1,8 @@
 import asyncio
 import random
 import pyray as pr
+from candidate import ChoiceContainer
+from color_candidate import ColorContainer
 
 width, height = 720, 720
 
@@ -39,6 +41,28 @@ async def main():
     current_hex: str = ""
     current_rgb: str = ""
 
+    candidate = ChoiceContainer(
+        position=pr.Vector2(180, 250), red_value=0, blue_value=0, green_value=0
+    )
+    red_container = ColorContainer(
+        position=pr.Vector2(40, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.RED,
+    )
+    green_container = ColorContainer(
+        position=pr.Vector2(260, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.GREEN,
+    )
+    blue_container = ColorContainer(
+        position=pr.Vector2(480, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.BLUE,
+    )
+
     while not pr.window_should_close():
         pr.begin_drawing()
         pr.clear_background(pr.BLACK)
@@ -56,14 +80,30 @@ async def main():
                 current_hex: str = random_hex_color()
                 current_col = hex_to_rgb(current_hex)  # gen_new_color()
                 current_rgb = ",".join([str(i) for i in current_col])
+                print(f"{current_hex=}, {current_col=}, {current_rgb=}")
                 current_col.append(255)
 
         if is_generated:
             # pr.draw_text("CLICKED", 300, 100, 20, current_col)
-            rect = pr.Rectangle(325, 90, 100, 40)
+            rect = pr.Rectangle(325, 90, 100, 100)
             pr.draw_rectangle_rounded(rect, 0.1, 100, current_col)
-            pr.draw_text(current_hex, 300, 90, 20, pr.BLACK)
-            pr.draw_text(current_rgb, 450, 90, 20, current_col)
+            pr.draw_text(current_hex, 330, 90, 20, pr.BLACK)
+
+            rect2 = pr.Rectangle(440, 90, 100, 100)
+            pr.draw_rectangle_rounded(rect2, 0.1, 100, current_col)
+            pr.draw_text(current_rgb, 440, 90, 20, pr.BLACK)
+
+            candidate.update(r=current_col[0], g=current_col[1], b=current_col[2])
+
+        # draw candidate container
+        candidate.draw()
+        red_container.draw()
+        green_container.draw()
+        blue_container.draw()
+
+        # draw axis
+        pr.draw_line(0, height // 2, width, height // 2, pr.RED)
+        pr.draw_line(width // 2, 0, width // 2, height, pr.RED)
 
         pr.end_drawing()
         pr.draw_fps(0, 0)
