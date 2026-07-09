@@ -2,7 +2,14 @@ import pyray as pr
 
 
 class Cell:
-    def __init__(self, position: pr.Vector2, size: pr.Vector2, offset_x: int, offset_y: int ,color: pr.Color) -> None:
+    def __init__(
+        self,
+        position: pr.Vector2,
+        size: pr.Vector2,
+        offset_x: int,
+        offset_y: int,
+        color: pr.Color,
+    ) -> None:
         self.position = position
         self.size = size
         self.color = color
@@ -10,7 +17,12 @@ class Cell:
         self.offset_y = offset_y
         self.state_changed: bool = False
         self.clicked: bool = False
-        self.rect = pr.Rectangle(self.position.x + self.offset_x, self.position.y + self.offset_y, self.size.x, self.size.y)
+        self.rect = pr.Rectangle(
+            self.position.x + self.offset_x,
+            self.position.y + self.offset_y,
+            self.size.x,
+            self.size.y,
+        )
 
     def update(self) -> None:
         # print(f"{pr.check_collision_point_rec(pr.get_mouse_position(), self.rect)}, {pr.is_mouse_button_pressed(0)}")
@@ -24,7 +36,10 @@ class Cell:
         pr.draw_rectangle_rec(self.rect, self.color)
         if self.state_changed:
             pr.draw_rectangle_lines_ex(self.rect, 2, pr.RAYWHITE)
-            pr.draw_text(f"{self.color}", int(self.rect.x), int(self.rect.y), 10, pr.BLACK)
+            pr.draw_text(
+                f"{self.color}", int(self.rect.x), int(self.rect.y), 10, pr.BLACK
+            )
+
 
 class ColorContainer:
     def __init__(
@@ -40,37 +55,37 @@ class ColorContainer:
         self.base_color = base_color
         self.interactive_area: list[Cell] = [
             Cell(
-                position = pr.Vector2(self.position.x, self.position.y),
-                size = pr.Vector2(80, 80),
+                position=pr.Vector2(self.position.x, self.position.y),
+                size=pr.Vector2(80, 80),
                 offset_x=20,
                 offset_y=20,
-                color=self.base_color
+                color=self.base_color,
             ),
             Cell(
-                position = pr.Vector2(self.position.x, self.position.y),
-                size = pr.Vector2(80, 80),
-                offset_x=20+80,
+                position=pr.Vector2(self.position.x, self.position.y),
+                size=pr.Vector2(80, 80),
+                offset_x=20 + 80,
                 offset_y=20,
-                color=pr.DARKGRAY
+                color=pr.DARKGRAY,
             ),
             Cell(
-                position = pr.Vector2(self.position.x, self.position.y),
-                size = pr.Vector2(80, 80),
+                position=pr.Vector2(self.position.x, self.position.y),
+                size=pr.Vector2(80, 80),
                 offset_x=20,
-                offset_y=20+80,
-                color=pr.GRAY
+                offset_y=20 + 80,
+                color=pr.GRAY,
             ),
             Cell(
-                position = pr.Vector2(self.position.x, self.position.y),
-                size = pr.Vector2(80, 80),
-                offset_x=20+80,
-                offset_y=20+80,
-                color=pr.BEIGE
-            )
+                position=pr.Vector2(self.position.x, self.position.y),
+                size=pr.Vector2(80, 80),
+                offset_x=20 + 80,
+                offset_y=20 + 80,
+                color=pr.BEIGE,
+            ),
         ]
 
     def update(self) -> None:
-        _ = [c.update() for c in self.interactive_area] 
+        _ = [c.update() for c in self.interactive_area]
 
     def draw(self) -> None:
         # outline
