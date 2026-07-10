@@ -53,7 +53,7 @@ class Cell:
                 f"{self.color[0:3]}", int(self.rect.x) + 5, int(self.rect.y) + 5, 10, pr.BLACK
             )
             pr.draw_text(
-                f"id={self.id}", int(self.rect.x) + 5, int(self.rect.y) + 5, 10, pr.BLACK
+                f"id={self.id}", int(self.rect.x) + 5, int(self.rect.y) + 20, 10, pr.BLACK
             )
 
 
@@ -95,7 +95,7 @@ class ColorContainer:
                 color=pr.PURPLE,
             ),
             Cell(
-                id=2,
+                id=3,
                 position=pr.Vector2(self.position.x, self.position.y),
                 size=pr.Vector2(80, 80),
                 offset_x=20 + 80,
@@ -103,8 +103,13 @@ class ColorContainer:
                 color=pr.ORANGE,
                 ),
             ]
+        self.is_picked: bool = False
         self.colored_picked: pr.Color = None
         self.id_picked: int = None
+
+    def get_colored_picked(self) -> pr.Color:
+        if self.is_picked:
+            return self.colored_picked
 
     def update(self) -> None:
         # check if any cell has been clicked
@@ -118,8 +123,10 @@ class ColorContainer:
 
             self.id_picked = current_index
             self.colored_picked = current_col
-        # else:
-        #     print(f"id picked: {self.id_picked}, colored picked: {self.colored_picked}")
+        else:
+            # if a choice has been made, we display it
+            self.is_picked = True
+            # print(f"id picked: {self.id_picked}, colored picked: {self.colored_picked}")
 
 
     def draw(self) -> None:

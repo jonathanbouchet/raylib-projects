@@ -100,7 +100,7 @@ async def main():
             pr.draw_rectangle_rounded(rect2, 0.1, 100, current_col)
             pr.draw_text(current_rgb, 390, 160, 20, pr.BLACK)
 
-            candidate.update(r=current_col[0], g=current_col[1], b=current_col[2])
+            candidate.update(r=current_col[0], g=current_col[1], b=current_col[2],red_container=red_container, green_container=green_container, blue_container=blue_container)
 
         # draw candidate container
         candidate.draw()

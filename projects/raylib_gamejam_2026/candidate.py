@@ -1,4 +1,5 @@
 import pyray as pr
+from color_candidate import ColorContainer
 
 
 class ChoiceContainer:
@@ -14,7 +15,10 @@ class ChoiceContainer:
             pr.Color(0, self.green_value, 0, 255),
             pr.Color(0, 0, self.blue_value, 255),
         ]
-
+        self.red_value_picked: pr.Color = None
+        self.green_value_picked: pr.Color = None
+        self.blue_value_picked: pr.Color = None
+    
     def set_red_value(self, red_val: int) -> None:
         self.red_value = red_val
 
@@ -31,11 +35,20 @@ class ChoiceContainer:
             pr.Color(0, 0, self.blue_value, 255),
         ]
 
-    def update(self, r: int, g: int, b: int) -> None:
+    def get_color_picked(self, color_container: ColorContainer) -> pr.Color:
+        return color_container.colored_picked
+
+
+    def update(self, r: int, g: int, b: int, red_container: ColorContainer, green_container: ColorContainer, blue_container: ColorContainer) -> None:
         self.set_red_value(red_val=r)
         self.set_green_value(green_val=g)
         self.set_blue_value(blue_val=b)
         self.set_colors()
+        self.red_value_picked = self.get_color_picked(color_container=red_container)
+        self.green_value_picked = self.get_color_picked(color_container=green_container)
+        self.blue_value_picked = self.get_color_picked(color_container=blue_container)
+        if self.red_value_picked:
+            print(f"red colored picked: {self.red_value_picked}")
 
     def draw(self) -> None:
         # outline
