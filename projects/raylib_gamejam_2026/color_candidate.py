@@ -50,10 +50,18 @@ class Cell:
             pr.draw_rectangle_lines_ex(self.rect, 2, pr.RAYWHITE)
         if self.is_clicked:
             pr.draw_text(
-                f"{self.color[0:3]}", int(self.rect.x) + 5, int(self.rect.y) + 5, 10, pr.BLACK
+                f"{self.color.r},{self.color.g},{self.color.b}",
+                int(self.rect.x) + 5,
+                int(self.rect.y) + 5,
+                10,
+                pr.BLACK,
             )
             pr.draw_text(
-                f"id={self.id}", int(self.rect.x) + 5, int(self.rect.y) + 20, 10, pr.BLACK
+                f"id={self.id}",
+                int(self.rect.x) + 5,
+                int(self.rect.y) + 20,
+                10,
+                pr.BLACK,
             )
 
 
@@ -84,7 +92,7 @@ class ColorContainer:
                 size=pr.Vector2(80, 80),
                 offset_x=20 + 80,
                 offset_y=20,
-                color=pr.YELLOW,
+                color=pr.Color(253, 249, 0, 255),
             ),
             Cell(
                 id=2,
@@ -92,7 +100,7 @@ class ColorContainer:
                 size=pr.Vector2(80, 80),
                 offset_x=20,
                 offset_y=20 + 80,
-                color=pr.PURPLE,
+                color=pr.Color(200, 122, 255, 255),
             ),
             Cell(
                 id=3,
@@ -100,9 +108,9 @@ class ColorContainer:
                 size=pr.Vector2(80, 80),
                 offset_x=20 + 80,
                 offset_y=20 + 80,
-                color=pr.ORANGE,
-                ),
-            ]
+                color=pr.Color(255, 161, 0, 255),
+            ),
+        ]
         self.is_picked: bool = False
         self.colored_picked: pr.Color = None
         self.id_picked: int = None
@@ -129,14 +137,12 @@ class ColorContainer:
             self.is_picked = True
             # print(f"ColorContainer -> id picked: {self.id_picked}, colored picked: {self.colored_picked}")
 
-
     def draw(self) -> None:
         # outline
         rect = pr.Rectangle(self.position.x, self.position.y, 200, 200)
         pr.draw_rectangle_lines_ex(rect, 1, self.outline_color)
         _ = [c.draw() for c in self.interactive_area]
 
-        
         # this works -> do not delete
         # choices: 1 is the correct value, the other are fake colors
         # tl_rect = pr.Rectangle(self.position.x + 20, self.position.y + 20, 80, 80)

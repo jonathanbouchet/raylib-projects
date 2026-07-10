@@ -18,7 +18,11 @@ class ChoiceContainer:
         self.red_value_picked: pr.Color = None
         self.green_value_picked: pr.Color = None
         self.blue_value_picked: pr.Color = None
-    
+
+        # self.red_container: ColorContainer = None
+        # self.blue_container: ColorContainer = None
+        # self.green_container: ColorContainer = None
+
     def set_red_value(self, red_val: int) -> None:
         self.red_value = red_val
 
@@ -38,8 +42,15 @@ class ChoiceContainer:
     def get_color_picked(self, color_container: ColorContainer) -> pr.Color:
         return color_container.colored_picked
 
-
-    def update(self, r: int, g: int, b: int, red_container: ColorContainer, green_container: ColorContainer, blue_container: ColorContainer) -> None:
+    def update(
+        self,
+        r: int,
+        g: int,
+        b: int,
+        red_container: ColorContainer,
+        green_container: ColorContainer,
+        blue_container: ColorContainer,
+    ) -> None:
         self.set_red_value(red_val=r)
         self.set_green_value(green_val=g)
         self.set_blue_value(blue_val=b)
@@ -56,17 +67,25 @@ class ChoiceContainer:
         pr.draw_rectangle_lines_ex(rect, 1, pr.WHITE)
 
         if self.red_value_picked:
-            red_rect = pr.Rectangle(self.position.x + 15 , self.position.y + 10, 100, 100 )
+            red_rect = pr.Rectangle(
+                self.position.x + 15, self.position.y + 10, 100, 100
+            )
             pr.draw_rectangle_rec(red_rect, self.red_value_picked)
 
         if self.green_value_picked:
-            green_rect = pr.Rectangle(self.position.x + 15 + 100 + 15, self.position.y + 10, 100, 100 )
+            green_rect = pr.Rectangle(
+                self.position.x + 15 + 100 + 15, self.position.y + 10, 100, 100
+            )
             pr.draw_rectangle_rec(green_rect, self.green_value_picked)
 
         if self.blue_value_picked:
-            blue_rect = pr.Rectangle(self.position.x + 15 + 100 + 15 + 100 + 15, self.position.y + 10, 100, 100 )
+            blue_rect = pr.Rectangle(
+                self.position.x + 15 + 100 + 15 + 100 + 15,
+                self.position.y + 10,
+                100,
+                100,
+            )
             pr.draw_rectangle_rec(blue_rect, self.blue_value_picked)
-
 
         # placeholder for testing
         # start = self.position.x

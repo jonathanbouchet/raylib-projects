@@ -30,8 +30,29 @@ def hex_int_to_rgb(hex_num):
 def gen_new_color():
     return random.choice([pr.RED, pr.BLUE, pr.GRAY, pr.GREEN, pr.PURPLE, pr.YELLOW])
 
-def init_container():
-    pass
+
+def init_container(r: int, g: int, b: int):
+    print(f"{r},{g},{b}")
+    tmp_red_container = ColorContainer(
+        position=pr.Vector2(40, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.Color(r, 0, 0, 255),
+    )
+    tmp_green_container = ColorContainer(
+        position=pr.Vector2(260, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.Color(0, g, 0, 255),
+    )
+    tmp_blue_container = ColorContainer(
+        position=pr.Vector2(480, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.Color(0, 0, b, 255),
+    )
+
+    return tmp_red_container, tmp_green_container, tmp_blue_container
 
 
 async def main():
@@ -47,52 +68,63 @@ async def main():
     candidate = ChoiceContainer(
         position=pr.Vector2(180, 250), red_value=0, blue_value=0, green_value=0
     )
-    red_container = ColorContainer(
-        position=pr.Vector2(40, 400),
-        value=100,
-        outline_color=pr.WHITE,
-        base_color=pr.RED,
-    )
-    green_container = ColorContainer(
-        position=pr.Vector2(260, 400),
-        value=100,
-        outline_color=pr.WHITE,
-        base_color=pr.GREEN,
-    )
 
-    blue_container = ColorContainer(
-        position=pr.Vector2(480, 400),
-        value=100,
-        outline_color=pr.WHITE,
-        base_color=pr.BLUE,
-    )
+    red_container: ColorContainer = None
+    green_container: ColorContainer = None
+    blue_container: ColorContainer = None
+
+    # red_container = ColorContainer(
+    #     position=pr.Vector2(40, 400),
+    #     value=100,
+    #     outline_color=pr.WHITE,
+    #     base_color=pr.RED,
+    # )
+    # green_container = ColorContainer(
+    #     position=pr.Vector2(260, 400),
+    #     value=100,
+    #     outline_color=pr.WHITE,
+    #     base_color=pr.GREEN,
+    # )
+
+    # blue_container = ColorContainer(
+    #     position=pr.Vector2(480, 400),
+    #     value=100,
+    #     outline_color=pr.WHITE,
+    #     base_color=pr.BLUE,
+    # )
 
     while not pr.window_should_close():
         # logic
         dt = pr.get_frame_time()
-        red_container.update()
-        green_container.update()
-        blue_container.update()
+        if red_container is not None:
+            red_container.update()
+        if green_container is not None:
+            green_container.update()
+        if blue_container is not None:
+            blue_container.update()
 
         # rendering
         pr.begin_drawing()
         pr.clear_background(pr.BLACK)
 
-        generate_color = pr.Rectangle(width//2 - 100, 10, 200, 40)
-        pr.draw_rectangle_rec(generate_color, pr.GREEN)
-        pr.draw_text("GENERATE COLOR", width//2 - 100 + 5, 20, 20, pr.BLACK)
+        generate_color = pr.Rectangle(width // 2 - 100, 10, 200, 40)
+        pr.draw_rectangle_rec(generate_color, pr.RAYWHITE)
+        pr.draw_text("GENERATE COLOR", width // 2 - 100 + 5, 20, 20, pr.BLACK)
 
         if pr.check_collision_point_rec(pr.get_mouse_position(), generate_color):
-            pr.draw_rectangle_rec(generate_color, pr.DARKGREEN)
-            pr.draw_text("GENERATE COLOR", 100, 100, 20, pr.BLACK)
+            pr.draw_rectangle_rec(generate_color, pr.DARKGRAY)
+            pr.draw_text("GENERATE COLOR", width // 2 - 100 + 5, 20, 20, pr.BLACK)
 
             if pr.is_mouse_button_pressed(0):
                 is_generated = True
                 current_hex: str = random_hex_color()
-                current_col = hex_to_rgb(current_hex)  # gen_new_color()
+                current_col = hex_to_rgb(current_hex)
                 current_rgb = ",".join([str(i) for i in current_col])
-                # print(f"{current_hex=}, {current_col=}, {current_rgb=}")
+                print(f"{current_hex=}, {current_col=}, {current_rgb=}")
                 current_col.append(255)
+                red_container, green_container, blue_container = init_container(
+                    r=current_col[0], g=current_col[1], b=current_col[2]
+                )
 
         if is_generated:
             rect = pr.Rectangle(200, 90, 150, 150)
@@ -103,13 +135,23 @@ async def main():
             pr.draw_rectangle_rounded(rect2, 0.1, 100, current_col)
             pr.draw_text(current_rgb, 390, 160, 20, pr.BLACK)
 
-            candidate.update(r=current_col[0], g=current_col[1], b=current_col[2],red_container=red_container, green_container=green_container, blue_container=blue_container)
+            candidate.update(
+                r=current_col[0],
+                g=current_col[1],
+                b=current_col[2],
+                red_container=red_container,
+                green_container=green_container,
+                blue_container=blue_container,
+            )
 
         # draw candidate container
         candidate.draw()
-        red_container.draw()
-        green_container.draw()
-        blue_container.draw()
+        if red_container:
+            red_container.draw()
+        if green_container:
+            green_container.draw()
+        if blue_container:
+            blue_container.draw()
 
         # draw axis
         pr.draw_line(0, height // 2, width, height // 2, pr.RED)
