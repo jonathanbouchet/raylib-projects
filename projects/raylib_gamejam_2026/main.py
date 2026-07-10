@@ -50,31 +50,34 @@ async def main():
         outline_color=pr.WHITE,
         base_color=pr.RED,
     )
-    # green_container = ColorContainer(
-    #     position=pr.Vector2(260, 400),
-    #     value=100,
-    #     outline_color=pr.WHITE,
-    #     base_color=pr.GREEN,
-    # )
-    # blue_container = ColorContainer(
-    #     position=pr.Vector2(480, 400),
-    #     value=100,
-    #     outline_color=pr.WHITE,
-    #     base_color=pr.BLUE,
-    # )
+    green_container = ColorContainer(
+        position=pr.Vector2(260, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.GREEN,
+    )
+
+    blue_container = ColorContainer(
+        position=pr.Vector2(480, 400),
+        value=100,
+        outline_color=pr.WHITE,
+        base_color=pr.BLUE,
+    )
 
     while not pr.window_should_close():
         # logic
         dt = pr.get_frame_time()
         red_container.update()
+        green_container.update()
+        blue_container.update()
 
         # rendering
         pr.begin_drawing()
         pr.clear_background(pr.BLACK)
 
-        generate_color = pr.Rectangle(90, 90, 210, 40)
+        generate_color = pr.Rectangle(width//2 - 100, 10, 200, 40)
         pr.draw_rectangle_rec(generate_color, pr.GREEN)
-        pr.draw_text("GENERATE COLOR", 100, 100, 20, pr.BLACK)
+        pr.draw_text("GENERATE COLOR", width//2 - 100 + 5, 20, 20, pr.BLACK)
 
         if pr.check_collision_point_rec(pr.get_mouse_position(), generate_color):
             pr.draw_rectangle_rec(generate_color, pr.DARKGREEN)
@@ -89,22 +92,21 @@ async def main():
                 current_col.append(255)
 
         if is_generated:
-            # pr.draw_text("CLICKED", 300, 100, 20, current_col)
-            rect = pr.Rectangle(325, 90, 100, 100)
+            rect = pr.Rectangle(200, 90, 150, 150)
             pr.draw_rectangle_rounded(rect, 0.1, 100, current_col)
-            pr.draw_text(current_hex, 330, 90, 20, pr.BLACK)
+            pr.draw_text(current_hex, 240, 160, 20, pr.BLACK)
 
-            rect2 = pr.Rectangle(440, 90, 100, 100)
+            rect2 = pr.Rectangle(370, 90, 150, 150)
             pr.draw_rectangle_rounded(rect2, 0.1, 100, current_col)
-            pr.draw_text(current_rgb, 440, 90, 20, pr.BLACK)
+            pr.draw_text(current_rgb, 390, 160, 20, pr.BLACK)
 
             candidate.update(r=current_col[0], g=current_col[1], b=current_col[2])
 
         # draw candidate container
         candidate.draw()
         red_container.draw()
-        # green_container.draw()
-        # blue_container.draw()
+        green_container.draw()
+        blue_container.draw()
 
         # draw axis
         pr.draw_line(0, height // 2, width, height // 2, pr.RED)
