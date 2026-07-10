@@ -124,9 +124,10 @@ class ColorContainer:
             self.id_picked = current_index
             self.colored_picked = current_col
         else:
+            pass
             # if a choice has been made, we display it
             self.is_picked = True
-            # print(f"id picked: {self.id_picked}, colored picked: {self.colored_picked}")
+            # print(f"ColorContainer -> id picked: {self.id_picked}, colored picked: {self.colored_picked}")
 
 
     def draw(self) -> None:

@@ -30,6 +30,9 @@ def hex_int_to_rgb(hex_num):
 def gen_new_color():
     return random.choice([pr.RED, pr.BLUE, pr.GRAY, pr.GREEN, pr.PURPLE, pr.YELLOW])
 
+def init_container():
+    pass
+
 
 async def main():
 
@@ -88,7 +91,7 @@ async def main():
                 current_hex: str = random_hex_color()
                 current_col = hex_to_rgb(current_hex)  # gen_new_color()
                 current_rgb = ",".join([str(i) for i in current_col])
-                print(f"{current_hex=}, {current_col=}, {current_rgb=}")
+                # print(f"{current_hex=}, {current_col=}, {current_rgb=}")
                 current_col.append(255)
 
         if is_generated:

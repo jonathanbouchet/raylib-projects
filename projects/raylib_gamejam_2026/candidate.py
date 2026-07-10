@@ -47,18 +47,31 @@ class ChoiceContainer:
         self.red_value_picked = self.get_color_picked(color_container=red_container)
         self.green_value_picked = self.get_color_picked(color_container=green_container)
         self.blue_value_picked = self.get_color_picked(color_container=blue_container)
-        if self.red_value_picked:
-            print(f"red colored picked: {self.red_value_picked}")
+        # if self.red_value_picked:
+        #     print(f"red colored picked: {self.red_value_picked}")
 
     def draw(self) -> None:
         # outline
         rect = pr.Rectangle(self.position.x, self.position.y, 360, 120)
         pr.draw_rectangle_lines_ex(rect, 1, pr.WHITE)
 
-        start = self.position.x
+        if self.red_value_picked:
+            red_rect = pr.Rectangle(self.position.x + 15 , self.position.y + 10, 100, 100 )
+            pr.draw_rectangle_rec(red_rect, self.red_value_picked)
 
-        for i in range(3):
-            current_rect = pr.Rectangle(
-                start + (i + 1) * 15 + 100 * (i), self.position.y + 10, 100, 100
-            )
-            pr.draw_rectangle_rec(current_rect, self.colors[i])
+        if self.green_value_picked:
+            green_rect = pr.Rectangle(self.position.x + 15 + 100 + 15, self.position.y + 10, 100, 100 )
+            pr.draw_rectangle_rec(green_rect, self.green_value_picked)
+
+        if self.blue_value_picked:
+            blue_rect = pr.Rectangle(self.position.x + 15 + 100 + 15 + 100 + 15, self.position.y + 10, 100, 100 )
+            pr.draw_rectangle_rec(blue_rect, self.blue_value_picked)
+
+
+        # placeholder for testing
+        # start = self.position.x
+        # for i in range(3):
+        #     current_rect = pr.Rectangle(
+        #         start + (i + 1) * 15 + 100 * (i), self.position.y + 10, 100, 100
+        #     )
+        #     pr.draw_rectangle_rec(current_rect, self.colors[i])
