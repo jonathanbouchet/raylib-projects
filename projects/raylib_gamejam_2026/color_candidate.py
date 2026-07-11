@@ -1,3 +1,4 @@
+import random 
 import pyray as pr
 
 
@@ -77,43 +78,85 @@ class ColorContainer:
         self.value = value
         self.outline_color = outline_color
         self.base_color = base_color
-        self.interactive_area: list[Cell] = [
-            Cell(
-                id=0,
-                position=pr.Vector2(self.position.x, self.position.y),
-                size=pr.Vector2(80, 80),
-                offset_x=20,
-                offset_y=20,
-                color=self.base_color,
-            ),
-            Cell(
-                id=1,
-                position=pr.Vector2(self.position.x, self.position.y),
-                size=pr.Vector2(80, 80),
-                offset_x=20 + 80,
-                offset_y=20,
-                color=pr.Color(253, 249, 0, 255),
-            ),
-            Cell(
-                id=2,
-                position=pr.Vector2(self.position.x, self.position.y),
-                size=pr.Vector2(80, 80),
-                offset_x=20,
-                offset_y=20 + 80,
-                color=pr.Color(200, 122, 255, 255),
-            ),
-            Cell(
-                id=3,
-                position=pr.Vector2(self.position.x, self.position.y),
-                size=pr.Vector2(80, 80),
-                offset_x=20 + 80,
-                offset_y=20 + 80,
-                color=pr.Color(255, 161, 0, 255),
-            ),
-        ]
+        self.interactive_area: list[Cell] = []#make_cells() 
         self.is_picked: bool = False
         self.colored_picked: pr.Color = None
         self.id_picked: int = None
+        
+    def make_cells(self) -> list[Cell]:
+        # randomize the position of the true value
+        l = [0,1,2,3]
+        true_pos = random.choice(l)
+        l.remove(true_pos) 
+        print(f"{true_pos=}, {l=}")
+        cells_position_offset = [
+            [20, 20],
+            [20 + 80, 20],
+            [20, 20 + 80],
+            [20 + 80, 20 + 80]
+        ]
+
+        # tmp = []
+        # add true cell
+        self.interactive_area.append(
+            Cell(
+                id=true_pos,
+                position=pr.Vector2(self.position.x, self.position.y),
+                size=pr.Vector2(80, 80),
+                offset_x=cells_position_offset[true_pos][0],
+                offset_y=cells_position_offset[true_pos][1],
+                color=self.base_color,
+            )) 
+        # add fake cells
+        for i in l:  
+            self.interactive_area.append(
+                Cell(
+                    id=i,
+                    position=pr.Vector2(self.position.x, self.position.y),
+                    size=pr.Vector2(80, 80),
+                    offset_x=cells_position_offset[i][0],
+                    offset_y=cells_position_offset[i][1],
+                    color=random.choice([pr.Color(253, 249, 0, 255), pr.Color(200, 122, 255, 255), pr.Color(255, 161, 0, 255)]),
+                )
+            ) 
+        # return tmp
+        # tmp = [
+        #     Cell(
+        #         id=0,
+        #         position=pr.Vector2(self.position.x, self.position.y),
+        #         size=pr.Vector2(80, 80),
+        #         offset_x=20,
+        #         offset_y=20,
+        #         color=self.base_color,
+        #     ),
+        #     Cell(
+        #         id=1,
+        #         position=pr.Vector2(self.position.x, self.position.y),
+        #         size=pr.Vector2(80, 80),
+        #         offset_x=20 + 80,
+        #         offset_y=20,
+        #         color=pr.Color(253, 249, 0, 255),
+        #     ),
+        #     Cell(
+        #         id=2,
+        #         position=pr.Vector2(self.position.x, self.position.y),
+        #         size=pr.Vector2(80, 80),
+        #         offset_x=20,
+        #         offset_y=20 + 80,
+        #         color=pr.Color(200, 122, 255, 255),
+        #     ),
+        #     Cell(
+        #         id=3,
+        #         position=pr.Vector2(self.position.x, self.position.y),
+        #         size=pr.Vector2(80, 80),
+        #         offset_x=20 + 80,
+        #         offset_y=20 + 80,
+        #         color=pr.Color(255, 161, 0, 255),
+        #     ),
+        # ]
+    # self.is_picked: bool = False
+    # self.colored_picked: pr.Color = None
+    # self.id_picked: int = None
 
     def get_colored_picked(self) -> pr.Color:
         if self.is_picked:

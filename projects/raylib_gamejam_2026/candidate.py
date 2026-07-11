@@ -19,10 +19,6 @@ class ChoiceContainer:
         self.green_value_picked: pr.Color = None
         self.blue_value_picked: pr.Color = None
 
-        # self.red_container: ColorContainer = None
-        # self.blue_container: ColorContainer = None
-        # self.green_container: ColorContainer = None
-
     def set_red_value(self, red_val: int) -> None:
         self.red_value = red_val
 
@@ -61,10 +57,11 @@ class ChoiceContainer:
         # if self.red_value_picked:
         #     print(f"red colored picked: {self.red_value_picked}")
 
-    def draw(self) -> None:
+    def draw(self, is_generated: bool) -> None:
         # outline
-        rect = pr.Rectangle(self.position.x, self.position.y, 360, 120)
-        pr.draw_rectangle_lines_ex(rect, 1, pr.WHITE)
+        if is_generated:
+            rect = pr.Rectangle(self.position.x, self.position.y, 360, 120)
+            pr.draw_rectangle_lines_ex(rect, 1, pr.WHITE)
 
         if self.red_value_picked:
             red_rect = pr.Rectangle(

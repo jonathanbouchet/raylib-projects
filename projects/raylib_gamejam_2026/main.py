@@ -39,18 +39,21 @@ def init_container(r: int, g: int, b: int):
         outline_color=pr.WHITE,
         base_color=pr.Color(r, 0, 0, 255),
     )
+    tmp_red_container.make_cells()
     tmp_green_container = ColorContainer(
         position=pr.Vector2(260, 400),
         value=100,
         outline_color=pr.WHITE,
         base_color=pr.Color(0, g, 0, 255),
     )
+    tmp_green_container.make_cells()
     tmp_blue_container = ColorContainer(
         position=pr.Vector2(480, 400),
         value=100,
         outline_color=pr.WHITE,
         base_color=pr.Color(0, 0, b, 255),
     )
+    tmp_blue_container.make_cells()
 
     return tmp_red_container, tmp_green_container, tmp_blue_container
 
@@ -127,13 +130,15 @@ async def main():
                 )
 
         if is_generated:
+            pr.draw_text(f"Color to find", 210, 70, 20, pr.RAYWHITE)
             rect = pr.Rectangle(200, 90, 150, 150)
             pr.draw_rectangle_rounded(rect, 0.1, 100, current_col)
             pr.draw_text(current_hex, 240, 160, 20, pr.BLACK)
 
-            rect2 = pr.Rectangle(370, 90, 150, 150)
-            pr.draw_rectangle_rounded(rect2, 0.1, 100, current_col)
-            pr.draw_text(current_rgb, 390, 160, 20, pr.BLACK)
+            pr.draw_text(f"your merge candidate", 370, 70, 20, pr.RAYWHITE)
+            # rect2 = pr.Rectangle(370, 90, 150, 150)
+            # pr.draw_rectangle_rounded(rect2, 0.1, 100, current_col)
+            # pr.draw_text(current_rgb, 390, 160, 20, pr.BLACK)
 
             candidate.update(
                 r=current_col[0],
@@ -145,7 +150,7 @@ async def main():
             )
 
         # draw candidate container
-        candidate.draw()
+        candidate.draw(is_generated=is_generated)
         if red_container:
             red_container.draw()
         if green_container:
