@@ -26,13 +26,13 @@ class Game:
             num_col=10,
             width=self.width,
             height=self.height,
-            tile_width=60,
-            tile_height=60,
+            tile_size=64,
             grid_outline_color=pr.RED,
         )
 
     def update(self) -> None:
-        pass
+        if pr.is_mouse_button_pressed(0):
+            self.grid.get_cell_clicked(pr.get_mouse_position())
 
     async def run(self) -> None:
         while not pr.window_should_close():
@@ -52,9 +52,10 @@ class Game:
 
 async def main() -> None:
     game = Game(
-        width=600, height=600, fps_target=60, name="app", background_color=pr.BLACK
+        width=640, height=640, fps_target=60, name="app", background_color=pr.BLACK
     )
     game.init()
+    game.grid.print()
     await game.run()
     game.end()
 

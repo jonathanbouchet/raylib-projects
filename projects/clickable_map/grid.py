@@ -1,4 +1,5 @@
 import pyray as pr
+import numpy as np
 
 
 class Grid:
@@ -8,26 +9,55 @@ class Grid:
         num_col: int,
         width: int,
         height: int,
-        tile_width: int,
-        tile_height: int,
+        tile_size: int,
         grid_outline_color: pr.Color,
     ) -> None:
         self.num_row = num_row
         self.num_col = num_col
         self.game_width = width
         self.game_height = height
-        self.tile_width = tile_width
-        self.tile_height = tile_height
+        self.tile_size = tile_size
         self.grid_outline_color = grid_outline_color
+        self.grid_cell_values = np.ones(
+            (self.num_row, self.num_col), dtype=int
+        )  # init with 1's as walkable tiles for the pathfinder algorithm
+        self.grid_cell_colors: list[pr.Color] = [pr.BLACK, pr.DARKGRAY]
+
+    def print(self) -> None:
+        for row in self.grid_cell_values:
+            for element in row:
+                print(element, end=" ")
+            print()
+
+    def get_cell_clicked(self, pos: pr.Vector2) -> tuple[int, int]:
+        i = int(pos.x / self.tile_size)
+        j = int(pos.y / self.tile_size)
+        self.grid_cell_values[j][i] = not self.grid_cell_values[j][i]
 
     def draw(self) -> None:
+        # for i in range(self.num_row):
+        #     pr.draw_line(
+        #                 0,
+        #                 i * self.tile_height,
+        #                 self.game_width,
+        #                 i * self.tile_height,
+        #                 self.grid_outline_color,
+        #         )
+        # for j in range(self.num_col):
+        #     pr.draw_line(
+        #             j * self.tile_width,
+        #             0,
+        #             j * self.tile_width,
+        #             self.game_height,
+        #             self.grid_outline_color,
+        #     )
         for i in range(self.num_row):
             for j in range(self.num_col):
-                if j == 0:
-                    pr.draw_line(
-                        0,
-                        i * self.tile_height,
-                        self.game_width,
-                        i * self.tile_height,
-                        self.grid_outline_color,
-                    )
+                cell_value = self.grid_cell_values[i][j]
+                pr.draw_rectangle(
+                    j * self.tile_size + 1,
+                    i * self.tile_size + 1,
+                    self.tile_size - 1,
+                    self.tile_size - 1,
+                    self.grid_cell_colors[cell_value],
+                )
