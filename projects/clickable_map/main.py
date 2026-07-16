@@ -28,6 +28,7 @@ class Game:
             height=self.height,
             tile_size=64,
             grid_outline_color=pr.RED,
+            block_probability=0.1,
         )
 
     def update(self) -> None:
