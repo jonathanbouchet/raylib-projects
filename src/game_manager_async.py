@@ -28,6 +28,7 @@ class Game:
         while not pr.window_should_close():
             self.update()
             self.draw()
+            await asyncio.sleep(0)
 
     def draw(self) -> None:
         pr.begin_drawing()
