@@ -16,6 +16,7 @@ class Game:
         background_color: pr.Color,
         texture_walkable_path: str,
         texture_obstacle_path: str,
+        texture_player_path: str
     ):
         self.width = width
         self.height = height
@@ -24,6 +25,7 @@ class Game:
         self.background_color = background_color
         self.texture_walkable_path = texture_walkable_path
         self.texture_obstacle_path = texture_obstacle_path
+        self.texture_player_path = texture_player_path
 
     def init(self):
         pr.init_window(self.width, self.height, self.name)
@@ -38,6 +40,7 @@ class Game:
             block_probability=0.1,
             texture_walkable=pr.load_texture(self.texture_walkable_path),
             texture_obstacle=pr.load_texture(self.texture_obstacle_path),
+            texture_player=pr.load_texture(self.texture_player_path),
         )
 
     def update(self) -> None:
@@ -72,8 +75,10 @@ async def main() -> None:
         background_color=pr.BLACK, 
         texture_obstacle_path=f"{THIS_DIR}/rock_64x64.png",
         texture_walkable_path=f"{THIS_DIR}/grass_64x64.png",
+        texture_player_path=f"{THIS_DIR}/player_64x64.png",
     )
     game.init()
+    game.grid.add_player()
     game.grid.print()
     await game.run()
     game.end()
