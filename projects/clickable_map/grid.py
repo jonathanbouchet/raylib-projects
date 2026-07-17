@@ -12,6 +12,8 @@ class Grid:
         tile_size: int,
         grid_outline_color: pr.Color,
         block_probability: float,
+        texture_walkable: pr.Texture,
+        texture_obstacle: pr.Texture 
     ) -> None:
         self.num_row = num_row
         self.num_col = num_col
@@ -20,6 +22,9 @@ class Grid:
         self.tile_size = tile_size
         self.grid_outline_color = grid_outline_color
         self.block_probability = block_probability
+        self.texture_walkable = texture_walkable
+        self.texture_obstacle = texture_obstacle
+        self.textures: list[pr.Texture] = [self.texture_obstacle, self.texture_walkable]
         self.grid_cell_values: np.ndarray[tuple[int, int], np.dtype[np.int64]] = (
             np.where(
                 np.random.rand(self.num_row, self.num_col) < self.block_probability,
@@ -42,32 +47,45 @@ class Grid:
         i = int(pos.x / self.tile_size)
         j = int(pos.y / self.tile_size)
         if self.grid_cell_clickable[j][i]:
-            self.grid_cell_values[j][i] = not self.grid_cell_values[j][i]
+            pass
+            # self.grid_cell_values[j][i] = not self.grid_cell_values[j][i]
+
+    def draw_grid_outline(self) -> None:
+        for i in range(self.num_row):
+            pr.draw_line(
+                        0,
+                        i * self.tile_size,
+                        self.game_width,
+                        i * self.tile_size,
+                        self.grid_outline_color,
+                )
+        for j in range(self.num_col):
+            pr.draw_line(
+                    j * self.tile_size,
+                    0,
+                    j * self.tile_size,
+                    self.game_height,
+                    self.grid_outline_color,
+            )
 
     def draw(self) -> None:
-        # for i in range(self.num_row):
-        #     pr.draw_line(
-        #                 0,
-        #                 i * self.tile_height,
-        #                 self.game_width,
-        #                 i * self.tile_height,
-        #                 self.grid_outline_color,
-        #         )
-        # for j in range(self.num_col):
-        #     pr.draw_line(
-        #             j * self.tile_width,
-        #             0,
-        #             j * self.tile_width,
-        #             self.game_height,
-        #             self.grid_outline_color,
-        #     )
         for i in range(self.num_row):
             for j in range(self.num_col):
                 cell_value = self.grid_cell_values[i][j]
-                pr.draw_rectangle(
-                    j * self.tile_size + 1,
-                    i * self.tile_size + 1,
-                    self.tile_size - 1,
-                    self.tile_size - 1,
-                    self.grid_cell_colors[cell_value],
+                # pr.draw_rectangle(
+                #     j * self.tile_size + 1,
+                #     i * self.tile_size + 1,
+                #     self.tile_size - 1,
+                #     self.tile_size - 1,
+                #     self.grid_cell_colors[cell_value],
+                # )
+                pr.draw_texture_v(
+                    self.textures[cell_value],
+                    pr.Vector2(
+                        j * self.tile_size,
+                        i * self.tile_size),
+                    pr.WHITE,
                 )
+    
+    def unload_textures(self) -> None:
+        _ = [pr.unload_texture(texture) for texture in self.textures]

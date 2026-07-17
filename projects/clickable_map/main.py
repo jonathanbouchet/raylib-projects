@@ -1,6 +1,9 @@
 import asyncio
+from pathlib import Path
 import pyray as pr
 from grid import Grid
+
+THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
 
 class Game:
@@ -11,12 +14,16 @@ class Game:
         fps_target: int,
         name: str,
         background_color: pr.Color,
+        texture_walkable_path: str,
+        texture_obstacle_path: str,
     ):
         self.width = width
         self.height = height
         self.fps_target = fps_target
         self.name = name
         self.background_color = background_color
+        self.texture_walkable_path = texture_walkable_path
+        self.texture_obstacle_path = texture_obstacle_path
 
     def init(self):
         pr.init_window(self.width, self.height, self.name)
@@ -29,6 +36,8 @@ class Game:
             tile_size=64,
             grid_outline_color=pr.RED,
             block_probability=0.1,
+            texture_walkable=pr.load_texture(self.texture_walkable_path),
+            texture_obstacle=pr.load_texture(self.texture_obstacle_path),
         )
 
     def update(self) -> None:
@@ -44,16 +53,25 @@ class Game:
         pr.begin_drawing()
         pr.clear_background(self.background_color)
         self.grid.draw()
+        self.grid.draw_grid_outline()
         pr.draw_fps(0, 0)
         pr.end_drawing()
 
     def end(self) -> None:
+        self.grid.unload_textures()
         pr.close_window()
 
 
 async def main() -> None:
+
     game = Game(
-        width=640, height=640, fps_target=60, name="app", background_color=pr.BLACK
+        width=640, 
+        height=640, 
+        fps_target=60, 
+        name="app", 
+        background_color=pr.BLACK, 
+        texture_obstacle_path=f"{THIS_DIR}/rock_64x64.png",
+        texture_walkable_path=f"{THIS_DIR}/grass_64x64.png",
     )
     game.init()
     game.grid.print()
