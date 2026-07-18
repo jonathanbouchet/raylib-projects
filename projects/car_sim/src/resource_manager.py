@@ -21,4 +21,4 @@ class ResourceManager:
 
     # print game data
     def print_game_data(self) -> str:
-        print(self.resources_data.get("game"))
+        print(self.resources_data.get("grid"))

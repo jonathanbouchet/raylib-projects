@@ -17,27 +17,39 @@ class Game:
         self.debug: bool = self.resources_manager.game_data().get("debug")
 
         # grid
-        self.color_walkable_cell = self.resources_manager.grid_data().get(
-            "color_walkable_cell"
-        )
-        self.color_obstacle_cell = self.resources_manager.grid_data().get(
-            "color_obstable_cell"
+        self.grid = Grid(
+            num_row=self.resources_manager.grid_data().get("num_row"),
+            num_col=self.resources_manager.grid_data().get("num_col"),
+            width=self.width,
+            height=self.height,
+            tile_size=self.resources_manager.grid_data().get("cell_size"),
+            grid_outline_color=self.resources_manager.grid_data().get("outline_color"),
+            obstacle_probability=self.resources_manager.grid_data().get(
+                "obstacle_probability"
+            ),
+            color_walkable_cell=self.resources_manager.grid_data().get(
+                "color_walkable_cell"
+            ),
+            color_obstacle_cell=self.resources_manager.grid_data().get(
+                "color_obstable_cell"
+            ),
+            debug=self.resources_manager.grid_data().get("debug"),
         )
 
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
-        self.grid = Grid(
-            num_row=10,
-            num_col=10,
-            width=self.width,
-            height=self.height,
-            tile_size=64,
-            grid_outline_color=pr.RED,
-            block_probability=0.1,
-            color_walkable_cell=self.color_walkable_cell,
-            color_obstacle_cell=self.color_obstacle_cell,
-        )
+        # self.grid = Grid(
+        #     num_row=self.grid.num_row,
+        #     num_col=self.grid.num_col,
+        #     width=self.width,
+        #     height=self.height,
+        #     tile_size=self.grid.cell_size,
+        #     grid_outline_color=self.grid.grid_outline_color,
+        #     block_probability=0.1,
+        #     color_walkable_cell=self.grid.color_walkable_cell,
+        #     color_obstacle_cell=self.grid.color_obstacle_cell,
+        # )
 
     def update(self) -> None:
         if pr.is_mouse_button_pressed(0):

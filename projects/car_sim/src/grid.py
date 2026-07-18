@@ -11,9 +11,10 @@ class Grid:
         height: int,
         tile_size: int,
         grid_outline_color: pr.Color,
-        block_probability: float,
+        obstacle_probability: float,
         color_walkable_cell: pr.Color,
         color_obstacle_cell: pr.Color,
+        debug: bool,
     ) -> None:
         self.num_row = num_row
         self.num_col = num_col
@@ -21,10 +22,11 @@ class Grid:
         self.game_height = height
         self.tile_size = tile_size
         self.grid_outline_color = grid_outline_color
-        self.block_probability = block_probability
+        self.obstacle_probability = obstacle_probability
+        self.debug = debug
         self.grid_cell_values: np.ndarray[tuple[int, int], np.dtype[np.int64]] = (
             np.where(
-                np.random.rand(self.num_row, self.num_col) < self.block_probability,
+                np.random.rand(self.num_row, self.num_col) < self.obstacle_probability,
                 0,
                 1,
             )

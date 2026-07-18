@@ -10,7 +10,13 @@
     },
     "grid":
     {
+        "num_row": 10,
+        "num_col": 10,
+        "cell_size": 64,
+        "outline_color": [255, 0, 0, 255],
+        "obstacle_probability": 0.1,
         "color_walkable_cell": [19, 45, 122, 255],
-        "color_obstable_cell": [12, 7, 47, 255]
+        "color_obstable_cell": [12, 7, 47, 255],
+        "debug": true
     }
 }
