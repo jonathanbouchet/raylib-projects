@@ -73,14 +73,14 @@ But first the current status of the project:
 - game size is 640x640
 - light blue are walkable cells, dark blues are obstacles ; this is supposed to represent road (=walkable) from other assets (terrain, building ?) 
 
-<img src="images/car_sim_2026-07-17.png", alt="" width="600">
+<img src="images/car_sim_2026-07-17.png" alt="" width="600">
 
 ## Testing
 - first test was to prototype the isometric rendering using a tile I made with `PixiEditor`
 - mouse can highlight a given isometric tile
 - this project had me working on the `cartesian-to-isometric` transformation
 
-<img src="images/isometric_plan_tile.png", alt="" width="600">
+<img src="images/isometric_plan_tile.png" alt="" width="600">
 
 - a similar test was to build map with `Tiled` with some of these tiles I made
 - so far looks good so the plan is to either 1) build predefined map with `Tiled` 2) build simple map in game directly by placing the different tiles
@@ -89,18 +89,18 @@ But first the current status of the project:
 
 - then so more testing about 2D tiles I made. I kinda get super excited about pixel art and tried some of that
 
-<img src="images/2d_tile_test.png", alt="" width="600">
+<img src="images/2d_tile_test.png" alt="" width="600">
 
 - before I switched back to regular plain colors for the project, I did try to see how these textures look in it
 - so far I like the style but I'm so bad at pixel aart :-(
 
-<img src="images/map_with_2d_tile.png", alt="" width="600">
+<img src="images/map_with_2d_tile.png" alt="" width="600">
 
 - about the size testing:
 
-<img src="images/tile_size_rendering_test.png", alt="" width="600">
+<img src="images/tile_size_rendering_test.png" alt="" width="600">
 
-<img src="images/font_test.png", alt="" width="600">
+<img src="images/font_test.png" alt="" width="600">
 
 - Right now I still don't what is the best solution for the `button`:
     1. make the button using a background tile and overlay the text (using a pixel-art font) on top of it
