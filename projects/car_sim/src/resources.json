@@ -8,7 +8,7 @@
         "name": "car simulator app",
         "debug": true
     },
-    "grid":
+    "board":
     {
         "num_row": 10,
         "num_col": 10,

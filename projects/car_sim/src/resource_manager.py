@@ -15,9 +15,9 @@ class ResourceManager:
     def game_data(self) -> dict[str : int | str]:
         return self.resources_data.get("game")
 
-    # extract grid data
-    def grid_data(self) -> dict[str : int | str]:
-        return self.resources_data.get("grid")
+    # extract board data
+    def board_data(self) -> dict[str : int | str]:
+        return self.resources_data.get("board")
 
     # print game data
     def print_game_data(self) -> str:

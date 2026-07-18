@@ -13,7 +13,7 @@ async def main() -> None:
 
     game = Game(resource_manager=resource_manager)
     game.init()
-    game.grid.print()
+    game.board.print()
     await game.run()
 
 

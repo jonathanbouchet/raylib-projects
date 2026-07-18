@@ -1,6 +1,6 @@
 import pyray as pr
 from .resource_manager import ResourceManager
-from .grid import Grid
+from .board import Board
 
 
 class Game:
@@ -16,24 +16,24 @@ class Game:
         self.name: str = self.resources_manager.game_data().get("name")
         self.debug: bool = self.resources_manager.game_data().get("debug")
 
-        # grid
-        self.grid = Grid(
-            num_row=self.resources_manager.grid_data().get("num_row"),
-            num_col=self.resources_manager.grid_data().get("num_col"),
+        # board
+        self.board = Board(
+            num_row=self.resources_manager.board_data().get("num_row"),
+            num_col=self.resources_manager.board_data().get("num_col"),
             width=self.width,
             height=self.height,
-            tile_size=self.resources_manager.grid_data().get("cell_size"),
-            grid_outline_color=self.resources_manager.grid_data().get("outline_color"),
-            obstacle_probability=self.resources_manager.grid_data().get(
+            tile_size=self.resources_manager.board_data().get("cell_size"),
+            board_outline_color=self.resources_manager.board_data().get("outline_color"),
+            obstacle_probability=self.resources_manager.board_data().get(
                 "obstacle_probability"
             ),
-            color_walkable_cell=self.resources_manager.grid_data().get(
+            color_walkable_cell=self.resources_manager.board_data().get(
                 "color_walkable_cell"
             ),
-            color_obstacle_cell=self.resources_manager.grid_data().get(
+            color_obstacle_cell=self.resources_manager.board_data().get(
                 "color_obstable_cell"
             ),
-            debug=self.resources_manager.grid_data().get("debug"),
+            debug=self.resources_manager.board_data().get("debug"),
         )
 
     def init(self) -> None:
@@ -53,7 +53,7 @@ class Game:
 
     def update(self) -> None:
         if pr.is_mouse_button_pressed(0):
-            self.grid.get_cell_clicked(pr.get_mouse_position())
+            self.board.get_cell_clicked(pr.get_mouse_position())
 
     async def run(self) -> None:
         while not pr.window_should_close():
@@ -63,7 +63,7 @@ class Game:
     def draw(self) -> None:
         pr.begin_drawing()
         pr.clear_background(self.background_color)
-        self.grid.draw()
-        self.grid.draw_grid_outline()
+        self.board.draw()
+        self.board.draw_board_outline()
         pr.draw_fps(0, 0)
         pr.end_drawing()
