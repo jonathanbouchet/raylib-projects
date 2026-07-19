@@ -2,6 +2,7 @@ import pyray as pr
 from .resource_manager import ResourceManager
 from .board import Board
 from .sprite import Sprite
+from .utils import find_path
 
 
 class Game:
@@ -68,7 +69,17 @@ class Game:
 
     def update(self) -> None:
         if pr.is_mouse_button_pressed(0):
-            self.board.get_cell_clicked(pr.get_mouse_position())
+            mouse_pos = self.board.get_cell_clicked(pr.get_mouse_position())
+            print(f"{mouse_pos=}")
+            if mouse_pos[0] is not None and mouse_pos[1] is not None:
+                # walkable tile
+                current_player_position = self.player.get_board_position()
+                print(f"{current_player_position=}")
+                path = find_path(board=self.board.get_board(), player_pos=current_player_position, target=mouse_pos)
+                print(f"{path=}")
+                self.board.update_board(path=path)
+                self.player.set_position(pr.Vector2(mouse_pos[0], mouse_pos[1]))
+
 
     async def run(self) -> None:
         while not pr.window_should_close():

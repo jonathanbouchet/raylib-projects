@@ -37,6 +37,7 @@ class Board:
         self.board_cell_colors: list[pr.Color] = [
             color_obstacle_cell,
             color_walkable_cell,
+            pr.Color(245, 241, 131, 255)
         ]
 
     def add_player(self) -> tuple[int, int]:
@@ -49,6 +50,14 @@ class Board:
         return [rows[val], cols[val]]
         # self.grid_cell_values[rows[val]][cols[val]] = 2
 
+    def update(self) -> None:
+        self.get_cell_clicked()
+
+    def update_board(self, path):
+        for val in path:
+            print(val[0], val[1])
+            self.board_cell_values[val[0], val[1]] = 2
+
     def print(self) -> None:
         for row in self.board_cell_values:
             for element in row:
@@ -59,8 +68,13 @@ class Board:
         i = int(pos.x / self.tile_size)
         j = int(pos.y / self.tile_size)
         if self.board_cell_clickable[j][i]:
-            pass
-            # self.board_cell_values[j][i] = not self.board_cell_values[j][i]
+            return [i, j]
+        else:
+            return [None, None]
+        
+    
+    def get_board(self) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
+        return self.board_cell_values
 
     def draw_board_outline(self) -> None:
         for i in range(self.num_row):
