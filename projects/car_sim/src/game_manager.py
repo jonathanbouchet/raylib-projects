@@ -58,27 +58,14 @@ class Game:
             debug=self.resources_manager.player_sprite().get("debug"),
         )
         self.player_timer = Timer(
-            duration=1, repeat=True, autostart=False, func=self.player.draw
+            duration=10, repeat=False, autostart=False, func=self.player.draw
         )
 
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
-        # self.grid = Grid(
-        #     num_row=self.grid.num_row,
-        #     num_col=self.grid.num_col,
-        #     width=self.width,
-        #     height=self.height,
-        #     tile_size=self.grid.cell_size,
-        #     grid_outline_color=self.grid.grid_outline_color,
-        #     block_probability=0.1,
-        #     color_walkable_cell=self.grid.color_walkable_cell,
-        #     color_obstacle_cell=self.grid.color_obstacle_cell,
-        # )
 
     def update(self) -> None:
-        # update timer that delays the player drawing
-        self.player_timer.update()
         if pr.is_mouse_button_pressed(0):
             self.board.reset_board()
             mouse_pos = self.board.get_cell_clicked(pr.get_mouse_position())
@@ -94,8 +81,13 @@ class Game:
                 )
                 print(f"{path=}")
                 self.board.update_board(path=path)
-                self.player.set_position(pr.Vector2(mouse_pos[0], mouse_pos[1]))
-
+                path.append(mouse_pos)
+                for val in path:
+                    # update timer that delays the player drawing
+                    self.player_timer.update()
+                    # self.player.set_position(pr.Vector2(mouse_pos[0], mouse_pos[1]))
+                    self.player.set_position(pr.Vector2(val[0], val[1]))
+                
     async def run(self) -> None:
         while not pr.window_should_close():
             self.update()
