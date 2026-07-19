@@ -7,6 +7,11 @@ from .utils import find_path
 
 
 class Game:
+    """
+    - the Game class is responsible to manage:
+        - board: grid system underlying the player movement
+        - the player  
+    """
     def __init__(self, resource_manager) -> None:
         self.resources_manager: ResourceManager = resource_manager
         # generalities
@@ -37,6 +42,9 @@ class Game:
             ),
             color_obstacle_cell=self.resources_manager.board_data().get(
                 "color_obstable_cell"
+            ),
+            color_path_cell=self.resources_manager.board_data().get(
+                "color_path_cell"
             ),
             debug=self.resources_manager.board_data().get("debug"),
         )

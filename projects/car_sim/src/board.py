@@ -15,6 +15,7 @@ class Board:
         obstacle_probability: float,
         color_walkable_cell: pr.Color,
         color_obstacle_cell: pr.Color,
+        color_path_cell: pr.Color,
         debug: bool,
     ) -> None:
         self.num_row = num_row
@@ -38,7 +39,7 @@ class Board:
         self.board_cell_colors: list[pr.Color] = [
             color_obstacle_cell,
             color_walkable_cell,
-            pr.Color(245, 241, 131, 255),
+            color_path_cell,
         ]
         self.initial_board: list[list[int]] = copy.deepcopy(
             self.board_cell_values.tolist()

@@ -15,7 +15,7 @@ def find_path(board, player_pos, target) -> tuple[int, int]:
 
     # 3. create the finder instance
     # finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
-    finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
+    finder = AStarFinder(diagonal_movement=DiagonalMovement.never)
 
     # 4. find the path
     # Warning: This operation mutates the grid object internally
