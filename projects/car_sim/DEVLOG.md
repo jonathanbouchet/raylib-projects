@@ -123,7 +123,7 @@ But first the current status of the project:
 
 <img src="images/car_sim_2026-07-18-1.png" alt="when the game starts" width="600">
 
-<img src="images/ar_sim_2026-07-18-2.png" alt="after clicking a walkable tile" width="600">
+<img src="images/car_sim_2026-07-18-2.png" alt="after clicking a walkable tile" width="600">
 
 
 
