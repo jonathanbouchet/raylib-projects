@@ -1,3 +1,4 @@
+import copy
 import pyray as pr
 import numpy as np
 
@@ -37,8 +38,11 @@ class Board:
         self.board_cell_colors: list[pr.Color] = [
             color_obstacle_cell,
             color_walkable_cell,
-            pr.Color(245, 241, 131, 255)
+            pr.Color(245, 241, 131, 255),
         ]
+        self.initial_board: list[list[int]] = copy.deepcopy(
+            self.board_cell_values.tolist()
+        )  # convert to list to make it immutable
 
     def add_player(self) -> tuple[int, int]:
         # should be in walkable cell, i.e cell_values = 1
@@ -48,14 +52,12 @@ class Board:
         val = np.random.randint(0, len(rows))
         print(f"player position on the grid: {rows[val]}, {cols[val]}")
         return [rows[val], cols[val]]
-        # self.grid_cell_values[rows[val]][cols[val]] = 2
 
     def update(self) -> None:
         self.get_cell_clicked()
 
     def update_board(self, path):
         for val in path:
-            print(val[0], val[1])
             self.board_cell_values[val[0], val[1]] = 2
 
     def print(self) -> None:
@@ -71,8 +73,7 @@ class Board:
             return [i, j]
         else:
             return [None, None]
-        
-    
+
     def get_board(self) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         return self.board_cell_values
 
@@ -105,4 +106,10 @@ class Board:
                     self.tile_size,
                     self.board_cell_colors[cell_value],
                 )
-        
+
+    def reset_board(self) -> None:
+        print("resetting the board")
+        print(f"original board: {self.initial_board}")
+        self.board_cell_values = np.array(self.initial_board)
+        print("done")
+        self.print()

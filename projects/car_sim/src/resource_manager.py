@@ -18,9 +18,9 @@ class ResourceManager:
     # extract board data
     def board_data(self) -> dict[str : int | str]:
         return self.resources_data.get("board")
-    
+
     # player sprite
-    def player_sprite(self) -> dict[str: int | str | tuple]:
+    def player_sprite(self) -> dict[str : int | str | tuple]:
         return self.resources_data.get("player_sprite")
 
     # print game data

@@ -1,7 +1,15 @@
 import pyray as pr
 
+
 class Sprite:
-    def __init__(self, position: pr.Vector2, position_board: pr.Vector2, radius: int, color: pr.Color, debug: bool) -> None:
+    def __init__(
+        self,
+        position: pr.Vector2,
+        position_board: pr.Vector2,
+        radius: int,
+        color: pr.Color,
+        debug: bool,
+    ) -> None:
         self.position = position
         self.position_board = position_board
         self.radius = radius
@@ -23,17 +31,17 @@ class Sprite:
     def draw(self) -> None:
         # pr.draw_circle_v(
         #     pr.Vector2(
-        #         self.position.x - self.radius, 
+        #         self.position.x - self.radius,
         #         self.position.y - self.radius
-        #     ), 
-        #     self.radius, 
+        #     ),
+        #     self.radius,
         #     self.color
         # )
         pr.draw_circle_v(
             pr.Vector2(
-                (self.position_board.x +1 )*64 - self.radius, #testing
-                (self.position_board.y + 1)*64 - self.radius
-            ), 
-            self.radius, 
-            self.color
+                (self.position_board.x + 1) * 64 - self.radius,  # testing
+                (self.position_board.y + 1) * 64 - self.radius,
+            ),
+            self.radius,
+            self.color,
         )
