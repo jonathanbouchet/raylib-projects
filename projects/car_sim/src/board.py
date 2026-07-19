@@ -39,6 +39,16 @@ class Board:
             color_walkable_cell,
         ]
 
+    def add_player(self) -> tuple[int, int]:
+        # should be in walkable cell, i.e cell_values = 1
+        rows, cols = np.nonzero(self.board_cell_values)
+        print(f"{rows=}, {cols=}")
+        # take randomly a couple with these values
+        val = np.random.randint(0, len(rows))
+        print(f"player position on the grid: {rows[val]}, {cols[val]}")
+        return [rows[val], cols[val]]
+        # self.grid_cell_values[rows[val]][cols[val]] = 2
+
     def print(self) -> None:
         for row in self.board_cell_values:
             for element in row:
@@ -81,3 +91,4 @@ class Board:
                     self.tile_size,
                     self.board_cell_colors[cell_value],
                 )
+        

@@ -1,6 +1,7 @@
 import pyray as pr
 from .resource_manager import ResourceManager
 from .board import Board
+from .sprite import Sprite
 
 
 class Game:
@@ -36,6 +37,20 @@ class Game:
             debug=self.resources_manager.board_data().get("debug"),
         )
 
+        # player
+        player_position_board = self.board.add_player()
+        # player_position_board = [0,0]
+        player_position_world = pr.Vector2(
+            (player_position_board[0] + 1) * self.board.tile_size, 
+            (player_position_board[1] + 1) * self.board.tile_size) # board indexes start at 0
+        self.player = Sprite(
+            position=player_position_world, 
+            position_board=pr.Vector2(player_position_board[0], player_position_board[1]),
+            radius = self.resources_manager.player_sprite().get("radius"),
+            color = self.resources_manager.player_sprite().get("color"),
+            debug = self.resources_manager.player_sprite().get("debug"))
+
+
     def init(self) -> None:
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
@@ -65,5 +80,9 @@ class Game:
         pr.clear_background(self.background_color)
         self.board.draw()
         self.board.draw_board_outline()
-        pr.draw_fps(0, 0)
+        self.player.draw()
+        if self.debug:
+            pr.draw_fps(0, 0)
+            pr.draw_text(f"PLAYER:[{int(self.player.position_board.x)},{int(self.player.position_board.y)}]", 0, 20, 20, pr.GREEN)
+            self.board.draw_board_outline()
         pr.end_drawing()

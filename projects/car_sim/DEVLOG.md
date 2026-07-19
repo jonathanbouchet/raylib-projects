@@ -109,7 +109,8 @@ But first the current status of the project:
     - 1. gives more control on the text placement and sizing but I don't like the rendering of the font, it looks burry
     - 2. gives nice visual results but the amoutn of work needed for each button state, and even more if it needs tweaking, will be pretty consequent 
 
-
+# 2026-07-18
+- color palette for the board tiles: https://lospec.com/palette-list/sun-set
 
 
 

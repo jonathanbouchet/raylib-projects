@@ -18,5 +18,11 @@
         "color_walkable_cell": [19, 45, 122, 255],
         "color_obstable_cell": [12, 7, 47, 255],
         "debug": true
+    },
+    "player_sprite":
+    {
+        "color": [242, 119, 114, 255],
+        "radius": 32,
+        "debug": true
     }
 }
