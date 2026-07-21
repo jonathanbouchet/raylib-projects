@@ -3,7 +3,7 @@ from pathlib import Path
 import pyray as pr
 import raylib as rl
 
-THIS_DIR = (Path(__file__).parent/"assets").resolve()
+THIS_DIR = (Path(__file__).parent / "assets").resolve()
 
 # Constants
 SCREEN_WIDTH = 640
@@ -49,16 +49,16 @@ class UIElement:
             pr.draw_rectangle_lines(
                 int(self.position.x),
                 int(self.position.y),
-                int(self.width//2),  # for visualization purposes only
-                int(self.height//2), # for visualization purposes only
+                int(self.width // 2),  # for visualization purposes only
+                int(self.height // 2),  # for visualization purposes only
                 pr.SKYBLUE,
             )
         else:
             pr.draw_rectangle_lines(
                 int(self.position.x),
                 int(self.position.y),
-                int(self.width//2), # for visualization purposes only
-                int(self.height//2),# for visualization purposes only
+                int(self.width // 2),  # for visualization purposes only
+                int(self.height // 2),  # for visualization purposes only
                 pr.RED,
             )
 
@@ -84,7 +84,7 @@ class UIContainer:
         if any(statuses):
             index = [i for i, val in enumerate(statuses) if val]
             return self.ui_elements[index[0]].name
-        
+
     def get_selected_tile_index(self) -> int:
         statuses = [x.get_status() for x in self.ui_elements]
         if any(statuses):
@@ -118,6 +118,7 @@ class Map:
     - it has the same textures (same order) as the UI class
     - the tile struct is a dict of tiles indexes and corresponding tile index
     """
+
     def __init__(self, textures: list[pr.Texture]):
         self.textures = textures
         self.tiles: list[dict[int, int]] = []
@@ -130,21 +131,22 @@ class Map:
             texture = self.textures[tile.get("index")]
             hover_x, hover_y = tile.get("hover_x"), tile.get("hover_y")
             pr.draw_texture(
-                texture, 
-                int(ORIGIN.x) + (hover_x - hover_y)*TILE_WIDTH//2, 
-                int(ORIGIN.y) + (hover_x+hover_y)*TILE_HEIGHT//4, 
-                pr.WHITE
-    )
-            
+                texture,
+                int(ORIGIN.x) + (hover_x - hover_y) * TILE_WIDTH // 2,
+                int(ORIGIN.y) + (hover_x + hover_y) * TILE_HEIGHT // 4,
+                pr.WHITE,
+            )
+
     def print(self):
         if len(self.tiles) > 0:
             for tile in self.tiles:
                 print(tile)
 
+
 def iso_to_screen(x, y):
     """Convert 2D grid coordinates to isometric screen coordinates."""
-    screen_x = (x - y) * (TILE_WIDTH // 2) + OFFSET_X
-    screen_y = (x + y) * (TILE_HEIGHT // 2) + OFFSET_Y
+    screen_x = (x - y) * (TILE_WIDTH // 2) + int(OFFSET_X)
+    screen_y = (x + y) * (TILE_HEIGHT // 2) + int(OFFSET_Y)
     return screen_x, screen_y
 
 
@@ -180,10 +182,7 @@ def main():
         height=green_tile.height,
         texture=green_tile,
     )
-    ui = UIContainer(
-        position=pr.Vector2(0, 0), 
-        el=[ui_element_blue, ui_element_green]
-    )
+    ui = UIContainer(position=pr.Vector2(0, 0), el=[ui_element_blue, ui_element_green])
     map = Map(textures=[blue_tile, green_tile])
 
     camera = pr.Camera2D()
@@ -223,8 +222,8 @@ def main():
         ui.draw()
 
         # Draw the 10x10 grid
-        for row in range(GRID_SIZE):
-            for col in range(GRID_SIZE):
+        for col in range(GRID_SIZE):
+            for row in range(GRID_SIZE):
                 # Calculate screen coordinates for the corners of the tile
                 sx, sy = iso_to_screen(col, row)
 
@@ -254,11 +253,12 @@ def main():
 
                         if pr.is_mouse_button_pressed(0):
                             print("here")
-                            map.add_tile(i=hover_x, j= hover_y, index=ui.get_selected_tile_index())
+                            map.add_tile(
+                                i=hover_x, j=hover_y, index=ui.get_selected_tile_index()
+                            )
                             # checking the tile has been added
                             map.print()
                             # pr.draw_texture(current_texture, int(ORIGIN.x) + (hover_x-hover_y)*TILE_WIDTH//2, int(ORIGIN.y) + (hover_x+hover_y)*TILE_HEIGHT//4, pr.WHITE)
-
 
                 # Draw the diamond outline
                 pr.draw_line_v(p1, p2, pr.DARKGRAY)
@@ -267,7 +267,6 @@ def main():
                 pr.draw_line_v(p4, p1, pr.DARKGRAY)
 
         map.draw()
-
 
         pr.end_mode_2d()
 
