@@ -45,7 +45,6 @@ class UIElement:
 
     def draw(self) -> None:
         pr.draw_texture_ex(self.texture, self.position, 0, 0.5, pr.WHITE)
-        # pr.draw_texture_v(self.texture, self.position, pr.WHITE)
         if self.is_selected:
             pr.draw_rectangle_lines(
                 int(self.position.x),
@@ -58,8 +57,8 @@ class UIElement:
             pr.draw_rectangle_lines(
                 int(self.position.x),
                 int(self.position.y),
-                int(self.width//2),
-                int(self.height//2),
+                int(self.width//2), # for visualization purposes only
+                int(self.height//2),# for visualization purposes only
                 pr.RED,
             )
 
@@ -86,6 +85,12 @@ class UIContainer:
             index = [i for i, val in enumerate(statuses) if val]
             return self.ui_elements[index[0]].name
         
+    def get_selected_tile_index(self) -> int:
+        statuses = [x.get_status() for x in self.ui_elements]
+        if any(statuses):
+            index = [i for i, val in enumerate(statuses) if val]
+            return index[0]
+
     def get_texture(self) -> pr.Texture:
         if self.get_selected() is not None:
             if self.get_selected() == "blue tile":
@@ -105,6 +110,36 @@ class UIContainer:
     def get_names(self) -> None:
         return [x.name for x in self.ui_elements]
 
+
+class Map:
+    """
+    - this class is only responsible to hold indexes of tiles(i,j)
+    selected by the user (highlighted)
+    - it has the same textures (same order) as the UI class
+    - the tile struct is a dict of tiles indexes and corresponding tile index
+    """
+    def __init__(self, textures: list[pr.Texture]):
+        self.textures = textures
+        self.tiles: list[dict[int, int]] = []
+
+    def add_tile(self, i: int, j: int, index: int) -> None:
+        self.tiles.append({"index": index, "hover_x": i, "hover_y": j})
+
+    def draw(self) -> None:
+        for tile in self.tiles:
+            texture = self.textures[tile.get("index")]
+            hover_x, hover_y = tile.get("hover_x"), tile.get("hover_y")
+            pr.draw_texture(
+                texture, 
+                int(ORIGIN.x) + (hover_x - hover_y)*TILE_WIDTH//2, 
+                int(ORIGIN.y) + (hover_x+hover_y)*TILE_HEIGHT//4, 
+                pr.WHITE
+    )
+            
+    def print(self):
+        if len(self.tiles) > 0:
+            for tile in self.tiles:
+                print(tile)
 
 def iso_to_screen(x, y):
     """Convert 2D grid coordinates to isometric screen coordinates."""
@@ -145,7 +180,11 @@ def main():
         height=green_tile.height,
         texture=green_tile,
     )
-    ui = UIContainer(position=pr.Vector2(0, 0), el=[ui_element_blue, ui_element_green])
+    ui = UIContainer(
+        position=pr.Vector2(0, 0), 
+        el=[ui_element_blue, ui_element_green]
+    )
+    map = Map(textures=[blue_tile, green_tile])
 
     camera = pr.Camera2D()
     camera.offset = pr.Vector2(0, 0)
@@ -215,7 +254,10 @@ def main():
 
                         if pr.is_mouse_button_pressed(0):
                             print("here")
-                            pr.draw_texture(current_texture, int(ORIGIN.x) + (hover_x-hover_y)*TILE_WIDTH//2, int(ORIGIN.y) + (hover_x+hover_y)*TILE_HEIGHT//4, pr.WHITE)
+                            map.add_tile(i=hover_x, j= hover_y, index=ui.get_selected_tile_index())
+                            # checking the tile has been added
+                            map.print()
+                            # pr.draw_texture(current_texture, int(ORIGIN.x) + (hover_x-hover_y)*TILE_WIDTH//2, int(ORIGIN.y) + (hover_x+hover_y)*TILE_HEIGHT//4, pr.WHITE)
 
 
                 # Draw the diamond outline
@@ -223,6 +265,8 @@ def main():
                 pr.draw_line_v(p2, p3, pr.DARKGRAY)
                 pr.draw_line_v(p3, p4, pr.DARKGRAY)
                 pr.draw_line_v(p4, p1, pr.DARKGRAY)
+
+        map.draw()
 
 
         pr.end_mode_2d()
