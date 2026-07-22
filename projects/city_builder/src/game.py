@@ -21,7 +21,7 @@ class Game:
         self.name = name
         self.background_color = background_color
         self.world = World(
-            grid_length_x=5, grid_length_y=5, width=self.width, height=self.height, 
+            grid_length_x=10, grid_length_y=10, width=self.width, height=self.height, 
         )
         self.TILE_SIZE = 64
 
@@ -38,9 +38,19 @@ class Game:
 
     def screen_to_iso(self, screen_x, screen_y):
         """Convert screen mouse coordinates to 2D isometric grid coordinates."""
+        # transform to world position (removing camera scroll and offset)
+        world_x = screen_x - self.width//2 - self.TILE_SIZE//2
+        world_y = screen_y - self.height//4
+        # transform to cart (inverse of cart_to_iso)
+        cart_y = (2*world_y - world_x)/2
+        cart_x = cart_y + world_x
+        # transform to grid coordinates
+        grid_x = int(cart_x // self.TILE_SIZE)
+        grid_y = int(cart_y // self.TILE_SIZE)
+        return grid_x, grid_y
         # Inverse transformation matrix logic
-        dx = screen_x - self.width//2
-        dy = screen_y - self.height//4
+        # dx = screen_x - self.width//2
+        # dy = screen_y - self.height//4
 
         # hover_i = math.floor((x / TILE_WIDTH) + (2 * y / TILE_HEIGHT))
         # hover_j = math.floor((2 * y / TILE_HEIGHT) - (x / TILE_WIDTH))
@@ -57,10 +67,10 @@ class Game:
         # return math.floor(nx), math.floor(ny)
 
         # Inverse isometric transform
-        tile_x = math.floor((dy / TILE_HEIGHT) + (dx / TILE_WIDTH))
-        tile_y = math.floor((dy / TILE_HEIGHT) - (dx / TILE_WIDTH))
+        # tile_x = math.floor((dy / TILE_HEIGHT) + (dx / TILE_WIDTH))
+        # tile_y = math.floor((dy / TILE_HEIGHT) - (dx / TILE_WIDTH))
 
-        return tile_x, tile_y
+        # return tile_x, tile_y
 
     async def run(self) -> None:
         while not pr.window_should_close():
