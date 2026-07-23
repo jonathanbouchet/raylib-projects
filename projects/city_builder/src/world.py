@@ -1,6 +1,8 @@
 import random
+from pathlib import Path
 import pyray as pr
 
+THIS_DIR = (Path(__file__).parent.parent).resolve()
 
 class World:
     def __init__(self, grid_length_x: int, grid_length_y: int, width: int, height: int):
@@ -8,7 +10,7 @@ class World:
         self.grid_length_y = grid_length_y
         self.width = width
         self.height = height
-        self.TILE_SIZE = 64
+        self.TILE_SIZE = 32
         self.world = self.create_world()
 
     def create_world(self) -> None:
@@ -61,4 +63,19 @@ class World:
         iso_x = x - y
         iso_y = (x + y) // 2
         return iso_x, iso_y
+
+    def load_textures(self):
+        """load textures used throughout the game"""
+        kenney_sand = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_059_64x64.png")
+        kenney_house = pr.load_texture(f"{THIS_DIR}/assets/buildingTiles_018_64x64.png")
+        kenney_tree = pr.load_texture(f"{THIS_DIR}/assets/cityDetails_010.png")
+        self.textures = {
+            "sand": kenney_sand,
+            "house": kenney_house,
+            "tree": kenney_tree
+            }
+
+    def unload_textures(self) -> None:
+        for k,v in self.textures.items():
+            pr.unload_texture(v)
 

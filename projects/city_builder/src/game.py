@@ -14,6 +14,8 @@ class Game:
         fps_target: int,
         name: str,
         background_color: pr.Color,
+        tile_x: int,
+        tile_y: int,
     ):
         self.width = width
         self.height = height
@@ -21,14 +23,16 @@ class Game:
         self.name = name
         self.background_color = background_color
         self.world = World(
-            grid_length_x=10, grid_length_y=10, width=self.width, height=self.height, 
+            grid_length_x=tile_x, grid_length_y=tile_y, width=self.width, height=self.height, 
         )
-        self.TILE_SIZE = 64
+        self.TILE_SIZE = 32 # should be real TILE_SIZE / 2
 
     def init(self):
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
+        pr.set_mouse_position(self.width//2, self.height//2) # set the mouse position at the center of the screnn to avoid the camera scrolling effect
         print(self.world.world[0], type(self.world.world[0]))
+        self.world.load_textures() # textures need raylib to be init first
 
     def update(self) -> None:
         pass
@@ -48,29 +52,6 @@ class Game:
         grid_x = int(cart_x // self.TILE_SIZE)
         grid_y = int(cart_y // self.TILE_SIZE)
         return grid_x, grid_y
-        # Inverse transformation matrix logic
-        # dx = screen_x - self.width//2
-        # dy = screen_y - self.height//4
-
-        # hover_i = math.floor((x / TILE_WIDTH) + (2 * y / TILE_HEIGHT))
-        # hover_j = math.floor((2 * y / TILE_HEIGHT) - (x / TILE_WIDTH))
-
-        # return hover_i, hover_j
-
-        # iso_x = math.floor((x - y) / TILE_WIDTH)
-        # iso_y = math.floor((x + y) // 2 / TILE_HEIGHT)
-
-        # return iso_x, iso_y
-
-        # nx = (x / (TILE_WIDTH / 2) + y / (TILE_HEIGHT / 2)) / 2
-        # ny = (y / (TILE_HEIGHT / 2) - x / (TILE_WIDTH / 2)) / 2
-        # return math.floor(nx), math.floor(ny)
-
-        # Inverse isometric transform
-        # tile_x = math.floor((dy / TILE_HEIGHT) + (dx / TILE_WIDTH))
-        # tile_y = math.floor((dy / TILE_HEIGHT) - (dx / TILE_WIDTH))
-
-        # return tile_x, tile_y
 
     async def run(self) -> None:
         while not pr.window_should_close():
@@ -90,12 +71,12 @@ class Game:
         for x in range(0, self.world.grid_length_x):
             for y in range(0, self.world.grid_length_y):
 
-                # cartesian grid
+                # 1. cartesian grid
                 tile = self.world.world[x][y]["cart_rect"]
                 tile_rect = pr.Rectangle(tile[0][0], tile[0][1], TILE_WIDTH, self.world.TILE_SIZE)
                 pr.draw_rectangle_lines_ex(tile_rect, 0.5, pr.GRAY)
 
-                # isometric grid
+                # 2. isometric grid
                 p = self.world.world[x][y]["iso_rect"]
               
                 # Corner coordinate anchors for the diamond polygon face
@@ -109,19 +90,17 @@ class Game:
                 bottom_centered = self.recenter_iso_tile(tile_in=bottom)
                 left_centered = self.recenter_iso_tile(tile_in=left)
 
-                # tile outline
+                # 3. tile outline
                 pr.draw_line_ex(top_centered, right_centered, 0.5, pr.YELLOW)
                 pr.draw_line_ex(right_centered, bottom_centered, 0.5, pr.YELLOW)
                 pr.draw_line_ex(bottom_centered, left_centered, 0.5, pr.YELLOW)
                 pr.draw_line_ex(left_centered, top_centered, 0.5, pr.YELLOW)
 
-                # pr.draw_line_ex(top, right, 0.5, pr.YELLOW)
-                # pr.draw_line_ex(right, bottom, 0.5, pr.YELLOW)
-                # pr.draw_line_ex(bottom, left, 0.5, pr.YELLOW)
-                # pr.draw_line_ex(left, top, 0.5, pr.YELLOW)
+                # 4. draw floor
+                render_pos = self.world.world[x][y]["render_pos"]
+                pr.draw_texture_v(self.world.textures.get("sand"), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
 
         pr.draw_text(f"[{hover_x}, {hover_y}]", 0, 20, 20, pr.GREEN)
-
         pr.end_drawing()
 
     def draw_debug(self) -> None:
@@ -133,5 +112,6 @@ class Game:
         pr.draw_line(self.width // 2, 0, self.width // 2, self.height, pr.RED)
 
     def end(self) -> None:
+        self.world.unload_textures()
         pr.close_window()
 
