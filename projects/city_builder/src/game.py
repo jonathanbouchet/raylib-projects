@@ -96,9 +96,28 @@ class Game:
                 pr.draw_line_ex(bottom_centered, left_centered, 0.5, pr.YELLOW)
                 pr.draw_line_ex(left_centered, top_centered, 0.5, pr.YELLOW)
 
-                # 4. draw floor
+                # 4. draw tiles: floor and props
+                tile = self.world.world[x][y]["tile"]
                 render_pos = self.world.world[x][y]["render_pos"]
-                pr.draw_texture_v(self.world.textures.get("sand"), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
+                if tile == "sand":
+                 pr.draw_texture_v(self.world.textures.get(tile), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
+                else:
+                    pr.draw_texture_v(
+                        self.world.textures.get(tile),
+                        self.recenter_iso_tile(
+                            tile_in=pr.Vector2(
+                                render_pos[0],
+                                render_pos[1]+
+                                - (
+                                    self.world.textures.get(tile).height // 2 ## 64x62 -> 31
+                                    - self.world.TILE_SIZE // 2 # 64/2
+                                ),
+                            )
+                        ),
+                        pr.WHITE,
+                    )
+                # if tile == "sand":
+                #     pr.draw_texture_v(self.world.textures.get(tile), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
 
         pr.draw_text(f"[{hover_x}, {hover_y}]", 0, 20, 20, pr.GREEN)
         pr.end_drawing()

@@ -50,11 +50,19 @@ class World:
         min_x = min([x for x, y in iso_poly])
         min_y = min([y for x, y in iso_poly])
 
+        # associate a texture to this tile
+        r = random.randint(1, 100)
+        if r <= 10:
+            tile = "house"
+        else:
+            tile = "sand"
+
         out = {
             "grid": [grid_x, grid_y],
             "cart_rect": rect,
             "iso_rect": iso_poly,
             "render_pos": [min_x, min_y],
+            "tile": tile
         }
         return out
 
