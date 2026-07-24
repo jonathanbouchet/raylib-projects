@@ -52,10 +52,12 @@ class World:
 
         # associate a texture to this tile
         r = random.randint(1, 100)
-        if r <= 10:
-            tile = "house"
-        else:
+        if r <= 5:
+            tile = "water"
+        elif r <= 10:
             tile = "sand"
+        else:
+            tile = "grass"
 
         out = {
             "grid": [grid_x, grid_y],
@@ -75,10 +77,14 @@ class World:
     def load_textures(self):
         """load textures used throughout the game"""
         kenney_sand = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_059_64x64.png")
+        kenney_water = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_066_64x64.png")
+        kenney_grass = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_067_64x64.png")
         kenney_house = pr.load_texture(f"{THIS_DIR}/assets/buildingTiles_018_64x64.png")
         kenney_tree = pr.load_texture(f"{THIS_DIR}/assets/cityDetails_010.png")
         self.textures = {
             "sand": kenney_sand,
+            "water": kenney_water,
+            "grass": kenney_grass,
             "house": kenney_house,
             "tree": kenney_tree
             }

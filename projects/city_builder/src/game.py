@@ -99,8 +99,8 @@ class Game:
                 # 4. draw tiles: floor and props
                 tile = self.world.world[x][y]["tile"]
                 render_pos = self.world.world[x][y]["render_pos"]
-                if tile == "sand":
-                 pr.draw_texture_v(self.world.textures.get(tile), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
+                if tile in ["sand", "grass"]:
+                    pr.draw_texture_v(self.world.textures.get(tile), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
                 else:
                     pr.draw_texture_v(
                         self.world.textures.get(tile),
@@ -110,7 +110,7 @@ class Game:
                                 render_pos[1]+
                                 - (
                                     self.world.textures.get(tile).height // 2 ## 64x62 -> 31
-                                    - self.world.TILE_SIZE // 2 # 64/2
+                                    - self.world.TILE_SIZE // 2 - 10 # 64/2
                                 ),
                             )
                         ),
