@@ -3,6 +3,7 @@ import asyncio
 import pyray as pr
 from .world import World
 from .camera import Camera
+from .ui import UIContainer, UIElement
 
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
@@ -48,8 +49,43 @@ class Game:
         print(self.world.world[0], type(self.world.world[0]))
         self.world.load_textures()  # textures need raylib to be init first
 
+        # ui 
+        ui_element_grass = UIElement(
+            position=pr.Vector2(self.width - 200, 60),
+            name="grass",
+            width=self.world.textures.get("grass").width,
+            height=self.world.textures.get("grass").height,
+            texture=self.world.textures.get("grass"),
+            scale_factor=0.5,
+        )
+        ui_element_sand = UIElement(
+                    position=pr.Vector2(self.width - 200, 90),
+                    name="grass",
+                    width=self.world.textures.get("sand").width,
+                    height=self.world.textures.get("sand").height,
+                    texture=self.world.textures.get("sand"),
+                    scale_factor=0.5,
+                )
+        ui_element_water = UIElement(
+                    position=pr.Vector2(self.width - 200, 120),
+                    name="grass",
+                    width=self.world.textures.get("water").width,
+                    height=self.world.textures.get("water").height,
+                    texture=self.world.textures.get("water"),
+                    scale_factor=0.5,
+                )
+        self.ui = UIContainer(
+            position=pr.Vector2(0, 0), 
+            el=[
+                ui_element_grass, 
+                ui_element_sand, 
+                ui_element_water
+                ]
+            )
+
     def update(self) -> None:
         self.camera.update()
+        self.ui.update()
 
     def recenter_iso_tile(self, tile_in: pr.Vector2, scroll: pr.Vector2) -> pr.Vector2:
         return pr.Vector2(
@@ -76,6 +112,7 @@ class Game:
         while not pr.window_should_close():
             self.update()
             self.draw()
+            self.ui.draw()
             self.draw_debug()
             await asyncio.sleep(0)
 
@@ -100,11 +137,11 @@ class Game:
                 )
 
                 # 1. cartesian grid
-                tile = self.world.world[x][y]["cart_rect"]
-                tile_rect = pr.Rectangle(
-                    tile[0][0], tile[0][1], TILE_WIDTH, self.world.TILE_SIZE
-                )
-                pr.draw_rectangle_lines_ex(tile_rect, 0.5, pr.GRAY)
+                # tile = self.world.world[x][y]["cart_rect"]
+                # tile_rect = pr.Rectangle(
+                #     tile[0][0], tile[0][1], TILE_WIDTH, self.world.TILE_SIZE
+                # )
+                # pr.draw_rectangle_lines_ex(tile_rect, 0.5, pr.GRAY)
 
                 # 2. isometric grid
                 p = self.world.world[x][y]["iso_rect"]
