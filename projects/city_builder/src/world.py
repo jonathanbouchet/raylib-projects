@@ -11,12 +11,12 @@ class World:
         self.width = width
         self.height = height
         self.TILE_SIZE = 32
+        self.ground_tiles: list[dict[str, pr.Vector2 | str]] = []
         self.world = self.create_world()
 
     def create_world(self) -> None:
         """
-        - create a map by placing randomly tree and rock textures
-        - grass (`block`) are placed for evry tile automatically as the `floor`
+        - create a map by placing randomly textures
         """
         world = []
         for grid_x in range(0, self.grid_length_x):
@@ -24,7 +24,44 @@ class World:
             for grid_y in range(0, self.grid_length_y):
                 world_tile = self.grid_to_world(grid_x=grid_x, grid_y=grid_y)
                 world[grid_x].append(world_tile)
+
+                # store all the ground tile in order to make only 1 draw call later on
+                render_pos = world_tile.get("render_pos")
+                tile_name = world_tile.get("tile")
+                self.ground_tiles.append(
+                    {
+                        "render_pos":pr.Vector2
+                        (
+                            render_pos[0] + self.width // 2,
+                            render_pos[1] + self.height // 4,
+                        ),
+                        "tile_name": tile_name
+                    }
+                )
         return world
+
+
+    def draw(self):
+        """draw all the floor tile in 1 draw call per frame"""
+        for tile in self.ground_tiles:
+            tile_name = tile.get("tile_name")
+            render_pos = tile.get("render_pos")
+            # print(f"{tile_name=}, {render_pos.x=}, {render_pos.y=}")
+            if tile_name in ["sand", "grass"]:
+                pr.draw_texture_v(self.textures.get(tile_name), render_pos, pr.WHITE)
+            else:
+                pr.draw_texture_v(
+                    self.textures.get(tile_name),
+                    pr.Vector2(
+                        render_pos.x,
+                        render_pos.y+
+                        - (
+                            self.textures.get(tile_name).height // 2 ## 64x62 -> 31
+                            - self.TILE_SIZE // 2 - 10 # fixed me later
+                        )
+                    ),
+                    pr.WHITE,
+                )
 
     def grid_to_world(
         self, grid_x: int, grid_y: int

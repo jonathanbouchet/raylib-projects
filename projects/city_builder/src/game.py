@@ -68,6 +68,9 @@ class Game:
         pr.begin_drawing()
         pr.clear_background(self.background_color)
 
+        # draw floor only once
+        self.world.draw()
+
         for x in range(0, self.world.grid_length_x):
             for y in range(0, self.world.grid_length_y):
 
@@ -97,27 +100,26 @@ class Game:
                 pr.draw_line_ex(left_centered, top_centered, 0.5, pr.YELLOW)
 
                 # 4. draw tiles: floor and props
-                tile = self.world.world[x][y]["tile"]
-                render_pos = self.world.world[x][y]["render_pos"]
-                if tile in ["sand", "grass"]:
-                    pr.draw_texture_v(self.world.textures.get(tile), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
-                else:
-                    pr.draw_texture_v(
-                        self.world.textures.get(tile),
-                        self.recenter_iso_tile(
-                            tile_in=pr.Vector2(
-                                render_pos[0],
-                                render_pos[1]+
-                                - (
-                                    self.world.textures.get(tile).height // 2 ## 64x62 -> 31
-                                    - self.world.TILE_SIZE // 2 - 10 # 64/2
-                                ),
-                            )
-                        ),
-                        pr.WHITE,
-                    )
-                # if tile == "sand":
+                # self.world.draw()
+                # tile = self.world.world[x][y]["tile"]
+                # render_pos = self.world.world[x][y]["render_pos"]
+                # if tile in ["sand", "grass"]:
                 #     pr.draw_texture_v(self.world.textures.get(tile), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
+                # else:
+                #     pr.draw_texture_v(
+                #         self.world.textures.get(tile),
+                #         self.recenter_iso_tile(
+                #             tile_in=pr.Vector2(
+                #                 render_pos[0],
+                #                 render_pos[1]+
+                #                 - (
+                #                     self.world.textures.get(tile).height // 2 ## 64x62 -> 31
+                #                     - self.world.TILE_SIZE // 2 - 10 # fixed me later
+                #                 ),
+                #             )
+                #         ),
+                #         pr.WHITE,
+                #     )
 
         pr.draw_text(f"[{hover_x}, {hover_y}]", 0, 20, 20, pr.GREEN)
         pr.end_drawing()
