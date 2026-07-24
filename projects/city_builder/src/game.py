@@ -44,7 +44,7 @@ class Game:
         pr.set_target_fps(self.fps_target)
         pr.set_mouse_position(
             self.width // 2, self.height // 2
-        )  # set the mouse position at the center of the screnn to avoid the camera scrolling effect
+        )  # set the mouse position at the center of the screen to avoid the camera scrolling effect
         print(self.world.world[0], type(self.world.world[0]))
         self.world.load_textures()  # textures need raylib to be init first
 
@@ -62,9 +62,11 @@ class Game:
         # transform to world position (removing camera scroll and offset)
         world_x = mouse.x - self.width // 2 - self.TILE_SIZE // 2 - scroll.x
         world_y = mouse.y - self.height // 4 - scroll.y
+
         # transform to cart (inverse of cart_to_iso)
         cart_y = (2 * world_y - world_x) / 2
         cart_x = cart_y + world_x
+
         # transform to grid coordinates
         grid_x = int(cart_x // self.TILE_SIZE)
         grid_y = int(cart_y // self.TILE_SIZE)
@@ -80,7 +82,6 @@ class Game:
     def draw(self) -> None:
         mouse = pr.get_mouse_position()
         hover_x, hover_y = self.screen_to_iso(mouse=mouse, scroll=self.camera.scroll)
-        # print(f"{hover_x=}, {hover_y=}")
 
         pr.begin_drawing()
         pr.clear_background(self.background_color)
@@ -139,7 +140,6 @@ class Game:
 
                 # Draw filled tile if hovered, otherwise draw basic grid lines
                 if is_hovered:
-                    # print(f"{top_centered.x=}, {top_centered.y=}")
                     pr.draw_triangle(
                         top_centered, right_centered, bottom_centered, pr.YELLOW
                     )  # Left half
@@ -148,28 +148,6 @@ class Game:
                     )  # Right half
                     if pr.is_mouse_button_pressed(0):
                         pr.draw_text("mouse clicked", 0, 40, 20, pr.GREEN)
-
-                # 4. draw tiles: floor and props
-                # self.world.draw()
-                # tile = self.world.world[x][y]["tile"]
-                # render_pos = self.world.world[x][y]["render_pos"]
-                # if tile in ["sand", "grass"]:
-                #     pr.draw_texture_v(self.world.textures.get(tile), self.recenter_iso_tile(tile_in=pr.Vector2(render_pos[0], render_pos[1])), pr.WHITE)
-                # else:
-                #     pr.draw_texture_v(
-                #         self.world.textures.get(tile),
-                #         self.recenter_iso_tile(
-                #             tile_in=pr.Vector2(
-                #                 render_pos[0],
-                #                 render_pos[1]+
-                #                 - (
-                #                     self.world.textures.get(tile).height // 2 ## 64x62 -> 31
-                #                     - self.world.TILE_SIZE // 2 - 10 # fixed me later
-                #                 ),
-                #             )
-                #         ),
-                #         pr.WHITE,
-                #     )
 
         pr.draw_text(f"[{hover_x}, {hover_y}]", 0, 20, 20, pr.GREEN)
         pr.end_drawing()
