@@ -4,6 +4,7 @@ import pyray as pr
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
 
+
 class World:
     def __init__(self, grid_length_x: int, grid_length_y: int, width: int, height: int):
         self.grid_length_x = grid_length_x
@@ -30,35 +31,41 @@ class World:
                 tile_name = world_tile.get("tile")
                 self.ground_tiles.append(
                     {
-                        "render_pos":pr.Vector2
-                        (
+                        "render_pos": pr.Vector2(
                             render_pos[0] + self.width // 2,
                             render_pos[1] + self.height // 4,
                         ),
-                        "tile_name": tile_name
+                        "tile_name": tile_name,
                     }
                 )
         return world
 
-
-    def draw(self):
+    def draw(self, scroll: pr.Vector2):
         """draw all the floor tile in 1 draw call per frame"""
         for tile in self.ground_tiles:
             tile_name = tile.get("tile_name")
             render_pos = tile.get("render_pos")
             # print(f"{tile_name=}, {render_pos.x=}, {render_pos.y=}")
             if tile_name in ["sand", "grass"]:
-                pr.draw_texture_v(self.textures.get(tile_name), render_pos, pr.WHITE)
+                pr.draw_texture_v(
+                    self.textures.get(tile_name),
+                    pr.vector2_add(render_pos, scroll),
+                    pr.WHITE,
+                )
             else:
                 pr.draw_texture_v(
                     self.textures.get(tile_name),
-                    pr.Vector2(
-                        render_pos.x,
-                        render_pos.y+
-                        - (
-                            self.textures.get(tile_name).height // 2 ## 64x62 -> 31
-                            - self.TILE_SIZE // 2 - 10 # fixed me later
-                        )
+                    pr.vector2_add(
+                        pr.Vector2(
+                            render_pos.x,
+                            render_pos.y
+                            + -(
+                                self.textures.get(tile_name).height // 2  ## 64x62 -> 31
+                                - self.TILE_SIZE // 2
+                                - 10  # fixed me later
+                            ),
+                        ),
+                        scroll,
                     ),
                     pr.WHITE,
                 )
@@ -73,13 +80,19 @@ class World:
         """
         # get the cartesian coordinates of the tile
         rect = [
-            (grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE), # top left
-            (grid_x * self.TILE_SIZE + self.TILE_SIZE, grid_y * self.TILE_SIZE), # top right
+            (grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),  # top left
+            (
+                grid_x * self.TILE_SIZE + self.TILE_SIZE,
+                grid_y * self.TILE_SIZE,
+            ),  # top right
             (
                 grid_x * self.TILE_SIZE + self.TILE_SIZE,
                 grid_y * self.TILE_SIZE + self.TILE_SIZE,
-            ), # bottom right
-            (grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE + self.TILE_SIZE), # bottom left
+            ),  # bottom right
+            (
+                grid_x * self.TILE_SIZE,
+                grid_y * self.TILE_SIZE + self.TILE_SIZE,
+            ),  # bottom left
         ]
 
         # get the isometric coordinates of the tile
@@ -101,7 +114,7 @@ class World:
             "cart_rect": rect,
             "iso_rect": iso_poly,
             "render_pos": [min_x, min_y],
-            "tile": tile
+            "tile": tile,
         }
         return out
 
@@ -114,8 +127,12 @@ class World:
     def load_textures(self):
         """load textures used throughout the game"""
         kenney_sand = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_059_64x64.png")
-        kenney_water = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_066_64x64.png")
-        kenney_grass = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_067_64x64.png")
+        kenney_water = pr.load_texture(
+            f"{THIS_DIR}/assets/landscapeTiles_066_64x64.png"
+        )
+        kenney_grass = pr.load_texture(
+            f"{THIS_DIR}/assets/landscapeTiles_067_64x64.png"
+        )
         kenney_house = pr.load_texture(f"{THIS_DIR}/assets/buildingTiles_018_64x64.png")
         kenney_tree = pr.load_texture(f"{THIS_DIR}/assets/cityDetails_010.png")
         self.textures = {
@@ -123,10 +140,9 @@ class World:
             "water": kenney_water,
             "grass": kenney_grass,
             "house": kenney_house,
-            "tree": kenney_tree
-            }
+            "tree": kenney_tree,
+        }
 
     def unload_textures(self) -> None:
-        for k,v in self.textures.items():
+        for k, v in self.textures.items():
             pr.unload_texture(v)
-
