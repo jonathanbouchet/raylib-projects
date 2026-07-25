@@ -1,4 +1,3 @@
-import math
 import pyray as pr
 import raylib as rl
 
@@ -19,7 +18,12 @@ class UIElement:
         self.height = height
         self.texture = texture
         self.scale_factor = scale_factor
-        self.rect = pr.Rectangle(position.x, position.y, self.scale_factor*self.width, self.scale_factor*self.height)
+        self.rect = pr.Rectangle(
+            position.x,
+            position.y,
+            self.scale_factor * self.width,
+            self.scale_factor * self.height,
+        )
         self.is_selected: bool = False
 
     def update(self) -> None:

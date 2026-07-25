@@ -1,4 +1,3 @@
-import math
 import asyncio
 import pyray as pr
 from .world import World
@@ -46,7 +45,7 @@ class Game:
         print(self.world.world[0], type(self.world.world[0]))
         self.world.load_textures()  # textures need raylib to be init first
 
-        # ui 
+        # ui
         ui_element_grass = UIElement(
             position=pr.Vector2(self.width - 200, 60),
             name="grass",
@@ -56,29 +55,25 @@ class Game:
             scale_factor=0.5,
         )
         ui_element_sand = UIElement(
-                    position=pr.Vector2(self.width - 200, 90),
-                    name="sand",
-                    width=self.world.textures.get("sand").width,
-                    height=self.world.textures.get("sand").height,
-                    texture=self.world.textures.get("sand"),
-                    scale_factor=0.5,
-                )
+            position=pr.Vector2(self.width - 200, 90),
+            name="sand",
+            width=self.world.textures.get("sand").width,
+            height=self.world.textures.get("sand").height,
+            texture=self.world.textures.get("sand"),
+            scale_factor=0.5,
+        )
         ui_element_water = UIElement(
-                    position=pr.Vector2(self.width - 200, 120),
-                    name="water",
-                    width=self.world.textures.get("water").width,
-                    height=self.world.textures.get("water").height,
-                    texture=self.world.textures.get("water"),
-                    scale_factor=0.5,
-                )
+            position=pr.Vector2(self.width - 200, 120),
+            name="water",
+            width=self.world.textures.get("water").width,
+            height=self.world.textures.get("water").height,
+            texture=self.world.textures.get("water"),
+            scale_factor=0.5,
+        )
         self.ui = UIContainer(
-            position=pr.Vector2(0, 0), 
-            el=[
-                ui_element_grass, 
-                ui_element_sand, 
-                ui_element_water
-                ]
-            )
+            position=pr.Vector2(0, 0),
+            el=[ui_element_grass, ui_element_sand, ui_element_water],
+        )
         self.ui_element_selected: int = None
 
     def update(self) -> None:
@@ -191,7 +186,9 @@ class Game:
         # debug
         pr.clear_background(self.background_color)
         pr.draw_fps(0, 0)
-        pr.draw_text(f"UI element: {str(self.ui_element_selected)}", 0, 60, 20, pr.GREEN)
+        pr.draw_text(
+            f"UI element: {str(self.ui_element_selected)}", 0, 60, 20, pr.GREEN
+        )
         pr.draw_line(0, self.height // 2, self.width, self.height // 2, pr.RED)
         pr.draw_line(0, self.height // 4, self.width, self.height // 4, pr.RED)
         pr.draw_line(self.width // 2, 0, self.width // 2, self.height, pr.RED)

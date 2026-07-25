@@ -46,7 +46,7 @@ class World:
             tile_name = tile.get("tile_name")
             render_pos = tile.get("render_pos")
             # print(f"{tile_name=}, {render_pos.x=}, {render_pos.y=}")
-            if tile_name in ["sand2", "grass2", "water2", "sand" ,"grass"]:
+            if tile_name in ["sand2", "grass2", "water2", "sand", "grass"]:
                 pr.draw_texture_v(
                     self.textures.get(tile_name),
                     pr.vector2_add(render_pos, scroll),
