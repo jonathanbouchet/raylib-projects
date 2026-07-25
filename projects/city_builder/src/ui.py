@@ -70,6 +70,10 @@ class UIContainer:
         statuses = [x.get_status() for x in self.ui_elements]
         if any(statuses):
             index = [i for i, val in enumerate(statuses) if val]
+            # disable the non selected UI elements
+            for cnt, el in enumerate(self.ui_elements):
+                if cnt != index[0]:
+                    el.set_status(False)
             return index[0]
         return None
 
