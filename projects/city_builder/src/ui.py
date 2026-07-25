@@ -19,7 +19,7 @@ class UIElement:
         self.height = height
         self.texture = texture
         self.scale_factor = scale_factor
-        self.rect = pr.Rectangle(position.x, position.y, self.width, self.height)
+        self.rect = pr.Rectangle(position.x, position.y, self.scale_factor*self.width, self.scale_factor*self.height)
         self.is_selected: bool = False
 
     def update(self) -> None:
@@ -62,10 +62,12 @@ class UIContainer:
         self.position = position
         self.ui_elements = el
 
-    def update_status(self) -> None:
+    def update_status(self) -> int | None:
         statuses = [x.get_status() for x in self.ui_elements]
         if any(statuses):
             index = [i for i, val in enumerate(statuses) if val]
+            return index[0]
+        return None
 
     def get_selected(self) -> str:
         statuses = [x.get_status() for x in self.ui_elements]
@@ -86,11 +88,10 @@ class UIContainer:
             if self.get_selected() == "green tile":
                 return self.ui_elements[1].get_texture()
 
-    def update(self) -> None:
+    def update(self) -> int | None:
         for el in self.ui_elements:
             el.update()
-        self.update_status()
-        # _ = [el.update() for el in self.ui_elements]
+        return self.update_status()
 
     def draw(self) -> None:
         _ = [el.draw() for el in self.ui_elements]
