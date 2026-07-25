@@ -5,9 +5,6 @@ from .world import World
 from .camera import Camera
 from .ui import UIContainer, UIElement
 
-TILE_WIDTH = 64
-TILE_HEIGHT = 64
-
 
 class Game:
     def __init__(

@@ -46,7 +46,7 @@ class World:
             tile_name = tile.get("tile_name")
             render_pos = tile.get("render_pos")
             # print(f"{tile_name=}, {render_pos.x=}, {render_pos.y=}")
-            if tile_name in ["sand", "grass"]:
+            if tile_name in ["sand2", "grass2", "water2"]:
                 pr.draw_texture_v(
                     self.textures.get(tile_name),
                     pr.vector2_add(render_pos, scroll),
@@ -103,11 +103,11 @@ class World:
         # associate a texture to this tile
         r = random.randint(1, 100)
         if r <= 5:
-            tile = "water"
+            tile = "water2"
         elif r <= 10:
-            tile = "sand"
+            tile = "sand2"
         else:
-            tile = "grass"
+            tile = "grass2"
 
         out = {
             "grid": [grid_x, grid_y],
@@ -135,12 +135,18 @@ class World:
         )
         kenney_house = pr.load_texture(f"{THIS_DIR}/assets/buildingTiles_018_64x64.png")
         kenney_tree = pr.load_texture(f"{THIS_DIR}/assets/cityDetails_010.png")
+        sand = pr.load_texture(f"{THIS_DIR}/assets/maroon_tile_no_border_64x64.png")
+        water = pr.load_texture(f"{THIS_DIR}/assets/blue_tile_no_border_64x64.png")
+        grass = pr.load_texture(f"{THIS_DIR}/assets/green_tile_no_border_64x64.png")
         self.textures = {
             "sand": kenney_sand,
             "water": kenney_water,
             "grass": kenney_grass,
             "house": kenney_house,
             "tree": kenney_tree,
+            "sand2": sand,
+            "water2": water,
+            "grass2": grass,
         }
 
     def unload_textures(self) -> None:
