@@ -41,7 +41,7 @@
 ## GamePlay
 
 - [ ] Stats
-- [ ]~~Combat~~
+- [ ] ~~Combat~~
 - [ ] Inventory
 - [ ] Equipment
 - [ ] Abilities
