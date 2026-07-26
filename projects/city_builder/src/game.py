@@ -186,9 +186,10 @@ class Game:
         # debug
         pr.clear_background(self.background_color)
         pr.draw_fps(0, 0)
-        pr.draw_text(
-            f"UI element: {str(self.ui_element_selected)}", 0, 60, 20, pr.GREEN
-        )
+        if self.ui_element_selected is not None:
+            pr.draw_text(
+                f"UI element ID: {str(self.ui_element_selected)}, type: {str(self.ui.ui_elements[self.ui_element_selected].name)}", 0, 60, 20, pr.GREEN
+            )
         pr.draw_line(0, self.height // 2, self.width, self.height // 2, pr.RED)
         pr.draw_line(0, self.height // 4, self.width, self.height // 4, pr.RED)
         pr.draw_line(self.width // 2, 0, self.width // 2, self.height, pr.RED)

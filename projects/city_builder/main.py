@@ -10,8 +10,8 @@ async def main() -> None:
         fps_target=60,
         name="app",
         background_color=pr.BLACK,
-        tile_x=20,
-        tile_y=20,
+        tile_x=15,
+        tile_y=15,
     )
     game.init()
     await game.run()

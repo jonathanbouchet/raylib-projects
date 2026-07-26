@@ -25,10 +25,11 @@ class UIElement:
             self.scale_factor * self.height,
         )
         self.is_selected: bool = False
+        self.is_disabled = False
 
     def update(self) -> None:
         if pr.is_mouse_button_pressed(0):
-            if pr.check_collision_point_rec(pr.get_mouse_position(), self.rect):
+            if pr.check_collision_point_rec(pr.get_mouse_position(), self.rect) and not self.is_disabled:
                 self.is_selected = not self.is_selected
                 print(f"selected tile: {self.name}, {self.is_selected}")
 
@@ -73,8 +74,12 @@ class UIContainer:
             # disable the non selected UI elements
             for cnt, el in enumerate(self.ui_elements):
                 if cnt != index[0]:
-                    el.set_status(False)
+                    el.is_disabled = True
             return index[0]
+        else:
+            # in that case no UI element has been selected so all should be enable
+            for cnt, el in enumerate(self.ui_elements):
+                el.is_disabled = False
         return None
 
     def get_selected(self) -> str:
@@ -88,13 +93,6 @@ class UIContainer:
         if any(statuses):
             index = [i for i, val in enumerate(statuses) if val]
             return index[0]
-
-    def get_texture(self) -> pr.Texture:
-        if self.get_selected() is not None:
-            if self.get_selected() == "blue tile":
-                return self.ui_elements[0].get_texture()
-            if self.get_selected() == "green tile":
-                return self.ui_elements[1].get_texture()
 
     def update(self) -> int | None:
         for el in self.ui_elements:
