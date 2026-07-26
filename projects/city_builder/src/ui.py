@@ -29,7 +29,10 @@ class UIElement:
 
     def update(self) -> None:
         if pr.is_mouse_button_pressed(0):
-            if pr.check_collision_point_rec(pr.get_mouse_position(), self.rect) and not self.is_disabled:
+            if (
+                pr.check_collision_point_rec(pr.get_mouse_position(), self.rect)
+                and not self.is_disabled
+            ):
                 self.is_selected = not self.is_selected
                 print(f"selected tile: {self.name}, {self.is_selected}")
 

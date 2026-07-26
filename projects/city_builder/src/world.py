@@ -40,6 +40,26 @@ class World:
                 )
         return world
 
+    def add_to_world(self, ui_element_name: str, tile_x: int, tile_y: int) -> None:
+        """add a selected entity to the world map"""
+        world_tile = self.grid_to_world(grid_x=tile_x, grid_y=tile_y)
+        self.world[tile_x].append(world_tile)
+
+        # store all the ground tile in order to make only 1 draw call later on
+        render_pos = world_tile.get("render_pos")
+        tile_name = ui_element_name
+        self.ground_tiles.append(
+            {
+                "render_pos": pr.Vector2(
+                    render_pos[0] + self.width // 2,
+                    render_pos[1]
+                    + self.height // 4
+                    - (self.textures.get(tile_name).height // 2 - self.TILE_SIZE // 2),
+                ),
+                "tile_name": tile_name,
+            }
+        )
+
     def draw(self, scroll: pr.Vector2):
         """draw all the floor tile in 1 draw call per frame"""
         for tile in self.ground_tiles:

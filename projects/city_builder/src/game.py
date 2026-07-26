@@ -70,9 +70,22 @@ class Game:
             texture=self.world.textures.get("water"),
             scale_factor=0.5,
         )
+        ui_element_building = UIElement(
+            position=pr.Vector2(self.width - 200, 150),
+            name="house",
+            width=self.world.textures.get("house").width,
+            height=self.world.textures.get("house").height,
+            texture=self.world.textures.get("house"),
+            scale_factor=0.5,
+        )
         self.ui = UIContainer(
             position=pr.Vector2(0, 0),
-            el=[ui_element_grass, ui_element_sand, ui_element_water],
+            el=[
+                ui_element_grass,
+                ui_element_sand,
+                ui_element_water,
+                ui_element_building,
+            ],
         )
         self.ui_element_selected: int = None
 
@@ -176,8 +189,18 @@ class Game:
                     pr.draw_triangle(
                         bottom_centered, left_centered, top_centered, pr.YELLOW
                     )  # Right half
-                    if pr.is_mouse_button_pressed(0):
+                    if (
+                        pr.is_mouse_button_pressed(0)
+                        and self.ui_element_selected is not None
+                    ):
                         pr.draw_text("mouse clicked", 0, 40, 20, pr.GREEN)
+                        self.world.add_to_world(
+                            ui_element_name=str(
+                                self.ui.ui_elements[self.ui_element_selected].name
+                            ),
+                            tile_x=hover_x,
+                            tile_y=hover_y,
+                        )
 
         pr.draw_text(f"[{hover_x}, {hover_y}]", 0, 20, 20, pr.GREEN)
         pr.end_drawing()
@@ -188,7 +211,11 @@ class Game:
         pr.draw_fps(0, 0)
         if self.ui_element_selected is not None:
             pr.draw_text(
-                f"UI element ID: {str(self.ui_element_selected)}, type: {str(self.ui.ui_elements[self.ui_element_selected].name)}", 0, 60, 20, pr.GREEN
+                f"UI element ID: {str(self.ui_element_selected)}, type: {str(self.ui.ui_elements[self.ui_element_selected].name)}",
+                0,
+                60,
+                20,
+                pr.GREEN,
             )
         pr.draw_line(0, self.height // 2, self.width, self.height // 2, pr.RED)
         pr.draw_line(0, self.height // 4, self.width, self.height // 4, pr.RED)
