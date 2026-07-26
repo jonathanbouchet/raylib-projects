@@ -41,13 +41,13 @@
 ## GamePlay
 
 - [ ] Stats
-- [ ]~~Combat~
+- [ ]~~Combat~~
 - [ ] Inventory
 - [ ] Equipment
 - [ ] Abilities
 
 ## Narrative
 
-- [] Dialogue
+- [ ] Dialogue
 - [ ] Quests
 - [ ] NPC Schedules
