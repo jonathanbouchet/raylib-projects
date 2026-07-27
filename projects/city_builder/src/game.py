@@ -74,10 +74,10 @@ class Game:
         )
         ui_element_building = UIElement(
             position=pr.Vector2(self.width - 200, 150),
-            name="house",
-            width=self.world.textures.get("house").width,
-            height=self.world.textures.get("house").height,
-            texture=self.world.textures.get("house"),
+            name="building01",
+            width=self.world.textures.get("building01").width,
+            height=self.world.textures.get("building01").height,
+            texture=self.world.textures.get("building01"),
             scale_factor=0.5,
         )
         self.ui = UIContainer(

@@ -8,7 +8,7 @@
         "tile_y": 15,
         "background_color": [0, 0, 0, 255],
         "name": "city builder",
-        "debug": false
+        "debug": true
     },
     "textures":
     {
