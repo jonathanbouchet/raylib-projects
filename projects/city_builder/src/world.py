@@ -62,6 +62,8 @@ class World:
 
     def draw(self, scroll: pr.Vector2):
         """draw all the floor tile in 1 draw call per frame"""
+        if len(self.ground_tiles) == 0:
+            return
         for tile in self.ground_tiles:
             tile_name = tile.get("tile_name")
             render_pos = tile.get("render_pos")

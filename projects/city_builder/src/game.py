@@ -15,6 +15,7 @@ class Game:
         background_color: pr.Color,
         tile_x: int,
         tile_y: int,
+        debug: bool
     ):
         self.width = width
         self.height = height
@@ -23,6 +24,7 @@ class Game:
         self.background_color = background_color
         self.grid_length_x = tile_x
         self.grid_length_y = tile_y
+        self.debug = debug
 
         # world
         self.world = World(
@@ -42,7 +44,7 @@ class Game:
         pr.set_mouse_position(
             self.width // 2, self.height // 2
         )  # set the mouse position at the center of the screen to avoid the camera scrolling effect
-        print(self.world.world[0], type(self.world.world[0]))
+        print(self.world.world[0], len(self.world.world[0]), type(self.world.world))
         self.world.load_textures()  # textures need raylib to be init first
 
         # ui
@@ -119,7 +121,8 @@ class Game:
             self.update()
             self.draw()
             self.ui.draw()
-            self.draw_debug()
+            if self.debug:
+                self.draw_debug()
             await asyncio.sleep(0)
 
     def draw(self) -> None:

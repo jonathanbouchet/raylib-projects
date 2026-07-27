@@ -1,0 +1,24 @@
+{
+    "game":
+    {
+        "width": 1080,
+        "height": 720,
+        "fps_target": 60,
+        "tile_x": 15,
+        "tile_y": 15,
+        "background_color": [0, 0, 0, 255],
+        "name": "city builder",
+        "debug": false
+    },
+    "textures":
+    {
+        "kenny_sand": "assets/landscapeTiles_059_64x64.png",
+        "kenney_water": "assets/landscapeTiles_066_64x64.png",
+        "kenney_grass": "assets/landscapeTiles_067_64x64.png",
+        "kenney_house": "assets/buildingTiles_018_64x64.png",
+        "kenney_tree": "assets/cityDetails_010.png",
+        "sand": "assets/maroon_tile_no_border_64x64.png",
+        "water": "assets/blue_tile_no_border_64x64.png",
+        "grass": "assets/green_tile_no_border_64x64.png"
+    }
+}
