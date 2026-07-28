@@ -42,7 +42,7 @@ class Game:
         # ui
         self.ui = UIContainer(
             position=pr.Vector2(self.width - 200, 50),
-            el = ["sand", "water", "grass", "building01"],
+            el = ["building01", "building02","road_top_right","road_bottom_round","road_bottom_right_T"],
             world = self.world
         )
         self.ui_element_selected: int = None

@@ -68,57 +68,57 @@ class World:
         for tile in self.ground_tiles:
             tile_name = tile.get("tile_name")
             render_pos = tile.get("render_pos")
-            if tile_name in ["sand2", "grass2", "water2", "sand", "grass"]:
-                pr.draw_texture_v(
-                    self.textures.get(tile_name),
-                    pr.vector2_add(render_pos, scroll),
-                    pr.WHITE,
-                )
-            else:
-                pr.draw_texture_v(
-                    self.textures.get(tile_name),
-                    pr.vector2_add(
-                        pr.Vector2(
-                            render_pos.x,
-                            render_pos.y
-                            + -(
-                                self.textures.get(tile_name).height // 2  ## 64x62 -> 31
-                                - self.TILE_SIZE // 2
-                                - 10  # fixed me later
-                            ),
-                        ),
-                        scroll,
-                    ),
-                    pr.WHITE,
-                )
+            # if tile_name in ["sand2", "grass2", "water2", "sand", "grass"]:
+            pr.draw_texture_v(
+                self.textures.get(tile_name),
+                pr.vector2_add(render_pos, scroll),
+                pr.WHITE,
+            )
+            # else:
+            #     pr.draw_texture_v(
+            #         self.textures.get(tile_name),
+            #         pr.vector2_add(
+            #             pr.Vector2(
+            #                 render_pos.x,
+            #                 render_pos.y
+            #                 + -(
+            #                     self.textures.get(tile_name).height // 2  ## 64x62 -> 31
+            #                     - self.TILE_SIZE // 2
+            #                     - 10  # fixed me later
+            #                 ),
+            #             ),
+            #             scroll,
+            #         ),
+            #         pr.WHITE,
+            #     )
         if len(self.additional_tiles) == 0:
             return
         for tile in self.additional_tiles:
             tile_name = tile.get("tile_name")
             render_pos = tile.get("render_pos")
-            if tile_name in ["sand2", "grass2", "water2", "sand", "grass"]:
-                pr.draw_texture_v(
-                    self.textures.get(tile_name),
-                    pr.vector2_add(render_pos, scroll),
-                    pr.WHITE,
-                )
-            else:
-                pr.draw_texture_v(
-                    self.textures.get(tile_name),
-                    pr.vector2_add(
-                        pr.Vector2(
-                            render_pos.x,
-                            render_pos.y
-                            + -(
-                                self.textures.get(tile_name).height // 2  ## 64x62 -> 31
-                                - self.TILE_SIZE // 2
-                                - 10  # fixed me later
-                            ),
-                        ),
-                        scroll,
-                    ),
-                    pr.WHITE,
-                )
+            # if tile_name in ["sand2", "grass2", "water2", "sand", "grass"]:
+            pr.draw_texture_v(
+                self.textures.get(tile_name),
+                pr.vector2_add(render_pos, scroll),
+                pr.WHITE,
+            )
+            # else:
+            #     pr.draw_texture_v(
+            #         self.textures.get(tile_name),
+            #         pr.vector2_add(
+            #             pr.Vector2(
+            #                 render_pos.x,
+            #                 render_pos.y
+            #                 + -(
+            #                     self.textures.get(tile_name).height // 2  ## 64x62 -> 31
+            #                     - self.TILE_SIZE // 2
+            #                     - 10  # fixed me later
+            #                 ),
+            #             ),
+            #             scroll,
+            #         ),
+            #         pr.WHITE,
+            #     )
 
     def grid_to_world(
         self, grid_x: int, grid_y: int
