@@ -190,6 +190,9 @@ class World:
         grass = pr.load_texture(f"{THIS_DIR}/assets/green_tile_no_border_64x64.png")
         building01 = pr.load_texture(f"{THIS_DIR}/assets/building01.png")
         building02 = pr.load_texture(f"{THIS_DIR}/assets/building02.png")
+        road_top_right = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_082.png")
+        road_bottom_round = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_127.png")
+        road_bottom_right_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_104.png")
         self.textures = {
             "sand": kenney_sand,
             "water": kenney_water,
@@ -201,6 +204,9 @@ class World:
             "sand2": sand,
             "water2": water,
             "grass2": grass,
+            "road_top_right": road_top_right,
+            "road_bottom_round": road_bottom_round,
+            "road_bottom_right_T": road_bottom_right_T,
         }
 
     def unload_textures(self) -> None:

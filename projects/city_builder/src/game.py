@@ -73,12 +73,28 @@ class Game:
             scale_factor=0.5,
         )
         ui_element_building = UIElement(
-            position=pr.Vector2(self.width - 200, 150),
+            position=pr.Vector2(self.width - 150, 60),
             name="building01",
             width=self.world.textures.get("building01").width,
             height=self.world.textures.get("building01").height,
             texture=self.world.textures.get("building01"),
             scale_factor=0.5,
+        )
+        ui_element_road_top_right = UIElement(
+                    position=pr.Vector2(self.width - 150, 90),
+                    name="road_top_right",
+                    width=self.world.textures.get("road_top_right").width,
+                    height=self.world.textures.get("road_top_right").height,
+                    texture=self.world.textures.get("road_top_right"),
+                    scale_factor=0.5,
+        )
+        ui_element_road_bottom_right_T = UIElement(
+                    position=pr.Vector2(self.width - 150, 120),
+                    name="road_bottom_right_T",
+                    width=self.world.textures.get("road_bottom_right_T").width,
+                    height=self.world.textures.get("road_bottom_right_T").height,
+                    texture=self.world.textures.get("road_bottom_right_T"),
+                    scale_factor=0.5,
         )
         self.ui = UIContainer(
             position=pr.Vector2(0, 0),
@@ -87,6 +103,8 @@ class Game:
                 ui_element_sand,
                 ui_element_water,
                 ui_element_building,
+                ui_element_road_top_right,
+                ui_element_road_bottom_right_T
             ],
         )
         self.ui_element_selected: int = None
@@ -179,10 +197,11 @@ class Game:
                 )
 
                 # 3. tile outline
-                pr.draw_line_ex(top_centered, right_centered, 0.5, pr.YELLOW)
-                pr.draw_line_ex(right_centered, bottom_centered, 0.5, pr.YELLOW)
-                pr.draw_line_ex(bottom_centered, left_centered, 0.5, pr.YELLOW)
-                pr.draw_line_ex(left_centered, top_centered, 0.5, pr.YELLOW)
+                if self.debug:
+                    pr.draw_line_ex(top_centered, right_centered, 0.5, pr.YELLOW)
+                    pr.draw_line_ex(right_centered, bottom_centered, 0.5, pr.YELLOW)
+                    pr.draw_line_ex(bottom_centered, left_centered, 0.5, pr.YELLOW)
+                    pr.draw_line_ex(left_centered, top_centered, 0.5, pr.YELLOW)
 
                 # Draw filled tile if hovered, otherwise draw basic grid lines
                 if is_hovered:
