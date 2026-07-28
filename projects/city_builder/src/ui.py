@@ -1,5 +1,5 @@
 import pyray as pr
-import raylib as rl
+from .world import World
 
 
 class UIElement:
@@ -66,9 +66,25 @@ class UIElement:
 
 
 class UIContainer:
-    def __init__(self, position: pr.Vector2, el: list[UIElement]) -> None:
+    def __init__(self, position: pr.Vector2, el: list[str], world: World) -> None:
         self.position = position
-        self.ui_elements = el
+        self.ui_element_names: list[str] = el
+        self.ui_elements: list[UIElement] = []
+        self.add_ui_elements(world=world)
+
+    def add_ui_elements(self, world: World) -> None:
+        for cnt, element_name in enumerate(self.ui_element_names):
+
+            ui_element = UIElement(
+                position=pr.Vector2(self.position.x, self.position.y + cnt * 30),
+                name=element_name,
+                width=world.textures.get(element_name).width,
+                height=world.textures.get(element_name).height,
+                texture=world.textures.get(element_name),
+                scale_factor=0.5,
+            )
+            self.ui_elements.append(ui_element)
+
 
     def update_status(self) -> int | None:
         statuses = [x.get_status() for x in self.ui_elements]

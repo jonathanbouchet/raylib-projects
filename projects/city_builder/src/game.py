@@ -3,28 +3,20 @@ import pyray as pr
 from .world import World
 from .camera import Camera
 from .ui import UIContainer, UIElement
+from .resource_manager import ResourceManager
 
 
 class Game:
-    def __init__(
-        self,
-        width: int,
-        height: int,
-        fps_target: int,
-        name: str,
-        background_color: pr.Color,
-        tile_x: int,
-        tile_y: int,
-        debug: bool
-    ):
-        self.width = width
-        self.height = height
-        self.fps_target = fps_target
-        self.name = name
-        self.background_color = background_color
-        self.grid_length_x = tile_x
-        self.grid_length_y = tile_y
-        self.debug = debug
+    def __init__(self, resource_manager) -> None:
+        self.resource_manager: ResourceManager = resource_manager
+        self.width=self.resource_manager.game_data().get("width")
+        self.height=self.resource_manager.game_data().get("height")
+        self.fps_target=self.resource_manager.game_data().get("fps_target")
+        self.name=self.resource_manager.game_data().get("name")
+        self.background_color=self.resource_manager.game_data().get("background_color")
+        self.grid_length_x=self.resource_manager.game_data().get("tile_x")
+        self.grid_length_y=self.resource_manager.game_data().get("tile_y")
+        self.debug=self.resource_manager.game_data().get("debug")
 
         # world
         self.world = World(
@@ -48,64 +40,10 @@ class Game:
         self.world.load_textures()  # textures need raylib to be init first
 
         # ui
-        ui_element_grass = UIElement(
-            position=pr.Vector2(self.width - 200, 60),
-            name="grass",
-            width=self.world.textures.get("grass").width,
-            height=self.world.textures.get("grass").height,
-            texture=self.world.textures.get("grass"),
-            scale_factor=0.5,
-        )
-        ui_element_sand = UIElement(
-            position=pr.Vector2(self.width - 200, 90),
-            name="sand",
-            width=self.world.textures.get("sand").width,
-            height=self.world.textures.get("sand").height,
-            texture=self.world.textures.get("sand"),
-            scale_factor=0.5,
-        )
-        ui_element_water = UIElement(
-            position=pr.Vector2(self.width - 200, 120),
-            name="water",
-            width=self.world.textures.get("water").width,
-            height=self.world.textures.get("water").height,
-            texture=self.world.textures.get("water"),
-            scale_factor=0.5,
-        )
-        ui_element_building = UIElement(
-            position=pr.Vector2(self.width - 150, 60),
-            name="building01",
-            width=self.world.textures.get("building01").width,
-            height=self.world.textures.get("building01").height,
-            texture=self.world.textures.get("building01"),
-            scale_factor=0.5,
-        )
-        ui_element_road_top_right = UIElement(
-                    position=pr.Vector2(self.width - 150, 90),
-                    name="road_top_right",
-                    width=self.world.textures.get("road_top_right").width,
-                    height=self.world.textures.get("road_top_right").height,
-                    texture=self.world.textures.get("road_top_right"),
-                    scale_factor=0.5,
-        )
-        ui_element_road_bottom_right_T = UIElement(
-                    position=pr.Vector2(self.width - 150, 120),
-                    name="road_bottom_right_T",
-                    width=self.world.textures.get("road_bottom_right_T").width,
-                    height=self.world.textures.get("road_bottom_right_T").height,
-                    texture=self.world.textures.get("road_bottom_right_T"),
-                    scale_factor=0.5,
-        )
         self.ui = UIContainer(
-            position=pr.Vector2(0, 0),
-            el=[
-                ui_element_grass,
-                ui_element_sand,
-                ui_element_water,
-                ui_element_building,
-                ui_element_road_top_right,
-                ui_element_road_bottom_right_T
-            ],
+            position=pr.Vector2(self.width - 200, 50),
+            el = ["sand", "water", "grass", "building01"],
+            world = self.world
         )
         self.ui_element_selected: int = None
 

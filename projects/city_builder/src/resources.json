@@ -19,6 +19,11 @@
         "kenney_tree": "assets/cityDetails_010.png",
         "sand": "assets/maroon_tile_no_border_64x64.png",
         "water": "assets/blue_tile_no_border_64x64.png",
-        "grass": "assets/green_tile_no_border_64x64.png"
+        "grass": "assets/green_tile_no_border_64x64.png",
+        "building01": "assets/building01.png",
+        "building02":"assets/building02.png",
+        "road_top_right":"assets/landscapeTiles_082.png",
+        "road_bottom_round":"assets/landscapeTiles_127.png",
+        "road_bottom_right_T":"assets/landscapeTiles_104.png"
     }
 }
