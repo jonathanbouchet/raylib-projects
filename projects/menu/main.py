@@ -51,7 +51,7 @@ class Game:
         pr.set_target_fps(self.fps_target)
 
     def update(self) -> None:
-        _ = [button.update() for button in self.buttons]
+        # _ = [button.update() for button in self.buttons]
         if self.game_state == GameState.INIT:
             self.draw_title()
         if self.game_state == GameState.RUN:
@@ -88,15 +88,15 @@ class Game:
 
         pr.draw_text("TITLE", self.width // 2, 100, 60, pr.DARKBLUE)
 
-        self.title_screen_button_1.draw()
-        self.title_screen_button_2.draw()
+        # self.title_screen_button_1.draw()
+        # self.title_screen_button_2.draw()
 
-        # if pr.gui_button(pr.Rectangle(150, 300, 100, 40), "START"):
-        #     self.game_state = GameState.RUN
-        #     self.screen_state = ScreenState.MAIN
-        # if pr.gui_button(pr.Rectangle(350, 300, 100, 40), "SETTINGS"):
-        #     self.game_state = GameState.SETTINGS
-        #     self.screen_state = ScreenState.SETTINGS
+        if pr.gui_button(pr.Rectangle(150, 300, 100, 40), "START"):
+            self.game_state = GameState.RUN
+            self.screen_state = ScreenState.MAIN
+        if pr.gui_button(pr.Rectangle(350, 300, 100, 40), "SETTINGS"):
+            self.game_state = GameState.SETTINGS
+            self.screen_state = ScreenState.SETTINGS
 
         pr.draw_fps(0, 0)
         pr.draw_text(f"GAME:{self.game_state}", 0, 20, 20, pr.GREEN)
