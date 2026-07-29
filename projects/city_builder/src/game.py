@@ -2,21 +2,23 @@ import asyncio
 import pyray as pr
 from .world import World
 from .camera import Camera
-from .ui import UIContainer, UIElement
+from .ui import UIContainer
 from .resource_manager import ResourceManager
 
 
 class Game:
     def __init__(self, resource_manager) -> None:
         self.resource_manager: ResourceManager = resource_manager
-        self.width=self.resource_manager.game_data().get("width")
-        self.height=self.resource_manager.game_data().get("height")
-        self.fps_target=self.resource_manager.game_data().get("fps_target")
-        self.name=self.resource_manager.game_data().get("name")
-        self.background_color=self.resource_manager.game_data().get("background_color")
-        self.grid_length_x=self.resource_manager.game_data().get("tile_x")
-        self.grid_length_y=self.resource_manager.game_data().get("tile_y")
-        self.debug=self.resource_manager.game_data().get("debug")
+        self.width = self.resource_manager.game_data().get("width")
+        self.height = self.resource_manager.game_data().get("height")
+        self.fps_target = self.resource_manager.game_data().get("fps_target")
+        self.name = self.resource_manager.game_data().get("name")
+        self.background_color = self.resource_manager.game_data().get(
+            "background_color"
+        )
+        self.grid_length_x = self.resource_manager.game_data().get("tile_x")
+        self.grid_length_y = self.resource_manager.game_data().get("tile_y")
+        self.debug = self.resource_manager.game_data().get("debug")
 
         # world
         self.world = World(
@@ -36,14 +38,21 @@ class Game:
         pr.set_mouse_position(
             self.width // 2, self.height // 2
         )  # set the mouse position at the center of the screen to avoid the camera scrolling effect
-        print(self.world.world[0], len(self.world.world[0]), type(self.world.world))
+        # print(self.world.world[0], len(self.world.world[0]), type(self.world.world))
+        print(self.world.ground_tiles[0:5], type(self.world.ground_tiles))
         self.world.load_textures()  # textures need raylib to be init first
 
         # ui
         self.ui = UIContainer(
             position=pr.Vector2(self.width - 200, 50),
-            el = ["building01", "building02","road_top_right","road_bottom_round","road_bottom_right_T"],
-            world = self.world
+            el=[
+                "building01",
+                "building02",
+                "road_top_right",
+                "road_bottom_round",
+                "road_bottom_right_T",
+            ],
+            world=self.world,
         )
         self.ui_element_selected: int = None
 

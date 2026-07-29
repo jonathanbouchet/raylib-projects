@@ -21,6 +21,7 @@ class World:
         - create a map by placing randomly textures
         """
         world = []
+        tile_count = 0
         for grid_x in range(0, self.grid_length_x):
             world.append([])
             for grid_y in range(0, self.grid_length_y):
@@ -37,29 +38,72 @@ class World:
                             render_pos[1] + self.height // 4,
                         ),
                         "tile_name": tile_name,
+                        "tile_id": tile_count,
+                        "grid_pos": {"tile_x": grid_x, "tile_y": grid_y},
                     }
                 )
+                tile_count += 1
         return world
 
     def add_to_world(self, ui_element_name: str, tile_x: int, tile_y: int) -> None:
         """add a selected entity to the world map"""
-        world_tile = self.grid_to_world(grid_x=tile_x+1, grid_y=tile_y+1)
-        # self.world[tile_x+1].append(world_tile)
+        world_tile = self.grid_to_world(grid_x=tile_x + 1, grid_y=tile_y + 1)
+        # testing: for road tiles, directly replace the tiles from the ground_tiles data
+        if ui_element_name in [
+            "road_top_right",
+            "road_bottom_round",
+            "road_bottom_right_T",
+        ]:
+            print("replacing ground tile with road")
+            self.replace_ground_tile(ui_element_name, tile_x, tile_y)
+            # pass
+        else:
+            # self.world[tile_x+1].append(world_tile)
 
+            render_pos = world_tile.get("render_pos")
+            tile_name = ui_element_name
+            self.additional_tiles.append(
+                {
+                    "render_pos": pr.Vector2(
+                        render_pos[0] + self.width // 2,
+                        render_pos[1]
+                        + self.height // 4
+                        - self.textures.get(tile_name).height,
+                    ),
+                    "tile_name": tile_name,
+                }
+            )
+            # reorder the additional list by y ascending
+            self.additional_tiles = sorted(
+                self.additional_tiles, key=lambda x: x["render_pos"].y
+            )
+
+    def replace_ground_tile(
+        self, ui_element_name: str, tile_x: int, tile_y: int
+    ) -> None:
+        world_tile = self.grid_to_world(grid_x=tile_x + 1, grid_y=tile_y + 1)
         render_pos = world_tile.get("render_pos")
         tile_name = ui_element_name
-        # self.ground_tiles.append(
-        self.additional_tiles.append(
-            {
-                "render_pos": pr.Vector2(
-                    render_pos[0] + self.width // 2,
-                    render_pos[1] + self.height // 4 - self.textures.get(tile_name).height
-                ),
-                "tile_name": tile_name,
-            }
-        )
-        # reorder the additional list by y ascending
-        self.additional_tiles = sorted(self.additional_tiles, key=lambda x: x["render_pos"].y)
+        for tile in self.ground_tiles:
+            if (
+                tile.get("grid_pos")["tile_x"] == tile_x
+                and tile.get("grid_pos")["tile_y"] == tile_y
+            ):
+                print("found tile")
+                id = tile["tile_id"]
+                self.ground_tiles[id] = {
+                    "render_pos": pr.Vector2(
+                        render_pos[0] + self.width // 2,
+                        render_pos[1]
+                        + self.height // 4
+                        - self.textures.get(tile_name).height // 4
+                        - self.TILE_SIZE // 2,
+                    ),
+                    "tile_name": tile_name,
+                    "tile_id": id,
+                    "grid_pos": {"tile_x": tile_x, "tile_y": tile_y},
+                }
+        print(self.ground_tiles[0:5])
 
     def draw(self, scroll: pr.Vector2):
         """draw all the floor tile in 1 draw call per frame"""
@@ -192,7 +236,9 @@ class World:
         building02 = pr.load_texture(f"{THIS_DIR}/assets/building02.png")
         road_top_right = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_082.png")
         road_bottom_round = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_127.png")
-        road_bottom_right_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_104.png")
+        road_bottom_right_T = pr.load_texture(
+            f"{THIS_DIR}/assets/landscapeTiles_104.png"
+        )
         self.textures = {
             "sand": kenney_sand,
             "water": kenney_water,

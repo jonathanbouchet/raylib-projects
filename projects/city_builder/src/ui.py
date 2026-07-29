@@ -74,7 +74,6 @@ class UIContainer:
 
     def add_ui_elements(self, world: World) -> None:
         for cnt, element_name in enumerate(self.ui_element_names):
-
             ui_element = UIElement(
                 position=pr.Vector2(self.position.x, self.position.y + cnt * 30),
                 name=element_name,
@@ -84,7 +83,6 @@ class UIContainer:
                 scale_factor=0.5,
             )
             self.ui_elements.append(ui_element)
-
 
     def update_status(self) -> int | None:
         statuses = [x.get_status() for x in self.ui_elements]
@@ -100,18 +98,6 @@ class UIContainer:
             for cnt, el in enumerate(self.ui_elements):
                 el.is_disabled = False
         return None
-
-    def get_selected(self) -> str:
-        statuses = [x.get_status() for x in self.ui_elements]
-        if any(statuses):
-            index = [i for i, val in enumerate(statuses) if val]
-            return self.ui_elements[index[0]].name
-
-    def get_selected_tile_index(self) -> int:
-        statuses = [x.get_status() for x in self.ui_elements]
-        if any(statuses):
-            index = [i for i, val in enumerate(statuses) if val]
-            return index[0]
 
     def update(self) -> int | None:
         for el in self.ui_elements:
