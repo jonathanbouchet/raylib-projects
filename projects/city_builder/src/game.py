@@ -50,7 +50,12 @@ class Game:
                 "building02",
                 "road_top_right",
                 "road_bottom_round",
-                "road_bottom_right_T",
+                # "road_bottom_right_T",
+                "road_bottom_right",
+                "road_crossing",
+                "road_top_left_T",
+                "road_bottom_left_T",
+                "road_top_right_T"
             ],
             world=self.world,
         )

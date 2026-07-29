@@ -86,6 +86,11 @@ class World:
             "road_top_right",
             "road_bottom_round",
             "road_bottom_right_T",
+            "road_bottom_right",
+            "road_crossing",
+            "road_top_left_T",
+            "road_bottom_left_T",
+            "road_top_right_T"
         ]:
             print("replacing ground tile with road")
             self.replace_ground_tile(ui_element_name, tile_x, tile_y)
@@ -299,6 +304,11 @@ class World:
         road_bottom_right_T = pr.load_texture(
             f"{THIS_DIR}/assets/landscapeTiles_104.png"
         )
+        road_bottom_right = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_074.png")
+        road_crossing = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_090.png")
+        road_top_left_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_123.png")
+        road_bottom_left_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_125.png")
+        road_top_right_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_126.png")
         self.textures = {
             "sand": kenney_sand,
             "water": kenney_water,
@@ -313,6 +323,11 @@ class World:
             "road_top_right": road_top_right,
             "road_bottom_round": road_bottom_round,
             "road_bottom_right_T": road_bottom_right_T,
+            "road_bottom_right": road_bottom_right,
+            "road_crossing": road_crossing,
+            "road_top_left_T": road_top_left_T,
+            "road_bottom_left_T": road_bottom_left_T,
+            "road_top_right_T": road_top_right_T
         }
 
     def unload_textures(self) -> None:
