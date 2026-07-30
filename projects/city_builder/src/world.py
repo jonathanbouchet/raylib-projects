@@ -11,7 +11,7 @@ class TileData:
         render_pos: pr.Vector2,
         tile_name: str,
         tile_id: int,
-        grid_pos: dict[str:int],
+        grid_pos: dict[str: int],
     ) -> None:
         self.render_pos = render_pos
         self.tile_name = tile_name
@@ -30,6 +30,9 @@ class TileData:
     def get_grid_pos_y(self) -> int:
         return self.grid_pos.get("tile_y")
 
+    def get_tile_id(self) -> int:
+        return self.tile_id
+
 
 class World:
     def __init__(self, grid_length_x: int, grid_length_y: int, width: int, height: int):
@@ -38,13 +41,8 @@ class World:
         self.width = width
         self.height = height
         self.TILE_SIZE = 32
-        # self.ground_tiles: list[TileData] = []
-        self.ground_tiles: list[
-            dict[str, pr.Vector2 | str]
-        ] = []  # ground level = 1st layer of tiles: grass, sand water or road
-        self.additional_tiles: list[
-            dict[str, pr.Vector2 | str]
-        ] = []  # upper level = 2nd layer of tiles: building
+        self.ground_tiles: list[TileData] = [] # ground level = 1st layer of tiles: grass, sand water or road
+        self.additional_tiles: list[TileData] = [] # upper level = 2nd layer of tiles: building
         self.world = self.create_world()
 
     def create_world(self) -> None:
@@ -62,31 +60,25 @@ class World:
                 # store all the ground tile in order to make only 1 draw call later on
                 render_pos = world_tile.get("render_pos")
                 tile_name = world_tile.get("tile")
-                # tmp = TileData(
-                #     render_pos=pr.Vector2(
-                #         render_pos[0] + self.width // 2,
-                #         render_pos[1] + self.height // 4),
-                #     tile_name=tile_name,
-                #     tile_id=tile_count,
-                #     grid_pos={"tile_x": grid_x, "tile_y": grid_y}
-                # )
-                # self.ground_tiles.append(tmp)
-                self.ground_tiles.append(
-                    {
-                        "render_pos": pr.Vector2(
-                            render_pos[0] + self.width // 2,
-                            render_pos[1] + self.height // 4,
-                        ),
-                        "tile_name": tile_name,
-                        "tile_id": tile_count,
-                        "grid_pos": {"tile_x": grid_x, "tile_y": grid_y},
-                    }
+                tmp = TileData(
+                    render_pos=pr.Vector2(
+                        render_pos[0] + self.width // 2,
+                        render_pos[1] + self.height // 4),
+                    tile_name=tile_name,
+                    tile_id=tile_count,
+                    grid_pos={"tile_x": grid_x, "tile_y": grid_y}
                 )
+                self.ground_tiles.append(tmp)
                 tile_count += 1
         return world
 
     def add_to_world(self, ui_element_name: str, tile_x: int, tile_y: int) -> None:
-        """add a selected entity to the world map"""
+        """
+        - add a selected entity to the world map
+        - how it works:
+            - if tile is one of the orad segments, the original tile is simply replaced
+            - if the tile is one of the buildnig, the original tile is kept and the new tile is add to another grid("additional_tiles")
+        """
         world_tile = self.grid_to_world(grid_x=tile_x + 1, grid_y=tile_y + 1)
         # testing: for road tiles, directly replace the tiles from the ground_tiles data
         if ui_element_name in [
@@ -105,28 +97,20 @@ class World:
             render_pos = world_tile.get("render_pos")
             tile_name = ui_element_name
 
-            # tmp = TileData(
-            #     render_pos=render_pos,
-            #     tile_name=tile_name,
-            #     tile_id=len(self.additional_tiles),
-            #     grid_pos={"tile_x": tile_x + 1, "tile_y": tile_y + 1}
-            # )
-            # self.additional_tiles.append(tmp)
-
-            self.additional_tiles.append(
-                {
-                    "render_pos": pr.Vector2(
-                        render_pos[0] + self.width // 2,
-                        render_pos[1]
+            tmp = TileData(
+                render_pos=pr.Vector2(
+                    render_pos[0] + self.width // 2,
+                    render_pos[1]
                         + self.height // 4
-                        - self.textures.get(tile_name).height,
-                    ),
-                    "tile_name": tile_name,
-                }
+                        - self.textures.get(tile_name).height),
+                tile_name=tile_name,
+                tile_id=len(self.additional_tiles),
+                grid_pos={"tile_x": tile_x + 1, "tile_y": tile_y + 1}
             )
-            # reorder the additional list by y ascending
+            self.additional_tiles.append(tmp)
+            # sort tiles by y asc
             self.additional_tiles = sorted(
-                self.additional_tiles, key=lambda x: x["render_pos"].y
+                self.additional_tiles, key=lambda x: x.get_render_pos().y
             )
 
     def replace_ground_tile(
@@ -137,50 +121,40 @@ class World:
         tile_name = ui_element_name
         for tile in self.ground_tiles:
             if (
-                tile.get("grid_pos")["tile_x"] == tile_x
-                and tile.get("grid_pos")["tile_y"] == tile_y
-                # tile.get_grid_pos_x == tile_x
-                # and tile.get_grid_pos_y == tile_y
+                tile.get_grid_pos_x() == tile_x
+                and tile.get_grid_pos_y() == tile_y
             ):
                 print("found tile")
-                id = tile["tile_id"]
+                id = tile.get_tile_id()
 
-                # tmp = TileData(
-                #     render_pos=pr.Vector2(
-                #         render_pos[0] + self.width // 2,
-                #         render_pos[1]
-                #         + self.height // 4
-                #         - self.textures.get(tile_name).height // 4
-                #         - self.TILE_SIZE // 2,
-                #     ),
-                #     tile_name=tile_name,
-                #     tile_id=id,
-                #     grid_pos={"tile_x": tile_x, "tile_y": tile_y},
-                # )
-                # self.ground_tiles[id] = tmp
-                self.ground_tiles[id] = {
-                    "render_pos": pr.Vector2(
+                tmp = TileData(
+                    render_pos=pr.Vector2(
                         render_pos[0] + self.width // 2,
                         render_pos[1]
                         + self.height // 4
                         - self.textures.get(tile_name).height // 4
                         - self.TILE_SIZE // 2,
                     ),
-                    "tile_name": tile_name,
-                    "tile_id": id,
-                    "grid_pos": {"tile_x": tile_x, "tile_y": tile_y},
-                }
+                    tile_name=tile_name,
+                    tile_id=id,
+                    grid_pos={"tile_x": tile_x, "tile_y": tile_y},
+                )
+                self.ground_tiles[id] = tmp
         print(self.ground_tiles[0:5], len(self.ground_tiles))
 
     def draw(self, scroll: pr.Vector2):
-        """draw all the floor tile in 1 draw call per frame"""
+        """
+        - draw tiles
+        - how it works:
+            - first the ground_tiles(grass, sand, water or raod segments) are drawn ; using ground_tiles list
+                - there is a special case for the water tile because the original texture has a different height
+            - then the buildings are drawn ; using additional_tiles list
+        """
         if len(self.ground_tiles) == 0:
             return
         for tile in self.ground_tiles:
-            tile_name = tile.get("tile_name")
-            render_pos = tile.get("render_pos")
-            # tile_name = tile.get_tile_name()
-            # render_pos = tile.get_render_pos()
+            tile_name = tile.get_tile_name()
+            render_pos = tile.get_render_pos()
             if tile_name in ["sand", "grass"]:
                 pr.draw_texture_v(
                     self.textures.get(tile_name),
@@ -199,7 +173,7 @@ class World:
                             + -(
                                 self.textures.get(tile_name).height // 2  ## 64x62 -> 31
                                 - self.TILE_SIZE // 2
-                                - 10  # fixed me later
+                                - 12  # fixed me later
                             ),
                         ),
                         scroll,
@@ -209,32 +183,14 @@ class World:
         if len(self.additional_tiles) == 0:
             return
         for tile in self.additional_tiles:
-            tile_name = tile.get("tile_name")
-            render_pos = tile.get("render_pos")
-            # if tile_name in ["sand2", "grass2", "water2", "sand", "grass"]:
+            tile_name = tile.get_tile_name()
+            render_pos = tile.get_render_pos()
             pr.draw_texture_v(
                 self.textures.get(tile_name),
                 pr.vector2_add(render_pos, scroll),
                 pr.WHITE,
             )
-            # else:
-            #     pr.draw_texture_v(
-            #         self.textures.get(tile_name),
-            #         pr.vector2_add(
-            #             pr.Vector2(
-            #                 render_pos.x,
-            #                 render_pos.y
-            #                 + -(
-            #                     self.textures.get(tile_name).height // 2  ## 64x62 -> 31
-            #                     - self.TILE_SIZE // 2
-            #                     - 10  # fixed me later
-            #                 ),
-            #             ),
-            #             scroll,
-            #         ),
-            #         pr.WHITE,
-            #     )
-
+        
     def grid_to_world(
         self, grid_x: int, grid_y: int
     ) -> dict[str, list[int, int] | list[tuple[int, int]]]:
