@@ -40,7 +40,7 @@ class Game:
         )  # set the mouse position at the center of the screen to avoid the camera scrolling effect
         # print(self.world.world[0], len(self.world.world[0]), type(self.world.world))
         print(self.world.ground_tiles[0:5], len(self.world.ground_tiles))
-        self.world.load_textures()  # textures need raylib to be init first
+        self.world.load_textures(textures_data_path=self.resource_manager.textures_data())  # textures need raylib to be init first
 
         # ui
         self.ui = UIContainer(
@@ -50,7 +50,7 @@ class Game:
                 "building02",
                 "road_top_right",
                 "road_bottom_round",
-                # "road_bottom_right_T",
+                "road_bottom_right_T",
                 "road_bottom_right",
                 "road_crossing",
                 "road_top_left_T",

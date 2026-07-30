@@ -283,53 +283,14 @@ class World:
         iso_y = (x + y) // 2
         return iso_x, iso_y
 
-    def load_textures(self):
+    def load_textures(self, textures_data_path: dict[str, str]):
         """load textures used throughout the game"""
-        kenney_sand = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_059_64x64.png")
-        kenney_water = pr.load_texture(
-            f"{THIS_DIR}/assets/landscapeTiles_066_64x64.png"
-        )
-        kenney_grass = pr.load_texture(
-            f"{THIS_DIR}/assets/landscapeTiles_067_64x64.png"
-        )
-        kenney_house = pr.load_texture(f"{THIS_DIR}/assets/buildingTiles_018_64x64.png")
-        kenney_tree = pr.load_texture(f"{THIS_DIR}/assets/cityDetails_010.png")
-        sand = pr.load_texture(f"{THIS_DIR}/assets/maroon_tile_no_border_64x64.png")
-        water = pr.load_texture(f"{THIS_DIR}/assets/blue_tile_no_border_64x64.png")
-        grass = pr.load_texture(f"{THIS_DIR}/assets/green_tile_no_border_64x64.png")
-        building01 = pr.load_texture(f"{THIS_DIR}/assets/building01.png")
-        building02 = pr.load_texture(f"{THIS_DIR}/assets/building02.png")
-        road_top_right = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_082.png")
-        road_bottom_round = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_127.png")
-        road_bottom_right_T = pr.load_texture(
-            f"{THIS_DIR}/assets/landscapeTiles_104.png"
-        )
-        road_bottom_right = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_074.png")
-        road_crossing = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_090.png")
-        road_top_left_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_123.png")
-        road_bottom_left_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_125.png")
-        road_top_right_T = pr.load_texture(f"{THIS_DIR}/assets/landscapeTiles_126.png")
-        self.textures = {
-            "sand": kenney_sand,
-            "water": kenney_water,
-            "grass": kenney_grass,
-            # "house": kenney_house,
-            "building01": building01,
-            "building02": building02,
-            # "tree": kenney_tree,
-            # "sand2": sand,
-            # "water2": water,
-            # "grass2": grass,
-            "road_top_right": road_top_right,
-            "road_bottom_round": road_bottom_round,
-            "road_bottom_right_T": road_bottom_right_T,
-            "road_bottom_right": road_bottom_right,
-            "road_crossing": road_crossing,
-            "road_top_left_T": road_top_left_T,
-            "road_bottom_left_T": road_bottom_left_T,
-            "road_top_right_T": road_top_right_T
-        }
+        textures = {}
+        for texture_name, texture_path in textures_data_path.items():
+            textures[texture_name] = pr.load_texture(f"{THIS_DIR}/{texture_path}")
+        self.textures = textures
 
+        
     def unload_textures(self) -> None:
         for k, v in self.textures.items():
             pr.unload_texture(v)
