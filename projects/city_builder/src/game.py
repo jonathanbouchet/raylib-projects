@@ -40,7 +40,9 @@ class Game:
         )  # set the mouse position at the center of the screen to avoid the camera scrolling effect
         # print(self.world.world[0], len(self.world.world[0]), type(self.world.world))
         print(self.world.ground_tiles[0:5], len(self.world.ground_tiles))
-        self.world.load_textures(textures_data_path=self.resource_manager.textures_data())  # textures need raylib to be init first
+        self.world.load_textures(
+            textures_data_path=self.resource_manager.textures_data()
+        )  # textures need raylib to be init first
 
         # ui
         self.ui = UIContainer(
@@ -55,7 +57,7 @@ class Game:
                 "road_crossing",
                 "road_top_left_T",
                 "road_bottom_left_T",
-                "road_top_right_T"
+                "road_top_right_T",
             ],
             world=self.world,
         )
@@ -167,7 +169,6 @@ class Game:
                         pr.is_mouse_button_pressed(0)
                         and self.ui_element_selected is not None
                     ):
-                        pr.draw_text("mouse clicked", 0, 40, 20, pr.GREEN)
                         self.world.add_to_world(
                             ui_element_name=str(
                                 self.ui.ui_elements[self.ui_element_selected].name

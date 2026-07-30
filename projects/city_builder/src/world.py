@@ -4,13 +4,15 @@ import pyray as pr
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
 
+
 class TileData:
     def __init__(
-            self, 
-            render_pos: pr.Vector2, 
-            tile_name: str, 
-            tile_id: int, 
-            grid_pos: dict[str: int]) -> None:
+        self,
+        render_pos: pr.Vector2,
+        tile_name: str,
+        tile_id: int,
+        grid_pos: dict[str:int],
+    ) -> None:
         self.render_pos = render_pos
         self.tile_name = tile_name
         self.tile_id = tile_id
@@ -26,7 +28,8 @@ class TileData:
         return self.grid_pos.get("tile_x")
 
     def get_grid_pos_y(self) -> int:
-            return self.grid_pos.get("tile_y")
+        return self.grid_pos.get("tile_y")
+
 
 class World:
     def __init__(self, grid_length_x: int, grid_length_y: int, width: int, height: int):
@@ -36,8 +39,12 @@ class World:
         self.height = height
         self.TILE_SIZE = 32
         # self.ground_tiles: list[TileData] = []
-        self.ground_tiles: list[dict[str, pr.Vector2 | str]] = [] # ground level = 1st layer of tiles: grass, sand water or road
-        self.additional_tiles: list[dict[str, pr.Vector2 | str]] = [] # upper level = 2nd layer of tiles: building
+        self.ground_tiles: list[
+            dict[str, pr.Vector2 | str]
+        ] = []  # ground level = 1st layer of tiles: grass, sand water or road
+        self.additional_tiles: list[
+            dict[str, pr.Vector2 | str]
+        ] = []  # upper level = 2nd layer of tiles: building
         self.world = self.create_world()
 
     def create_world(self) -> None:
@@ -60,7 +67,7 @@ class World:
                 #         render_pos[0] + self.width // 2,
                 #         render_pos[1] + self.height // 4),
                 #     tile_name=tile_name,
-                #     tile_id=tile_count, 
+                #     tile_id=tile_count,
                 #     grid_pos={"tile_x": grid_x, "tile_y": grid_y}
                 # )
                 # self.ground_tiles.append(tmp)
@@ -90,19 +97,18 @@ class World:
             "road_crossing",
             "road_top_left_T",
             "road_bottom_left_T",
-            "road_top_right_T"
+            "road_top_right_T",
         ]:
             print("replacing ground tile with road")
             self.replace_ground_tile(ui_element_name, tile_x, tile_y)
         else:
-
             render_pos = world_tile.get("render_pos")
             tile_name = ui_element_name
 
             # tmp = TileData(
-            #     render_pos=render_pos, 
+            #     render_pos=render_pos,
             #     tile_name=tile_name,
-            #     tile_id=len(self.additional_tiles), 
+            #     tile_id=len(self.additional_tiles),
             #     grid_pos={"tile_x": tile_x + 1, "tile_y": tile_y + 1}
             # )
             # self.additional_tiles.append(tmp)
@@ -148,7 +154,7 @@ class World:
                 #         - self.TILE_SIZE // 2,
                 #     ),
                 #     tile_name=tile_name,
-                #     tile_id=id, 
+                #     tile_id=id,
                 #     grid_pos={"tile_x": tile_x, "tile_y": tile_y},
                 # )
                 # self.ground_tiles[id] = tmp
@@ -287,10 +293,11 @@ class World:
         """load textures used throughout the game"""
         textures = {}
         for texture_name, texture_path in textures_data_path.items():
-            textures[texture_name] = pr.load_texture(f"{THIS_DIR}/{texture_path}")
+            textures[texture_name] = pr.load_texture(
+                f"{THIS_DIR}/{texture_path.get('path')}"
+            )
         self.textures = textures
 
-        
     def unload_textures(self) -> None:
         for k, v in self.textures.items():
             pr.unload_texture(v)

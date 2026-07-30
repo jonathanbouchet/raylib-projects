@@ -1,6 +1,5 @@
 {
-    "game":
-    {
+    "game": {
         "width": 1080,
         "height": 720,
         "fps_target": 60,
@@ -10,20 +9,58 @@
         "name": "city builder",
         "debug": true
     },
-    "textures":
-    {
-        "sand": "assets/landscapeTiles_059_64x64.png",
-        "water": "assets/landscapeTiles_066_64x64.png",
-        "grass": "assets/landscapeTiles_067_64x64.png",
-        "building01": "assets/building01.png",
-        "building02":"assets/building02.png",
-        "road_top_right":"assets/landscapeTiles_082.png",
-        "road_bottom_round":"assets/landscapeTiles_127.png",
-        "road_bottom_right_T":"assets/landscapeTiles_104.png",
-        "road_bottom_right":"assets/landscapeTiles_074.png",
-        "road_crossing":"assets/landscapeTiles_090.png",
-        "road_top_left_T" :"assets/landscapeTiles_123.png",
-        "road_bottom_left_T":"assets/landscapeTiles_125.png",
-        "road_top_right_T":"assets/landscapeTiles_126.png"
+    "textures": {
+        "sand": {
+            "path": "assets/landscapeTiles_059_64x64.png", 
+            "is_buildable": true
+        },
+        "water": {
+            "path": "assets/landscapeTiles_066_64x64.png",
+            "is_buildable": false
+        },
+        "grass": {
+            "path": "assets/landscapeTiles_067_64x64.png", 
+            "is_buildable": true
+        },
+        "building01": {
+            "path": "assets/building01.png", 
+            "is_buildable": true
+        },
+        "building02": {
+            "path": "assets/building02.png", 
+            "is_buildable": true
+        },
+        "road_top_right": {
+            "path": "assets/landscapeTiles_082.png",
+            "is_buildable": true
+        },
+        "road_bottom_round": {
+            "path": "assets/landscapeTiles_127.png",
+            "is_buildable": true
+        },
+        "road_bottom_right_T": {
+            "path": "assets/landscapeTiles_104.png",
+            "is_buildable": true
+        },
+        "road_bottom_right": {
+            "path": "assets/landscapeTiles_074.png",
+            "is_buildable": true
+        },
+        "road_crossing": {
+            "path": "assets/landscapeTiles_090.png",
+            "is_buildable": true
+        },
+        "road_top_left_T": {
+            "path": "assets/landscapeTiles_123.png",
+            "is_buildable": true
+        },
+        "road_bottom_left_T": {
+            "path": "assets/landscapeTiles_125.png",
+            "is_buildable": true
+        },
+        "road_top_right_T": {
+            "path": "assets/landscapeTiles_126.png",
+            "is_buildable": true
+        }
     }
 }
