@@ -2,6 +2,7 @@ import pyray as pr
 from sprite import Sprite
 import random
 import settings as setting
+import tracemalloc
 
 
 class Game:
@@ -22,6 +23,10 @@ class Game:
         [r.draw() for r in self.rings]
         pr.draw_fps(0, 0)
         pr.draw_text(f"RINGS {len(self.rings)}", 0, 20, 20, pr.DARKGREEN)
+        # Get memory statistics
+        current, peak = tracemalloc.get_traced_memory()
+        pr.draw_text(f"current memory usage: {current / 10**6} MB", 0, 40, 20, pr.DARKGREEN)
+        pr.draw_text(f"peak memory usage: {peak / 10**6} MB", 0, 60, 20, pr.DARKGREEN)
         pr.end_drawing()
 
     def run(self) -> None:
@@ -54,5 +59,8 @@ class Game:
 
 
 if __name__ == "__main__":
+    # Start tracking memory
+    tracemalloc.start()
     game = Game()
     game.run()
+    tracemalloc.stop()
