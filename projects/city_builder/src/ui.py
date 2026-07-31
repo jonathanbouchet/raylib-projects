@@ -5,6 +5,7 @@ from .world import World
 class UIElement:
     def __init__(
         self,
+        id: int,
         position: pr.Vector2,
         name: str,
         width: int,
@@ -12,6 +13,7 @@ class UIElement:
         texture: pr.Texture,
         scale_factor: float,
     ) -> None:
+        self.id = id
         self.position = position
         self.name = name
         self.width = width
@@ -75,11 +77,15 @@ class UIContainer:
     def add_ui_elements(self, world: World) -> None:
         for cnt, element_name in enumerate(self.ui_element_names):
             ui_element = UIElement(
+                id=cnt,
                 position=pr.Vector2(self.position.x, self.position.y + cnt * 30),
                 name=element_name,
-                width=world.textures.get(element_name).width,
-                height=world.textures.get(element_name).height,
-                texture=world.textures.get(element_name),
+                # width=world.textures.get(element_name).width,
+                # height=world.textures.get(element_name).height,
+                # texture=world.textures.get(element_name),
+                width=world.textures.get(element_name).get_texture().width,
+                height=world.textures.get(element_name).get_texture().height,
+                texture=world.textures.get(element_name).get_texture(),
                 scale_factor=0.5,
             )
             self.ui_elements.append(ui_element)

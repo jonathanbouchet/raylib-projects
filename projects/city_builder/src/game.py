@@ -177,7 +177,7 @@ class Game:
                             tile_y=hover_y,
                         )
 
-        pr.draw_text(f"[{hover_x}, {hover_y}]", 0, 20, 20, pr.GREEN)
+        pr.draw_text(f"tile X:{hover_x}, tile Y:{hover_y}", 0, 20, 20, pr.GREEN)
         pr.end_drawing()
 
     def draw_debug(self) -> None:
@@ -186,9 +186,9 @@ class Game:
         pr.draw_fps(0, 0)
         if self.ui_element_selected is not None:
             pr.draw_text(
-                f"UI element ID: {str(self.ui_element_selected)}, type: {str(self.ui.ui_elements[self.ui_element_selected].name)}",
+                f"UI ID: {str(self.ui.ui_elements[self.ui_element_selected].id)}, TYPE: {str(self.ui.ui_elements[self.ui_element_selected].name)}",
                 0,
-                60,
+                40,
                 20,
                 pr.GREEN,
             )

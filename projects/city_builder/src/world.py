@@ -4,6 +4,21 @@ import pyray as pr
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
 
+class TextureData:
+    def __init__(self, name: str, texture: pr.Texture, is_buildable: bool) -> None:
+        self.name = name
+        self.texture = texture
+        self.is_buildable = is_buildable
+
+    def get_name(self) -> str:
+        return self.name
+
+    def get_texture(self) -> pr.Texture:
+        return self.texture
+
+    def get_buildable(self) -> bool:
+        return self.is_buildable
+
 
 class TileData:
     def __init__(
@@ -102,7 +117,8 @@ class World:
                     render_pos[0] + self.width // 2,
                     render_pos[1]
                         + self.height // 4
-                        - self.textures.get(tile_name).height),
+                        - self.textures.get(tile_name).get_texture().height),
+                        # - self.textures.get(tile_name).height),
                 tile_name=tile_name,
                 tile_id=len(self.additional_tiles),
                 grid_pos={"tile_x": tile_x + 1, "tile_y": tile_y + 1}
@@ -132,7 +148,8 @@ class World:
                         render_pos[0] + self.width // 2,
                         render_pos[1]
                         + self.height // 4
-                        - self.textures.get(tile_name).height // 4
+                        # - self.textures.get(tile_name).height // 4
+                        - self.textures.get(tile_name).get_texture().height //4
                         - self.TILE_SIZE // 2,
                     ),
                     tile_name=tile_name,
@@ -157,7 +174,8 @@ class World:
             render_pos = tile.get_render_pos()
             if tile_name in ["sand", "grass"]:
                 pr.draw_texture_v(
-                    self.textures.get(tile_name),
+                    # self.textures.get(tile_name),
+                    self.textures.get(tile_name).get_texture(),
                     pr.vector2_add(render_pos, scroll),
                     pr.WHITE,
                 )
@@ -165,13 +183,15 @@ class World:
                 # toggle this block to draw the water tile under ground level
                 # need to decide
                 pr.draw_texture_v(
-                    self.textures.get(tile_name),
+                    # self.textures.get(tile_name),
+                    self.textures.get(tile_name).get_texture(),
                     pr.vector2_add(
                         pr.Vector2(
                             render_pos.x,
                             render_pos.y
                             + -(
-                                self.textures.get(tile_name).height // 2  ## 64x62 -> 31
+                                # self.textures.get(tile_name).height // 2  ## 64x62 -> 31
+                                self.textures.get(tile_name).get_texture().height // 2  ## 64x62 -> 31
                                 - self.TILE_SIZE // 2
                                 - 12  # fixed me later
                             ),
@@ -186,7 +206,8 @@ class World:
             tile_name = tile.get_tile_name()
             render_pos = tile.get_render_pos()
             pr.draw_texture_v(
-                self.textures.get(tile_name),
+                # self.textures.get(tile_name),
+                self.textures.get(tile_name).get_texture(),
                 pr.vector2_add(render_pos, scroll),
                 pr.WHITE,
             )
@@ -239,6 +260,9 @@ class World:
         }
         return out
 
+    def get_ground_tile_status(self, x: int, y) -> TileData:
+        pass
+
     def cart_to_iso(self, x, y):
         """convert from cartesian to isometric coordinates"""
         iso_x = x - y
@@ -249,11 +273,17 @@ class World:
         """load textures used throughout the game"""
         textures = {}
         for texture_name, texture_path in textures_data_path.items():
-            textures[texture_name] = pr.load_texture(
-                f"{THIS_DIR}/{texture_path.get('path')}"
-            )
-        self.textures = textures
+            # textures[texture_name] = pr.load_texture(
+            #     f"{THIS_DIR}/{texture_path.get('path')}"
+            # )
+            textures[texture_name] = TextureData(
+                name=texture_name, 
+                texture=pr.load_texture(f"{THIS_DIR}/{texture_path.get('path')}"), 
+                is_buildable=f"{THIS_DIR}/{texture_path.get('is_buildable')}")
+        self.textures: dict[str: TextureData] = textures
 
     def unload_textures(self) -> None:
+        print("in unload_textures")
         for k, v in self.textures.items():
-            pr.unload_texture(v)
+            print(f"{k}, {v}")
+            pr.unload_texture(v.get_texture())
