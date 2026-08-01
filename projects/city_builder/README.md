@@ -32,3 +32,47 @@ As of right now, I'm working on the above to integrate these other systems:
 
 ### Game Mechanics
 - **placeholder**
+
+## 2026-07-31
+- current status:
+<img src="../../images/city_builder_v1.png" alt="" width="600">
+
+- features:
+    - can add road tile and building tile (!)
+    - prevent to add any new tile on tile flagged as `is_buildable` False (water tile and a new building)
+
+
+```mermaid
+classDiagram
+    class Game{
+    }
+
+    class ResourceManager{
+    }
+
+    class UIContainer{
+        +List[UIElement] el 
+    }
+
+    class World{
+        +List[TileData] ground_tiles 
+        +List[TileData] additional_tiles 
+    }
+
+    class UIElement{
+    }
+
+    class TileData{
+
+    }
+
+    class TextureData{
+
+    }
+
+    Game --> World: owns
+    Game --> UIContainer: owns
+    UIElement --> UIContainer: member
+    ResourceManager --> Game: member
+    TileData --> World: member
+```
