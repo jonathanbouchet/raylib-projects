@@ -5,13 +5,13 @@ from .world import World
 class UIElement:
     def __init__(
         self,
-        id: int,
-        position: pr.Vector2,
-        name: str,
-        width: int,
-        height: int,
-        texture: pr.Texture,
-        scale_factor: float,
+        id: int, # unique id
+        position: pr.Vector2, # position of the element RELATIVe to the top left corner of the container
+        name: str, # texture name, e.g: building01
+        width: int, # texture width in pixels
+        height: int, # texture height in pixels
+        texture: pr.Texture, # texture itself
+        scale_factor: float, # scaling factor ; used to display a smaller version of the original texture
     ) -> None:
         self.id = id
         self.position = position
@@ -68,10 +68,14 @@ class UIElement:
 
 
 class UIContainer:
-    def __init__(self, position: pr.Vector2, el: list[str], world: World) -> None:
+    def __init__(
+            self, 
+            position: pr.Vector2, # position in game coordinates (pixels) of the top left corner
+            el: list[str], world: World # list of texture names used by the UI
+        ) -> None:
         self.position = position
         self.ui_element_names: list[str] = el
-        self.ui_elements: list[UIElement] = []
+        self.ui_elements: list[UIElement] = [] # list of UI Element
         self.add_ui_elements(world=world)
 
     def add_ui_elements(self, world: World) -> None:
@@ -80,9 +84,6 @@ class UIContainer:
                 id=cnt,
                 position=pr.Vector2(self.position.x, self.position.y + cnt * 30),
                 name=element_name,
-                # width=world.textures.get(element_name).width,
-                # height=world.textures.get(element_name).height,
-                # texture=world.textures.get(element_name),
                 width=world.textures.get(element_name).get_texture().width,
                 height=world.textures.get(element_name).get_texture().height,
                 texture=world.textures.get(element_name).get_texture(),

@@ -24,11 +24,11 @@
         },
         "building01": {
             "path": "assets/building01.png", 
-            "is_buildable": true
+            "is_buildable": false
         },
         "building02": {
             "path": "assets/building02.png", 
-            "is_buildable": true
+            "is_buildable": false
         },
         "road_top_right": {
             "path": "assets/landscapeTiles_082.png",
