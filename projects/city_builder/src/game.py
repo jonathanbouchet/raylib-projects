@@ -169,12 +169,15 @@ class Game:
                     current_tile_name = current_tile.get_tile_name()
                     current_tile_texture: TextureData = self.world.textures.get(current_tile_name)
                     current_tile_texture_status = current_tile_texture.get_buildable()
+
                     # checking if there are building
-                    # if len(self.world.additional_tiles) > 0:
-                    #     current_tile: TileData = self.world.additional_tiles[x*self.grid_length_x + y]
-                    #     current_tile_name = current_tile.get_tile_name()
-                    #     current_tile_texture: TextureData = self.world.textures.get(current_tile_name)
-                    #     current_tile_texture_status = current_tile_texture.get_buildable()
+                    if len(self.world.additional_tiles) > 0:
+                        for tile in self.world.additional_tiles:
+                            if x == tile.get_grid_pos_x() and y == tile.get_grid_pos_y():
+                                current_tile_name = tile.get_tile_name()
+                                current_tile_texture: TextureData = self.world.textures.get(current_tile_name)
+                                current_tile_texture_status = current_tile_texture.get_buildable()
+                                break
 
                     if current_tile_texture_status:
                         pr.draw_triangle(
@@ -211,7 +214,7 @@ class Game:
         # debug
         pr.clear_background(self.background_color)
         pr.draw_fps(0, 0)
-        pr.draw_text(f"GROUND TILES: {len(self.world.ground_tiles)}, BUILDING TILES: {len([x for x in self.world.additional_tiles if x is not None])}", 0, 40, 20, pr.GREEN)
+        pr.draw_text(f"GROUND TILES: {len(self.world.ground_tiles)}, BUILDING TILES: {len(self.world.additional_tiles)}", 0, 40, 20, pr.GREEN)
         if self.ui_element_selected is not None:
             pr.draw_text(
                 f"UI ID: {str(self.ui.ui_elements[self.ui_element_selected].id)}, TYPE: {str(self.ui.ui_elements[self.ui_element_selected].name)}",

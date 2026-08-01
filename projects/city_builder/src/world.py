@@ -74,7 +74,7 @@ class World:
         self.height = height
         self.TILE_SIZE = 32
         self.ground_tiles: list[TileData] = [] # ground level = 1st layer of tiles: grass, sand water or road
-        self.additional_tiles: list[TileData] = [None] * (grid_length_x*grid_length_y) # upper level = 2nd layer of tiles: building
+        self.additional_tiles: list[TileData] = [] # upper level = 2nd layer of tiles: building
         self.create_world()
 
     def create_world(self) -> None:
@@ -147,8 +147,8 @@ class World:
                 cart_rect=world_tile.get("cart_rect") 
             )
             print(tmp)
-            # self.additional_tiles.append(tmp)
-            self.additional_tiles.insert(tile_x*self.grid_length_x + tile_y, tmp)
+            self.additional_tiles.append(tmp)
+            # self.additional_tiles.insert(tile_x*self.grid_length_x + tile_y, tmp)
             # sort tiles by y ascending
             self.additional_tiles = sorted(
                 self.additional_tiles, key=lambda x: x.get_render_pos().y
