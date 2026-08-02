@@ -61,6 +61,14 @@
         "road_top_right_T": {
             "path": "assets/landscapeTiles_126.png",
             "is_buildable": true
+        },
+        "trashcan": {
+            "path": "assets/trashcanOpen.png",
+            "is_buildable": false
+        },
+        "car": {
+            "path": "assets/Black_SEDAN_CLEAN_All_020.png",
+            "is_buildable": false
         }
     }
 }

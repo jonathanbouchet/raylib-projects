@@ -4,6 +4,7 @@ from .world import World, TileData, TextureData
 from .camera import Camera
 from .ui import UIContainer
 from .resource_manager import ResourceManager
+from .entity import Entity
 
 
 class Game:
@@ -34,6 +35,9 @@ class Game:
         # add a Camera instance as member of the game
         self.camera = Camera(width=self.width, height=self.height)
 
+        # add entities to the game
+        self.entities: list[Entity] = []
+
     def init(self):
         """
         - raylib window and FPS init
@@ -51,7 +55,7 @@ class Game:
 
         # add a UI instance as a member of the game
         self.ui = UIContainer(
-            position=pr.Vector2(self.width - 200, 50), # position in game coordinates (pixels) of the top left corner
+            position=pr.Vector2(self.width - 50, 10), # position in game coordinates (pixels) of the top left corner
             el=[
                 "building01",
                 "building02",
@@ -63,11 +67,17 @@ class Game:
                 "road_top_left_T",
                 "road_bottom_left_T",
                 "road_top_right_T",
+                # "trashcan"
             ], # list of texture names used by the UI
             world=self.world,
         )
         # add the current UI Element selected, if any
         self.ui_element_selected: int = None
+
+        # testing to add an entity
+        entity = Entity(id=0, name="car", width=self.width, height=self.height, tile_x=0, tile_y=0, texture=self.world.textures.get("car").get_texture(), world=self.world)
+        print(f"{entity=}")
+        self.entities.append(entity)
 
     def update(self) -> None:
         self.camera.update()
@@ -206,7 +216,7 @@ class Game:
                             tile_x=hover_x,
                             tile_y=hover_y,
                         )
-
+        _ = [ent.draw(tile_x=0, tile_y=0, scroll=self.camera.scroll) for ent in self.entities]
         pr.draw_text(f"tile X:{hover_x}, tile Y:{hover_y}", 0, 20, 20, pr.GREEN)
         pr.end_drawing()
 
