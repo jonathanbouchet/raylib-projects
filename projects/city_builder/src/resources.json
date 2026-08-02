@@ -70,5 +70,12 @@
             "path": "assets/Black_SEDAN_CLEAN_All_020.png",
             "is_buildable": false
         }
+    },
+    "maps": {
+        "test":
+        {
+            "tileset": "assets/maps/city_builder_tiles.tsx", 
+            "map": "assets/maps/city_builder_test_map.tmx"
+        }
     }
 }

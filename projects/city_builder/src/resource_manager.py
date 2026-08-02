@@ -18,3 +18,7 @@ class ResourceManager:
     # extract textures data
     def textures_data(self) -> dict[str:str]:
         return self.resources_data.get("textures")
+
+    # extract maps data
+    def maps_data(self) -> dict[str, dict[str, str]]:
+        return self.resources_data.get("maps")
