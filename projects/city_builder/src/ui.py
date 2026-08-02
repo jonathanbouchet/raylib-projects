@@ -42,23 +42,16 @@ class UIElement:
         return self.texture
 
     def draw(self) -> None:
-        pr.draw_texture_ex(self.texture, self.position, 0, self.scale_factor, pr.WHITE)
         if self.is_selected:
+            # pr.draw_rectangle_rounded(self.rect, 0.75, 20, pr.GREEN)
             pr.draw_rectangle_lines(
                 int(self.position.x),
                 int(self.position.y),
                 int(self.width // 2),  # for visualization purposes only
                 int(self.height // 2),  # for visualization purposes only
-                pr.SKYBLUE,
+                pr.YELLOW,
             )
-        else:
-            pr.draw_rectangle_lines(
-                int(self.position.x),
-                int(self.position.y),
-                int(self.width // 2),  # for visualization purposes only
-                int(self.height // 2),  # for visualization purposes only
-                pr.RED,
-            )
+        pr.draw_texture_ex(self.texture, self.position, 0, self.scale_factor, pr.WHITE)
 
     def set_status(self, status: bool) -> None:
         self.is_selected = status
@@ -106,10 +99,26 @@ class UIContainer:
                 el.is_disabled = False
         return None
 
-    def update(self) -> int | None:
-        for el in self.ui_elements:
-            el.update()
-        return self.update_status()
+    def update(self, current_selection: int) -> int | None:
+        if pr.is_mouse_button_pressed(0):
+            # reset all UI elements statuses
+            for el in self.ui_elements:
+                el.is_selected = False
+            for el in self.ui_elements:
+                if pr.check_collision_point_rec(pr.get_mouse_position(), el.rect):
+                    print(f"CLICKED: {el.name}")
+                    el.is_selected = True
+                    return el.id
+        return current_selection
+
+
+
+        # for el in self.ui_elements:
+        #     el.update()
+        # statuses = [x.get_status() for x in self.ui_elements]
+        # print(f"{statuses=}")
+
+        # return self.update_status()
 
     def draw(self) -> None:
         _ = [el.draw() for el in self.ui_elements]

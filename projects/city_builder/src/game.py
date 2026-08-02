@@ -67,7 +67,7 @@ class Game:
                 "road_top_left_T",
                 "road_bottom_left_T",
                 "road_top_right_T",
-                # "trashcan"
+                "trashcan"
             ], # list of texture names used by the UI
             world=self.world,
         )
@@ -75,13 +75,12 @@ class Game:
         self.ui_element_selected: int = None
 
         # testing to add an entity
-        entity = Entity(id=0, name="car", width=self.width, height=self.height, tile_x=0, tile_y=0, texture=self.world.textures.get("car").get_texture(), world=self.world)
-        print(f"{entity=}")
-        self.entities.append(entity)
+        # entity = Entity(id=0, name="car", width=self.width, height=self.height, tile_x=0, tile_y=0, texture=self.world.textures.get("car").get_texture(), world=self.world)
+        # self.entities.append(entity)
 
     def update(self) -> None:
         self.camera.update()
-        self.ui_element_selected = self.ui.update()
+        self.ui_element_selected = self.ui.update(current_selection=self.ui_element_selected)
 
     def recenter_iso_tile(self, tile_in: pr.Vector2, scroll: pr.Vector2) -> pr.Vector2:
         """
@@ -178,7 +177,7 @@ class Game:
                     current_tile: TileData = self.world.ground_tiles[x*self.grid_length_x + y]
                     current_tile_name = current_tile.get_tile_name()
                     current_tile_texture: TextureData = self.world.textures.get(current_tile_name)
-                    current_tile_texture_status = current_tile_texture.get_buildable()
+                    current_tile_texture_is_buildable = current_tile_texture.get_buildable()
 
                     # checking if there are building
                     if len(self.world.additional_tiles) > 0:
@@ -186,10 +185,10 @@ class Game:
                             if x == tile.get_grid_pos_x() and y == tile.get_grid_pos_y():
                                 current_tile_name = tile.get_tile_name()
                                 current_tile_texture: TextureData = self.world.textures.get(current_tile_name)
-                                current_tile_texture_status = current_tile_texture.get_buildable()
+                                current_tile_texture_is_buildable = current_tile_texture.get_buildable()
                                 break
 
-                    if current_tile_texture_status:
+                    if current_tile_texture_is_buildable:
                         pr.draw_triangle(
                             top_centered, right_centered, bottom_centered, pr.Color(255, 255, 0, 100)
                         )  # Left half
@@ -204,8 +203,10 @@ class Game:
                             bottom_centered, left_centered, top_centered, pr.Color(255, 0, 0, 100)
                         )  # Right half
                     if (
-                        pr.is_mouse_button_pressed(0)
-                        and self.ui_element_selected is not None and current_tile_texture_status
+                        pr.is_mouse_button_pressed(0) and 
+                        self.ui_element_selected is not None and 
+                        current_tile_texture_is_buildable is True 
+                        and self.ui.ui_elements[self.ui_element_selected].name != "trashcan"
                     ):
                         
                         print(f"{x=}, {y=}, id:{x*self.grid_length_x + y}")
@@ -216,7 +217,7 @@ class Game:
                             tile_x=hover_x,
                             tile_y=hover_y,
                         )
-        _ = [ent.draw(tile_x=0, tile_y=0, scroll=self.camera.scroll) for ent in self.entities]
+        # _ = [ent.draw(tile_x=0, tile_y=0, scroll=self.camera.scroll) for ent in self.entities]
         pr.draw_text(f"tile X:{hover_x}, tile Y:{hover_y}", 0, 20, 20, pr.GREEN)
         pr.end_drawing()
 
