@@ -10,26 +10,41 @@ from .entity import Entity
 class Game:
     def __init__(self, resource_manager) -> None:
         self.resource_manager: ResourceManager = resource_manager
-        self.width = self.resource_manager.game_data().get("width") # screen width in pixels
-        self.height = self.resource_manager.game_data().get("height") # screen height in pixels
-        self.fps_target = self.resource_manager.game_data().get("fps_target") # game FPS
-        self.name = self.resource_manager.game_data().get("name") # game name
-        self.background_color = self.resource_manager.game_data().get( # background color
-            "background_color"
+        self.width = self.resource_manager.game_data().get(
+            "width"
+        )  # screen width in pixels
+        self.height = self.resource_manager.game_data().get(
+            "height"
+        )  # screen height in pixels
+        self.fps_target = self.resource_manager.game_data().get(
+            "fps_target"
+        )  # game FPS
+        self.name = self.resource_manager.game_data().get("name")  # game name
+        self.background_color = (
+            self.resource_manager.game_data().get(  # background color
+                "background_color"
+            )
         )
-        self.grid_length_x = self.resource_manager.game_data().get("tile_x") # number of tiles on the x-axis
-        self.grid_length_y = self.resource_manager.game_data().get("tile_y") # number of tiles on the y-axis
-        self.debug = self.resource_manager.game_data().get("debug") # flag to show debug or not
+        self.grid_length_x = self.resource_manager.game_data().get(
+            "tile_x"
+        )  # number of tiles on the x-axis
+        self.grid_length_y = self.resource_manager.game_data().get(
+            "tile_y"
+        )  # number of tiles on the y-axis
+        self.debug = self.resource_manager.game_data().get(
+            "debug"
+        )  # flag to show debug or not
 
         # add a World instance as member of the game
         self.world = World(
-            grid_length_x=self.grid_length_x, # number of tiles on the x-axis
-            grid_length_y=self.grid_length_y, # number of tiles on the y-axis
-            width=self.width, # screen width in pixels
-            height=self.height, # screen height in pixels
-            map_data=resource_manager.maps_data().get("test")
+            grid_length_x=self.grid_length_x,  # number of tiles on the x-axis
+            grid_length_y=self.grid_length_y,  # number of tiles on the y-axis
+            width=self.width,  # screen width in pixels
+            height=self.height,  # screen height in pixels
+            map_data=resource_manager.maps_data().get("test"),
+            map_textures_dict=resource_manager.textures_data_path(),
         )
-        self.TILE_SIZE = 32  
+        self.TILE_SIZE = 32
         # half size of a tile in pixels
         # should be real size of texture TILE_SIZE / 2
 
@@ -56,7 +71,9 @@ class Game:
 
         # add a UI instance as a member of the game
         self.ui = UIContainer(
-            position=pr.Vector2(self.width - 50, 10), # position in game coordinates (pixels) of the top left corner
+            position=pr.Vector2(
+                self.width - 50, 10
+            ),  # position in game coordinates (pixels) of the top left corner
             el=[
                 "building01",
                 "building02",
@@ -72,8 +89,8 @@ class Game:
                 "road_bottom_T_shape",
                 "road_left_T_shape",
                 "road_right_T_shape",
-                "trashcan"
-            ], # list of texture names used by the UI
+                "trashcan",
+            ],  # list of texture names used by the UI
             world=self.world,
         )
         # add the current UI Element selected, if any
@@ -85,7 +102,9 @@ class Game:
 
     def update(self) -> None:
         self.camera.update()
-        self.ui_element_selected = self.ui.update(current_selection=self.ui_element_selected)
+        self.ui_element_selected = self.ui.update(
+            current_selection=self.ui_element_selected
+        )
 
     def recenter_iso_tile(self, tile_in: pr.Vector2, scroll: pr.Vector2) -> pr.Vector2:
         """
@@ -144,7 +163,7 @@ class Game:
                     and hover_y == y
                 )
 
-                p = self.world.ground_tiles[x*self.grid_length_x + y].get_iso_rect()
+                p = self.world.ground_tiles[x * self.grid_length_x + y].get_iso_rect()
 
                 # Corner coordinate anchors for the diamond polygon face
                 top = pr.Vector2(p[2][0], p[2][1])
@@ -179,42 +198,67 @@ class Game:
                 # Draw filled tile if hovered, otherwise draw basic grid lines
                 if is_hovered:
                     # print(f"{x=}, {y=}, id:{x*self.grid_length_x + y}")
-                    current_tile: TileData = self.world.ground_tiles[x*self.grid_length_x + y]
+                    current_tile: TileData = self.world.ground_tiles[
+                        x * self.grid_length_x + y
+                    ]
                     current_tile_name = current_tile.get_tile_name()
-                    current_tile_texture: TextureData = self.world.textures.get(current_tile_name)
-                    current_tile_texture_is_buildable = current_tile_texture.get_buildable()
+                    current_tile_texture: TextureData = self.world.textures.get(
+                        current_tile_name
+                    )
+                    current_tile_texture_is_buildable = (
+                        current_tile_texture.get_buildable()
+                    )
 
                     # checking if there are building
                     if len(self.world.additional_tiles) > 0:
                         for tile in self.world.additional_tiles:
-                            if x == tile.get_grid_pos_x() and y == tile.get_grid_pos_y():
+                            if (
+                                x == tile.get_grid_pos_x()
+                                and y == tile.get_grid_pos_y()
+                            ):
                                 current_tile_name = tile.get_tile_name()
-                                current_tile_texture: TextureData = self.world.textures.get(current_tile_name)
-                                current_tile_texture_is_buildable = current_tile_texture.get_buildable()
+                                current_tile_texture: TextureData = (
+                                    self.world.textures.get(current_tile_name)
+                                )
+                                current_tile_texture_is_buildable = (
+                                    current_tile_texture.get_buildable()
+                                )
                                 break
 
                     if current_tile_texture_is_buildable:
                         pr.draw_triangle(
-                            top_centered, right_centered, bottom_centered, pr.Color(255, 255, 0, 100)
+                            top_centered,
+                            right_centered,
+                            bottom_centered,
+                            pr.Color(255, 255, 0, 100),
                         )  # Left half
                         pr.draw_triangle(
-                            bottom_centered, left_centered, top_centered, pr.Color(255, 255, 0, 100)
+                            bottom_centered,
+                            left_centered,
+                            top_centered,
+                            pr.Color(255, 255, 0, 100),
                         )  # Right half
                     else:
                         pr.draw_triangle(
-                            top_centered, right_centered, bottom_centered, pr.Color(255, 0, 0, 100)
+                            top_centered,
+                            right_centered,
+                            bottom_centered,
+                            pr.Color(255, 0, 0, 100),
                         )  # Left half
                         pr.draw_triangle(
-                            bottom_centered, left_centered, top_centered, pr.Color(255, 0, 0, 100)
+                            bottom_centered,
+                            left_centered,
+                            top_centered,
+                            pr.Color(255, 0, 0, 100),
                         )  # Right half
                     if (
-                        pr.is_mouse_button_pressed(0) and 
-                        self.ui_element_selected is not None and 
-                        current_tile_texture_is_buildable is True 
-                        and self.ui.ui_elements[self.ui_element_selected].name != "trashcan"
+                        pr.is_mouse_button_pressed(0)
+                        and self.ui_element_selected is not None
+                        and current_tile_texture_is_buildable is True
+                        and self.ui.ui_elements[self.ui_element_selected].name
+                        != "trashcan"
                     ):
-                        
-                        print(f"{x=}, {y=}, id:{x*self.grid_length_x + y}")
+                        print(f"{x=}, {y=}, id:{x * self.grid_length_x + y}")
                         self.world.add_to_world(
                             ui_element_name=str(
                                 self.ui.ui_elements[self.ui_element_selected].name
@@ -230,7 +274,13 @@ class Game:
         # debug
         pr.clear_background(self.background_color)
         pr.draw_fps(0, 0)
-        pr.draw_text(f"GROUND TILES: {len(self.world.ground_tiles)}, BUILDING TILES: {len(self.world.additional_tiles)}", 0, 40, 20, pr.GREEN)
+        pr.draw_text(
+            f"GROUND TILES: {len(self.world.ground_tiles)}, BUILDING TILES: {len(self.world.additional_tiles)}",
+            0,
+            40,
+            20,
+            pr.GREEN,
+        )
         if self.ui_element_selected is not None:
             pr.draw_text(
                 f"UI ID: {str(self.ui.ui_elements[self.ui_element_selected].id)}, TYPE: {str(self.ui.ui_elements[self.ui_element_selected].name)}",

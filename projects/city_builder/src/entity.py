@@ -1,8 +1,19 @@
 import pyray as pr
 from .world import World
 
+
 class Entity:
-    def __init__(self, id: int, name: str, width:int, height: int,  tile_x: int, tile_y: int, texture: pr.Texture, world: World) -> None:
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        width: int,
+        height: int,
+        tile_x: int,
+        tile_y: int,
+        texture: pr.Texture,
+        world: World,
+    ) -> None:
         self.id = id
         self.name = name
         self.width = width
@@ -19,9 +30,7 @@ class Entity:
         entity_tile = self.world.grid_to_world(grid_x=tile_x, grid_y=tile_y)
         render_pos = entity_tile.get("render_pos")
         tmp_pos = pr.Vector2(
-            render_pos[0] + self.width // 2,
-            render_pos[1]
-            + self.height // 4
+            render_pos[0] + self.width // 2, render_pos[1] + self.height // 4
         )
         pr.draw_texture_v(
             self.texture,

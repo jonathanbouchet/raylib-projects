@@ -5,13 +5,13 @@ from .world import World
 class UIElement:
     def __init__(
         self,
-        id: int, # unique id
-        position: pr.Vector2, # position of the element RELATIVe to the top left corner of the container
-        name: str, # texture name, e.g: building01
-        width: int, # texture width in pixels
-        height: int, # texture height in pixels
-        texture: pr.Texture, # texture itself
-        scale_factor: float, # scaling factor ; used to display a smaller version of the original texture
+        id: int,  # unique id
+        position: pr.Vector2,  # position of the element RELATIVe to the top left corner of the container
+        name: str,  # texture name, e.g: building01
+        width: int,  # texture width in pixels
+        height: int,  # texture height in pixels
+        texture: pr.Texture,  # texture itself
+        scale_factor: float,  # scaling factor ; used to display a smaller version of the original texture
     ) -> None:
         self.id = id
         self.position = position
@@ -62,13 +62,14 @@ class UIElement:
 
 class UIContainer:
     def __init__(
-            self, 
-            position: pr.Vector2, # position in game coordinates (pixels) of the top left corner
-            el: list[str], world: World # list of texture names used by the UI
-        ) -> None:
+        self,
+        position: pr.Vector2,  # position in game coordinates (pixels) of the top left corner
+        el: list[str],
+        world: World,  # list of texture names used by the UI
+    ) -> None:
         self.position = position
         self.ui_element_names: list[str] = el
-        self.ui_elements: list[UIElement] = [] # list of UI Element
+        self.ui_elements: list[UIElement] = []  # list of UI Element
         self.add_ui_elements(world=world)
 
     def add_ui_elements(self, world: World) -> None:
@@ -110,8 +111,6 @@ class UIContainer:
                     el.is_selected = True
                     return el.id
         return current_selection
-
-
 
         # for el in self.ui_elements:
         #     el.update()

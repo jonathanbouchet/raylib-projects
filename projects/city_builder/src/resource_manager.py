@@ -19,6 +19,17 @@ class ResourceManager:
     def textures_data(self) -> dict[str:str]:
         return self.resources_data.get("textures")
 
+    def textures_data_path(self) -> dict[str, str]:
+        """
+        - format the textures metadata as k,v "path_to_png":"tilen_name"
+        - this is used when loading a map
+        """
+        textures = self.resources_data.get("textures")
+        tmp = {}
+        for k, v in textures.items():
+            tmp[v.get("path")] = k
+        return tmp
+
     # extract maps data
     def maps_data(self) -> dict[str, dict[str, str]]:
         return self.resources_data.get("maps")

@@ -23,7 +23,7 @@ class TileData:
         render_pos: pr.Vector2,
         tile_name: str,
         tile_id: int,
-        grid_pos: dict[str: int], # indexes of tile from 0 to grid_length, eg: 0 .. 14
+        grid_pos: dict[str:int],  # indexes of tile from 0 to grid_length, eg: 0 .. 14
         iso_rect: pr.Vector2,
         cart_rect: pr.Vector2,
     ) -> None:
