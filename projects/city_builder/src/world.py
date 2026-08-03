@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from pathlib import Path
 import pyray as pr
 from .tiles import TextureData, TileData
@@ -55,7 +56,12 @@ class World:
             layer_name = layer.get("name")
             width, height = layer.get('width'), layer.get('width')
             data = layer.get("data")
-            layers_data.append({"name": layer_name, "width": width, "height": height, "data": data})
+            # transpose y->x data
+            data_1 = np.array(data).reshape(width, height)
+            data_2 = data_1.transpose()
+            data_3 = data_2.reshape(-1)
+            data_4 = data_3.tolist()
+            layers_data.append({"name": layer_name, "width": width, "height": height, "data": data_4})
 
         for layer in layers_data:
             print(layer.get('name'), layer.get('width'), layer.get('height'))
@@ -66,7 +72,7 @@ class World:
                     grid_len_y=height, 
                     tileset=textures_list
                 )
-                self.ground_tiles = res
+        self.ground_tiles = res
             # else:
             #     res = process_layer(
             #         data=layer.get("data"), 
