@@ -1,73 +1,14 @@
 import random
 from pathlib import Path
 import pyray as pr
+from .tiles import TextureData, TileData
+from .utils import parse_map, parse_tileset, process_layer
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
 
-class TextureData:
-    def __init__(self, name: str, texture: pr.Texture, is_buildable: bool) -> None:
-        self.name = name
-        self.texture = texture
-        self.is_buildable = is_buildable
-
-    def get_name(self) -> str:
-        return self.name
-
-    def get_texture(self) -> pr.Texture:
-        return self.texture
-
-    def get_buildable(self) -> bool:
-        return self.is_buildable
-
-
-class TileData:
-    def __init__(
-        self,
-        render_pos: pr.Vector2,
-        tile_name: str,
-        tile_id: int,
-        grid_pos: dict[str: int], # indexes of tile from 0 to grid_length, eg: 0 .. 14
-        iso_rect: pr.Vector2,
-        cart_rect: pr.Vector2,
-    ) -> None:
-        self.render_pos = render_pos
-        self.tile_name = tile_name
-        self.tile_id = tile_id
-        self.grid_pos = grid_pos
-        self.iso_rect = iso_rect
-        self.cart_rect = cart_rect
-
-    def get_render_pos(self) -> pr.Vector2:
-        return self.render_pos
-
-    def get_tile_name(self) -> str:
-        return self.tile_name
-
-    def get_grid_pos_x(self) -> int:
-        return self.grid_pos.get("tile_x")
-
-    def get_grid_pos_y(self) -> int:
-        return self.grid_pos.get("tile_y")
-
-    def get_tile_id(self) -> int:
-        return self.tile_id
-
-    def get_iso_rect(self) -> pr.Vector2:
-        return self.iso_rect
-
-    def get_cart_rect(self) -> pr.Vector2:
-        return self.cart_rect
-
-    def __str__(self) -> str:
-        return f"""
-        Tile ID: {self.get_tile_id()},
-        name: {self.get_tile_name()}, 
-        X: {self.get_grid_pos_x()},
-        Y: {self.get_grid_pos_y()}"""
-
 
 class World:
-    def __init__(self, grid_length_x: int, grid_length_y: int, width: int, height: int):
+    def __init__(self, grid_length_x: int, grid_length_y: int, width: int, height: int, map_data: dict[str, dict[str, str]]):
         self.grid_length_x = grid_length_x
         self.grid_length_y = grid_length_y
         self.width = width
@@ -75,8 +16,67 @@ class World:
         self.TILE_SIZE = 32
         self.ground_tiles: list[TileData] = [] # ground level = 1st layer of tiles: grass, sand water or road
         self.additional_tiles: list[TileData] = [] # upper level = 2nd layer of tiles: building
-        self.create_world()
+        self.load_world(map_data=map_data)
+        # self.create_world()
 
+    def load_world(self, map_data: dict[str, dict[str, str]]):
+        # tileset
+        tileset_name = f"{THIS_DIR}/{map_data.get("tileset")}"
+        print(f"{tileset_name=}")
+        tileset = parse_tileset(tileset_name=tileset_name)
+        textures_data = tileset.get("tileset")["tile"]
+        textures_list = []
+        for texture in textures_data:
+            # print(f"{texture=}")
+            texture_dict = {
+                'id': int(texture.get('@id')),
+                'source': texture.get('image')['@source'].split("city_builder/")[-1],
+                'width': texture.get('image')['@width'],
+                'height': texture.get('image')['@height']
+            }
+            textures_list.append(texture_dict)
+
+        print(f"{textures_list=}")
+
+        # map
+        # a. building layer: 
+        #   - if index is 0 -> no tile
+        #   - otherwise, index needs to be subtracted by 1 when referencing the textures_list
+        # b. ground layer:
+        #   - index needs to be subtracted by 1 when referencing the textures_list
+
+        map_name = f"{THIS_DIR}/{map_data.get("map")}"
+        print(f"{map_name=}")
+        map = parse_map(map_name=map_name)
+        layers = map.get("layers")
+        print(f"number of layers: {len(layers)}")
+        layers_data = []
+        for layer in layers:
+            layer_name = layer.get("name")
+            width, height = layer.get('width'), layer.get('width')
+            data = layer.get("data")
+            layers_data.append({"name": layer_name, "width": width, "height": height, "data": data})
+
+        for layer in layers_data:
+            print(layer.get('name'), layer.get('width'), layer.get('height'))
+            if layer.get('name') == "ground_tiles":
+                res = process_layer(
+                    data=layer.get("data"), 
+                    grid_len_x=width, 
+                    grid_len_y=height, 
+                    tileset=textures_list
+                )
+                self.ground_tiles = res
+            # else:
+            #     res = process_layer(
+            #         data=layer.get("data"), 
+            #         grid_len_x=width, 
+            #         grid_len_y=height, 
+            #         tileset=textures_list
+            #     )
+            #     self.additional_tiles = res
+        
+    
     def create_world(self) -> None:
         """
         - create a map by placing randomly textures
@@ -123,6 +123,10 @@ class World:
             "road_top_left_T",
             "road_bottom_left_T",
             "road_top_right_T",
+            "road_top_T_shape",
+            "road_bottom_T_shape",
+            "road_left_T_shape",
+            "road_right_T_shape",
         ]:
             print("replacing ground tile with road")
             self.replace_ground_tile(ui_element_name, tile_x, tile_y)

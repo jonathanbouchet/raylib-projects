@@ -27,6 +27,7 @@ class Game:
             grid_length_y=self.grid_length_y, # number of tiles on the y-axis
             width=self.width, # screen width in pixels
             height=self.height, # screen height in pixels
+            map_data=resource_manager.maps_data().get("test")
         )
         self.TILE_SIZE = 32  
         # half size of a tile in pixels
@@ -67,6 +68,10 @@ class Game:
                 "road_top_left_T",
                 "road_bottom_left_T",
                 "road_top_right_T",
+                "road_top_T_shape",
+                "road_bottom_T_shape",
+                "road_left_T_shape",
+                "road_right_T_shape",
                 "trashcan"
             ], # list of texture names used by the UI
             world=self.world,

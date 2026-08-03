@@ -62,6 +62,22 @@
             "path": "assets/landscapeTiles_126.png",
             "is_buildable": true
         },
+        "road_top_T_shape": {
+            "path": "assets/landscapeTiles_096.png",
+            "is_buildable": true
+        },
+        "road_bottom_T_shape": {
+            "path": "assets/landscapeTiles_089.png",
+            "is_buildable": true
+        },
+        "road_left_T_shape": {
+            "path": "assets/landscapeTiles_104.png",
+            "is_buildable": true
+        },
+        "road_right_T_shape": {
+            "path": "assets/landscapeTiles_097.png",
+            "is_buildable": true
+        },
         "trashcan": {
             "path": "assets/trashcanOpen.png",
             "is_buildable": false
@@ -75,7 +91,7 @@
         "test":
         {
             "tileset": "assets/maps/city_builder_tiles.tsx", 
-            "map": "assets/maps/city_builder_test_map.tmx"
+            "map": "assets/maps/city_builder_test_map.tmj"
         }
     }
 }
