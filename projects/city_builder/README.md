@@ -76,3 +76,15 @@ classDiagram
     ResourceManager --> Game: member
     TileData --> World: member
 ```
+
+## 2026-08-03
+### Loading maps from `Tiled`
+
+Maps are created with 3 layers:
+- `ground_tiles`
+- `road_tiles`
+- `building_tiles`
+
+in order to match the `layers` in `world.py`
+
+<img src="../../images/city_builder_v2.png" alt="" width="600">

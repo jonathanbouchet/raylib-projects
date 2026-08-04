@@ -30,8 +30,8 @@ class World:
         self.additional_tiles: list[
             TileData
         ] = []  # upper level = 2nd layer of tiles: building
-        self.load_world(map_data=map_data)
-        # self.create_world()
+        # self.load_world(map_data=map_data)
+        self.create_world()
 
     def load_world(self, map_data: dict[str, dict[str, str]]):
         # tileset
@@ -87,15 +87,16 @@ class World:
                     tileset=textures_list,
                     map_textures_dict=self.map_textures_dict,
                 )
-        self.ground_tiles = res
-        # else:
-        #     res = process_layer(
-        #         data=layer.get("data"),
-        #         grid_len_x=width,
-        #         grid_len_y=height,
-        #         tileset=textures_list
-        #     )
-        #     self.additional_tiles = res
+                self.ground_tiles = res
+            if layer.get("name") == "road_tiles":
+                res = process_layer(
+                    data=layer.get("data"),
+                    grid_len_x=width,
+                    grid_len_y=height,
+                    tileset=textures_list,
+                    map_textures_dict=self.map_textures_dict,
+                )
+                self.additional_tiles = res
 
     def create_world(self) -> None:
         """

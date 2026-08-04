@@ -75,39 +75,42 @@ def process_layer(
     WIDTH = 1080
     HEIGHT = 720
     print(f"{map_textures_dict=}")
+    print(f"{tileset=}")
     ground_tiles: list[TileData] = []
     tile_cnt = 0
     for grid_x in range(0, grid_len_x):
         for grid_y in range(0, grid_len_y):
-            texture_id = data[tile_cnt] - 1  # reminder: subtract 1 to reference tileset
-            tile = grid_to_world(grid_x=grid_x, grid_y=grid_y)
-            tile["tile"] = tileset[texture_id].get("source")
+            if data[tile_cnt]>0:
+                texture_id = data[tile_cnt] - 1  # reminder: subtract 1 to reference tileset
+                tile = grid_to_world(grid_x=grid_x, grid_y=grid_y)
+                tile["tile"] = tileset[texture_id].get("source")
 
-            # get the tiles indexes to isometric/cartesian data
-            render_pos = tile.get("render_pos")
-            tile_name = tile.get("tile")
-            iso_rect = tile.get("iso_rect")
-            cart_rect = tile.get("cart_rect")
+                # get the tiles indexes to isometric/cartesian data
+                render_pos = tile.get("render_pos")
+                tile_name = tile.get("tile")
+                iso_rect = tile.get("iso_rect")
+                cart_rect = tile.get("cart_rect")
 
-            if tile.get("tile") in map_textures_dict.keys():
-                tile_name = map_textures_dict.get(tile.get("tile"))
-            else:
-                # default tile
-                print(f"tile not found: {tile.get('tile')}")
-                tile_name = "grass"
+                if tile.get("tile") in map_textures_dict.keys():
+                    tile_name = map_textures_dict.get(tile.get("tile"))
+            # else:
+            #     # default tile
+            #     print(f"tile not found: {tile.get('tile')}")
+            #     tile_name = "grass"
 
-            # instantiate a TileData class
-            tmp = TileData(
-                render_pos=pr.Vector2(
-                    render_pos[0] + WIDTH // 2, render_pos[1] + HEIGHT // 4
-                ),
-                tile_name=tile_name,
-                tile_id=tile_cnt,
-                grid_pos={"tile_x": grid_x, "tile_y": grid_y},
-                iso_rect=iso_rect,
-                cart_rect=cart_rect,
-            )
-            ground_tiles.append(tmp)
+                # instantiate a TileData class
+                tmp = TileData(
+                    render_pos=pr.Vector2(
+                        render_pos[0] + WIDTH // 2, 
+                        render_pos[1] + HEIGHT // 4,
+                    ),
+                    tile_name=tile_name,
+                    tile_id=tile_cnt,
+                    grid_pos={"tile_x": grid_x, "tile_y": grid_y},
+                    iso_rect=iso_rect,
+                    cart_rect=cart_rect,
+                )
+                ground_tiles.append(tmp)
             tile_cnt += 1
 
     return ground_tiles

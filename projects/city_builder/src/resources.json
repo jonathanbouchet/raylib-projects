@@ -91,7 +91,7 @@
         "test":
         {
             "tileset": "assets/maps/city_builder_tiles.tsx", 
-            "map": "assets/maps/city_builder_test_map.tmj"
+            "map": "assets/maps/city_builder_test_map_2.tmj"
         }
     }
 }
