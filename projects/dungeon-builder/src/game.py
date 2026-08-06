@@ -154,6 +154,7 @@ class Game:
                     pr.draw_triangle(bottom_centered, left_centered, top_centered, pr.Color(255,255,0,100) ) # Right half
                     if pr.is_mouse_button_pressed(0):
                         pr.draw_text("mouse clicked", 0, 40, 20, pr.GREEN)
+                        self.world.find_path(grid_x=hover_x, grid_y=hover_y)  # runs pathfinder algorithm
 
 
     def end(self) -> None:

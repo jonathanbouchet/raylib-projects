@@ -2,6 +2,9 @@ import random
 from pathlib import Path
 import pyray as pr
 import numpy as np
+from pathfinding.core.grid import Grid
+from pathfinding.finder.a_star import AStarFinder
+from pathfinding.core.diagonal_movement import DiagonalMovement
 from .tiles import TileData, LayerTile
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
@@ -22,10 +25,6 @@ class World:
         self.print_props_grid()
 
     def create_world(self) -> None:
-        """
-        - create a map by placing randomly tree and rock textures
-        - grass (`block`) are placed for every tile automatically as the `floor`
-        """
         tile_count: int = 0
         for grid_x in range(0, self.grid_length_x):
             for grid_y in range(0, self.grid_length_y):
@@ -52,10 +51,6 @@ class World:
                 tile_count += 1
 
     def add_props_world(self)-> None:
-        """
-        - create a map by placing randomly tree and rock textures
-        - grass (`block`) are placed for evry tile automatically as the `floor`
-        """
         tile_count: int = 0
         for grid_x in range(0, self.grid_length_x):
             for grid_y in range(0, self.grid_length_y):
@@ -80,6 +75,37 @@ class World:
                 )
                 self.props_tiles.append(tmp)
                 tile_count += 1
+
+    def find_path(self, grid_x: int, grid_y: int) -> None:
+        # 1. instantiate the grid object: 1's are walkable tiles, 0's are non walkable
+        # in our case, these values come from the props_tiles
+        data = np.array([0 if t.tile_name is not None else 1 for t in self.props_tiles]).reshape(self.grid_length_x, self.grid_length_y)
+        grid = Grid(matrix=data)
+
+        # 2. define the start and end nodes (X, Y format)
+        start = grid.node(grid_x, grid_y)
+        end = grid.node(self.grid_length_x - 1, self.grid_length_y - 1)  # Bottom-right corner
+
+        # 3. create the finder instance
+        # finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
+        finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
+
+        # 4. find the path
+        # Warning: This operation mutates the grid object internally
+        path, runs = finder.find_path(start, end, grid)
+
+        # optional: output the results
+        print(f"Algorithm finished in {runs} iterations.")
+        print("Path found:")
+
+        # 5. convert node objects into readable (X, Y) coordinates
+        clean_path = [(node.x, node.y) for node in path]
+        print(clean_path)
+
+        # optional: Visualize the grid map with the path drawn on it
+        print("\nVisualized Grid Map:")
+        print(grid.grid_str(path=path, start=start, end=end))
+        
 
     def draw_floor(self, scroll: pr.Vector2):
         """draw all the floor tile in 1 draw call per frame"""
@@ -156,15 +182,18 @@ class World:
                 "tile": tile,
             }
         elif tile_type == LayerTile.props:
-            r = random.randint(1, 100)
-            if r <= 5:
-                tile = "stoneWallCorner_E"
-            elif r <= 10:
-                tile = "stoneWallArchway_N"
-            elif r <= 15:
-                tile = "stoneColumn_N"
+            if grid_x == self.grid_length_x - 1 and grid_y == self.grid_length_y - 1:
+                tile = None # reserve the last tile of the grid empty
             else:
-                tile = None
+                r = random.randint(1, 100)
+                if r <= 5:
+                    tile = "stoneWallCorner_E"
+                elif r <= 10:
+                    tile = "stoneWallArchway_N"
+                elif r <= 15:
+                    tile = "stoneColumn_N"
+                else:
+                    tile = None
         else:
             print(f"tile_type not found: {tile_type}")
             tile = None
