@@ -5,8 +5,8 @@ from src.game import Game
 
 async def main() -> None:
     game = Game(
-        width=1080, 
-        height=720, 
+        width=896, 
+        height=640, 
         fps_target=60, 
         name="app",
         background_color=pr.BLACK, 

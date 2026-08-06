@@ -25,9 +25,18 @@ class World:
         self.print_props_grid()
 
     def create_world(self) -> None:
+        """
+        - the grid is now filled accordingly pathfinder algo, ie, the values for grid_x are filled first 
+        - then the loop is done by the grid_y:
+        - [
+            [0,1,2], # y=0
+            [3,4,5], # y=1
+            ...    , 
+          ]
+        """
         tile_count: int = 0
-        for grid_x in range(0, self.grid_length_x):
-            for grid_y in range(0, self.grid_length_y):
+        for grid_y in range(0, self.grid_length_y):
+            for grid_x in range(0, self.grid_length_x):
                 world_tile = self.grid_to_world(tile_type=LayerTile.ground,grid_x=grid_x, grid_y=grid_y)
                 render_pos = world_tile.get("render_pos")
                 tile_name = world_tile.get("tile")
@@ -52,8 +61,8 @@ class World:
 
     def add_props_world(self)-> None:
         tile_count: int = 0
-        for grid_x in range(0, self.grid_length_x):
-            for grid_y in range(0, self.grid_length_y):
+        for grid_y in range(0, self.grid_length_y):
+            for grid_x in range(0, self.grid_length_x):
                 world_tile = self.grid_to_world(tile_type=LayerTile.props, grid_x=grid_x, grid_y=grid_y)
                 render_pos = world_tile.get("render_pos")
                 tile_name = world_tile.get("tile")
@@ -80,7 +89,9 @@ class World:
         # 1. instantiate the grid object: 1's are walkable tiles, 0's are non walkable
         # in our case, these values come from the props_tiles
         data = np.array([0 if t.tile_name is not None else 1 for t in self.props_tiles]).reshape(self.grid_length_x, self.grid_length_y)
+        print(f"{data=}")
         grid = Grid(matrix=data)
+        print(f"{grid=}")
 
         # 2. define the start and end nodes (X, Y format)
         start = grid.node(grid_x, grid_y)
@@ -88,7 +99,7 @@ class World:
 
         # 3. create the finder instance
         # finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
-        finder = AStarFinder(diagonal_movement=DiagonalMovement.only_when_no_obstacle)
+        finder = AStarFinder(diagonal_movement=DiagonalMovement.never)
 
         # 4. find the path
         # Warning: This operation mutates the grid object internally
@@ -113,16 +124,15 @@ class World:
             tile_name = tile.get_tile_name()
             render_pos = tile.get_render_pos()
             
-            if tile_name in ["stone_W" ,"stone_E", "dirt_W"]:
-                pr.draw_texture_v(
-                    self.textures.get(tile_name), 
-                    pr.Vector2(
-                        render_pos.x + self.origin.x + scroll.x,
-                        render_pos.y - (128 + self.TILE_SIZE - 10) 
-                        + self.origin.y + scroll.y 
-                        ), 
-                    pr.WHITE
-                )
+            pr.draw_texture_v(
+                self.textures.get(tile_name), 
+                pr.Vector2(
+                    render_pos.x + self.origin.x + scroll.x,
+                    render_pos.y - (128 + self.TILE_SIZE - 10) 
+                    + self.origin.y + scroll.y 
+                    ), 
+                pr.WHITE
+            )
 
     def draw_props(self, scroll: pr.Vector2):
         """draw all the floor tile in 1 draw call per frame"""
@@ -242,9 +252,9 @@ class World:
             pr.unload_texture(v)
 
     def print_props_grid(self) -> None:
-        data = np.array(['x' if t.tile_name is not None else 'o' for t in self.props_tiles]).reshape(self.grid_length_x, self.grid_length_y)
-        data_grid = data.transpose()
-        data_grid_fl = data_grid.reshape(-1)
+        data_0 = np.array(['x' if t.tile_name is not None else 'o' for t in self.props_tiles])
+        data = data_0.reshape(self.grid_length_x, self.grid_length_y)
+        data_grid_fl = data.reshape(-1)
         data_grid_fl_2 = data_grid_fl.tolist()
 
         cols = self.grid_length_x

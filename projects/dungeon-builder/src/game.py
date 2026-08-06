@@ -128,7 +128,8 @@ class Game:
                 )
 
                 # isometric grid
-                p = self.world.ground_tiles[x * self.tile_x + y].get_iso_rect()
+                # p = self.world.ground_tiles[x * self.tile_x + y].get_iso_rect()
+                p = self.world.ground_tiles[x + y * self.tile_y].get_iso_rect()
                 # print(p)
                 # Corner coordinate anchors for the diamond polygon face
                 top = pr.Vector2(p[2][0], p[2][1])
@@ -150,8 +151,8 @@ class Game:
                 # Draw filled tile if hovered, otherwise draw basic grid lines
                 if is_hovered:
                     # print(f"{top_centered.x=}, {top_centered.y=}")
-                    pr.draw_triangle(top_centered, right_centered, bottom_centered, pr.Color(255,255,0,100))  # Left half
-                    pr.draw_triangle(bottom_centered, left_centered, top_centered, pr.Color(255,255,0,100) ) # Right half
+                    pr.draw_triangle(top_centered, right_centered, bottom_centered, pr.Color(0, 255,0, 100))  # Left half
+                    pr.draw_triangle(bottom_centered, left_centered, top_centered, pr.Color(0, 255, 0, 100) ) # Right half
                     if pr.is_mouse_button_pressed(0):
                         pr.draw_text("mouse clicked", 0, 40, 20, pr.GREEN)
                         self.world.find_path(grid_x=hover_x, grid_y=hover_y)  # runs pathfinder algorithm
