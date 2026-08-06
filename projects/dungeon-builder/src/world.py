@@ -1,8 +1,10 @@
 import random
+from pathlib import Path
 import pyray as pr
 import numpy as np
 from .tiles import TileData, LayerTile
 
+THIS_DIR = (Path(__file__).parent.parent).resolve()
 
 class World:
     def __init__(self, grid_length_x: int, grid_length_y: int, width: int, height: int, origin: pr.Vector2):
@@ -184,15 +186,15 @@ class World:
 
     def load_textures(self):
         """load textures used throughout the game"""
-        stone_E = pr.load_texture("./assets/stone_E.png")
-        stone_W = pr.load_texture("./assets/stone_W.png")
-        stone_N = pr.load_texture("./assets/stone_N.png")
-        stone_S = pr.load_texture("./assets/stone_S.png")
-        dirt_W = pr.load_texture("./assets/dirt_W.png")
-        stoneWallArchway_N = pr.load_texture("./assets/stoneWallArchway_N.png")
-        stoneColumn_N = pr.load_texture("./assets/stoneColumn_N.png")
-        Male_4_Idle0 = pr.load_texture("./assets/Male_4_Idle0.png")
-        stoneWallCorner_E = pr.load_texture("./assets/stoneWallCorner_E.png")
+        stone_E = pr.load_texture(f"{THIS_DIR}/assets/stone_E.png")
+        stone_W = pr.load_texture(f"{THIS_DIR}/assets/stone_W.png")
+        stone_N = pr.load_texture(f"{THIS_DIR}/assets/stone_N.png")
+        stone_S = pr.load_texture(f"{THIS_DIR}/assets/stone_S.png")
+        dirt_W = pr.load_texture(f"{THIS_DIR}/assets/dirt_W.png")
+        stoneWallArchway_N = pr.load_texture(f"{THIS_DIR}/assets/stoneWallArchway_N.png")
+        stoneColumn_N = pr.load_texture(f"{THIS_DIR}/assets/stoneColumn_N.png")
+        Male_4_Idle0 = pr.load_texture(f"{THIS_DIR}/assets/Male_4_Idle0.png")
+        stoneWallCorner_E = pr.load_texture(f"{THIS_DIR}/assets/stoneWallCorner_E.png")
         
         self.textures = {
             "stone_E": stone_E,
