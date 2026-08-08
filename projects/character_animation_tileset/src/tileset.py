@@ -31,6 +31,7 @@ class TextureAnim:
         self.position = position  # position of the texture
         self.anim_index = 0
         self.scale_factor = scale
+        self.fps_target_mult: float = 1.0
 
     def extract_tilesets(self, textures: dict[str: dict[str, Any]]):
         tilesets = {}
@@ -44,9 +45,11 @@ class TextureAnim:
         self.animations = tilesets
         self.current_animation_name = list(tilesets.keys())[0]
 
-    def update(self, selected_value: int) -> None:
+    def update(self, selected_value: int, fps_target_mult: float) -> None:
         if selected_value is not None:
             self.current_animation_name = list(self.animations.keys())[selected_value]
+        if fps_target_mult is not None:
+            self.fps_target_mult = fps_target_mult
 
     def get_animation_names(self) -> list[str]:
         return list(self.animations.keys())
@@ -88,6 +91,6 @@ class TextureAnim:
             0,
             pr.WHITE,
         )
-        self.anim_index += current_num_row / fps
+        self.anim_index += current_num_row / int(fps*self.fps_target_mult)
         if self.anim_index > current_num_row:
             self.anim_index = 0

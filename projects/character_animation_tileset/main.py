@@ -1,6 +1,6 @@
 import asyncio
 import pyray as pr
-from src.game_manager_async import Game
+from src.game_manager_tileset import Game
 
 async def main() -> None:
     game = Game(

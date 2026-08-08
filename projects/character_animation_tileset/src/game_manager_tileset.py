@@ -23,6 +23,8 @@ class Game:
         self.active_index_ptr:int = pr.ffi.new("int *", 0)
         self.ui_dropdown_edit_mode = False
         self.ui_selected_value: int = None
+        self.fps_value = pr.ffi.new("float *", 1.0)
+        # self.fps_value_selected = pr.ffi.new("bool *", False)
 
     def init(self):
         pr.init_window(self.width, self.height, self.name)
@@ -35,15 +37,16 @@ class Game:
     def update(self) -> None:
         anims = self.animations.get_animation_names()
         if pr.gui_dropdown_box(
-            pr.Rectangle(0, 40, 120, 20),
+            pr.Rectangle(0, 60, 120, 20),
                 ";".join(anims),
                 self.active_index_ptr,
                 self.ui_dropdown_edit_mode,
             ):
                 self.ui_dropdown_edit_mode = not self.ui_dropdown_edit_mode
                 self.ui_selected_value = self.active_index_ptr[0]
+        pr.gui_slider(pr.Rectangle(0, 40, 120, 20), "0", "2", self.fps_value, 0.0, 2.0)
 
-        self.animations.update(selected_value=self.ui_selected_value)
+        self.animations.update(selected_value=self.ui_selected_value, fps_target_mult=self.fps_value[0])
 
     async def run(self) -> None:
         while not pr.window_should_close():
