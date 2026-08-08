@@ -1,15 +1,28 @@
 from pathlib import Path
+from typing import Any
 import pyray as pr
 
 THIS_DIR = (Path(__file__).parent.parent / "assets").resolve()
 print(f"{str(THIS_DIR)=}")
 
 
-def load_tilesets() -> dict[str: pr.Texture]:
+def load_tilesets() -> dict[str: dict[str, Any]]:
+    """load animations as a tileset"""
     return {
-        "explosion": pr.load_texture(f"{THIS_DIR}/Explosions.png"),
-        "foam": pr.load_texture(f"{THIS_DIR}/Foam.png"),
-        "rock": pr.load_texture(f"{THIS_DIR}/Rocks_01.png")
+        "explosion": {
+            "texture": pr.load_texture(f"{THIS_DIR}/Explosions.png"),
+            "tile_size": 192
+        },
+
+        "foam": {
+            "texture": pr.load_texture(f"{THIS_DIR}/Foam.png"),
+            "tile_size": 192
+        },
+        "rock": 
+        {
+            "texture": pr.load_texture(f"{THIS_DIR}/Rocks_01.png"),
+            "tile_size": 128
+        }
     }
 
 

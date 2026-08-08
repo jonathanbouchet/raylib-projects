@@ -1,3 +1,5 @@
+from enum import Enum
+from typing import Any
 import pyray as pr
 
 """ 
@@ -21,49 +23,71 @@ Note:
 class TextureAnim:
     def __init__(
         self,
-        texture_path: str,
+        textures: list[pr.Texture],
         position: pr.Vector2,
-        tile_size: int,
         scale: float = 1.0,
     ) -> None:
-        self.texture = pr.load_texture(texture_path)
+        self.tilesets = self.extract_tilesets(textures=textures)
         self.position = position  # position of the texture
-        self.tile_size = tile_size  # size in pizels of a single frame
-        self.texture_width = self.texture.width  # width in pixels of the whole texture
-        self.texture_heigth = (
-            self.texture.height
-        )  # height in pixels of the whole texture
-        self.texture_len = int(
-            self.texture.width / self.texture.height
-        )  # number of animations in the texture
         self.anim_index = 0
         self.scale_factor = scale
+
+    def extract_tilesets(self, textures: dict[str: dict[str, Any]]):
+        tilesets = {}
+        for texture_name, texture_data in textures.items():
+            tilesets[texture_name] = {
+                "texture": texture_data.get('texture'),
+                "tile_size": texture_data.get('tile_size'),
+                "num_rows": int(texture_data.get('texture').width / texture_data.get('tile_size')),
+                "num_cols": int(texture_data.get('texture').height / texture_data.get('tile_size'))
+            }
+        self.animations = tilesets
+        self.current_animation_name = list(tilesets.keys())[0]
+
+    def update(self, selected_value: int) -> None:
+        if selected_value is not None:
+            self.current_animation_name = list(self.animations.keys())[selected_value]
+
+    def get_animation_names(self) -> list[str]:
+        return list(self.animations.keys())
+
+    def __str__(self) -> str:
+        res = ""
+        for texture_name, texture_data in self.animations.items():
+            res += f"name:{texture_name}, tile size: {texture_data.get('tile_size')}, rows: {texture_data.get('num_rows')}, cols: {texture_data.get('num_cols')}\n"
+        return res
 
     def draw(self, dt: float, fps: int) -> None:
         if fps == 0:
             return
+        # get the current animation data
+        current_animation_data = self.animations.get(self.current_animation_name)
+        current_animation_frames = current_animation_data.get('texture')
+        current_num_row = current_animation_data.get('num_rows')
+        current_num_col = current_animation_data.get('num_cols')
+        current_tile_size = current_animation_data.get('tile_size')
 
         # first animation start at index=0
-        tile_x = int(self.anim_index) * self.tile_size
+        tile_x = int(self.anim_index) * current_tile_size
         tile_y = 0
 
         # point to the ith animation frame in the texture
-        source_rec = pr.Rectangle(tile_x, tile_y, self.tile_size, self.tile_size)
+        source_rec = pr.Rectangle(tile_x, tile_y, current_tile_size, current_tile_size)
 
         dest_rec = pr.Rectangle(
             self.position.x,
             self.position.y,
-            int(self.tile_size * self.scale_factor),
-            int(self.tile_size * self.scale_factor),
+            int(current_tile_size * self.scale_factor),
+            int(current_tile_size * self.scale_factor),
         )
         pr.draw_texture_pro(
-            self.texture,
+            current_animation_frames,
             source_rec,
             dest_rec,
             pr.Vector2(dest_rec.width / 2, dest_rec.height / 2),
             0,
             pr.WHITE,
         )
-        self.anim_index += self.texture_len / fps
-        if self.anim_index > self.texture_len:
+        self.anim_index += current_num_row / fps
+        if self.anim_index > current_num_row:
             self.anim_index = 0
