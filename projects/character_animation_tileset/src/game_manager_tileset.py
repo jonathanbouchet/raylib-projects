@@ -39,18 +39,18 @@ class Game:
     def update(self) -> None:
         anims = self.animations.get_animation_names()
         if pr.gui_dropdown_box(
-            pr.Rectangle(0, 60, 120, 20),
+            pr.Rectangle(15, 60, 120, 20),
                 ";".join(anims),
                 self.active_index_ptr,
                 self.ui_dropdown_edit_mode,
             ):
                 self.ui_dropdown_edit_mode = not self.ui_dropdown_edit_mode
                 self.ui_selected_value = self.active_index_ptr[0]
-        pr.gui_slider(pr.Rectangle(0, 40, 120, 20), "0", "2", self.fps_value, 0.0, 2.0)
+        pr.gui_slider(pr.Rectangle(15, 40, 120, 20), "0.1", "2", self.fps_value, 0.1, 2.0)
 
         if self.ui_selected_value == 3:
             if pr.gui_dropdown_box(
-            pr.Rectangle(0, 80, 120, 20),
+            pr.Rectangle(15, 80, 120, 20),
                 "E;SE;S;SW;W;NW;N;NW",
                 self.walk_animation_direction,
                 self.walk_animation_direction_edit_mode,
