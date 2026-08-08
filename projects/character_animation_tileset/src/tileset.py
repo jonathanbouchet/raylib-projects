@@ -32,6 +32,7 @@ class TextureAnim:
         self.anim_index = 0
         self.scale_factor = scale
         self.fps_target_mult: float = 1.0
+        self.animation_row: int = 0
 
     def extract_tilesets(self, textures: dict[str: dict[str, Any]]):
         tilesets = {}
@@ -45,11 +46,13 @@ class TextureAnim:
         self.animations = tilesets
         self.current_animation_name = list(tilesets.keys())[0]
 
-    def update(self, selected_value: int, fps_target_mult: float) -> None:
+    def update(self, selected_value: int, fps_target_mult: float, animation_row: int) -> None:
         if selected_value is not None:
             self.current_animation_name = list(self.animations.keys())[selected_value]
         if fps_target_mult is not None:
             self.fps_target_mult = fps_target_mult
+        if animation_row is not None: # make sure it doesn't mess with the other animations that only have 1 row
+            self.animation_row = animation_row
 
     def get_animation_names(self) -> list[str]:
         return list(self.animations.keys())
@@ -72,7 +75,7 @@ class TextureAnim:
 
         # first animation start at index=0
         tile_x = int(self.anim_index) * current_tile_size
-        tile_y = 0
+        tile_y = self.animation_row * current_tile_size
 
         # point to the ith animation frame in the texture
         source_rec = pr.Rectangle(tile_x, tile_y, current_tile_size, current_tile_size)

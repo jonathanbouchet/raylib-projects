@@ -22,6 +22,11 @@ def load_tilesets() -> dict[str: dict[str, Any]]:
         {
             "texture": pr.load_texture(f"{THIS_DIR}/Rocks_01.png"),
             "tile_size": 128
+        },
+        "walk":
+        {
+            "texture": pr.load_texture(f"{THIS_DIR}/Walk.png"),
+            "tile_size": 128
         }
     }
 
