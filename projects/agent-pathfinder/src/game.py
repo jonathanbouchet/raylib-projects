@@ -26,9 +26,9 @@ class Game:
     def init(self):
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
-        # load textures
+        # load and add textures
         self.textures = load_textures()
-
+        # create world
         self.world = World(
             grid_length_x=self.tile_x,
             grid_length_y=self.tile_y,
@@ -37,6 +37,8 @@ class Game:
             textures=self.textures,
         )
         _ = [print(tile) for tile in self.world.ground_tiles[0:5]]
+        # add markers to game
+        self.markers = self.world.make_path()
 
     def update(self) -> None:
         dt = pr.get_frame_time()
@@ -60,6 +62,7 @@ class Game:
     def draw(self) -> None:
         self.world.draw_ground()
         self.world.draw_grid()
+        self.world.draw_path()
 
     def end(self) -> None:
         pr.close_window()
