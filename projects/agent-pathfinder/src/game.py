@@ -1,17 +1,19 @@
 import asyncio
 import pyray as pr
+from .utils import load_textures
+from .world import World
 
 
 class Game:
     def __init__(
         self,
-        width: int,
-        height: int,
-        fps_target: int,
-        name: str,
-        background_color: pr.Color,
-        tile_x: int,
-        tile_y: int,
+        width: int, # game window width
+        height: int, # game window height
+        fps_target: int, # game fps target
+        name: str, # game name
+        background_color: pr.Color, # game background color
+        tile_x: int, # number of tiles on X-axis
+        tile_y: int, # number of tiles on Y-axis
     ):
         self.width = width
         self.height = height
@@ -24,6 +26,17 @@ class Game:
     def init(self):
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
+        # load textures
+        self.textures = load_textures()
+
+        self.world = World(
+            grid_length_x=self.tile_x,
+            grid_length_y=self.tile_y,
+            width=self.width,
+            height=self.height,
+            textures=self.textures,
+        )
+        _ = [print(tile) for tile in self.world.ground_tiles[0:5]]
 
     def update(self) -> None:
         dt = pr.get_frame_time()
@@ -42,9 +55,11 @@ class Game:
         pr.clear_background(self.background_color)
         if pr.get_frame_time():
             pr.draw_text(f"FPS: {int(1.0 / pr.get_frame_time())}", 0, 0, 20, pr.RED)
+            pr.draw_text(f"GROUND: {len(self.world.ground_tiles)}", 0, 20, 20, pr.RED)
 
     def draw(self) -> None:
-        pass
+        self.world.draw_ground()
+        self.world.draw_grid()
 
     def end(self) -> None:
         pr.close_window()
