@@ -2,18 +2,19 @@ import asyncio
 import pyray as pr
 from .utils import load_textures
 from .world import World
+from .waypoint import WayPoints
 
 
 class Game:
     def __init__(
         self,
-        width: int, # game window width
-        height: int, # game window height
-        fps_target: int, # game fps target
-        name: str, # game name
-        background_color: pr.Color, # game background color
-        tile_x: int, # number of tiles on X-axis
-        tile_y: int, # number of tiles on Y-axis
+        width: int,  # game window width
+        height: int,  # game window height
+        fps_target: int,  # game fps target
+        name: str,  # game name
+        background_color: pr.Color,  # game background color
+        tile_x: int,  # number of tiles on X-axis
+        tile_y: int,  # number of tiles on Y-axis
     ):
         self.width = width
         self.height = height
@@ -37,8 +38,12 @@ class Game:
             textures=self.textures,
         )
         _ = [print(tile) for tile in self.world.ground_tiles[0:5]]
-        # add markers to game
+        # add markers
         self.markers = self.world.make_path()
+        # create and add waypoints
+        self.waypoints = WayPoints(positions=self.markers)
+        print(f"number of waypoints: {self.waypoints.get_number_waypoints()}")
+        print(f"First waypoint: {self.waypoints.get_waypoint(idx=0)}")
 
     def update(self) -> None:
         dt = pr.get_frame_time()
@@ -63,6 +68,7 @@ class Game:
         self.world.draw_ground()
         self.world.draw_grid()
         self.world.draw_path()
+        self.waypoints.draw_waypoint_index()
 
     def end(self) -> None:
         pr.close_window()

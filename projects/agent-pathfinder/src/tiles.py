@@ -17,7 +17,7 @@ class TileData:
         tile_id: int,
         grid_pos: dict[str:int],  # indexes of tile from 0 to grid_length, eg: 0 .. 14
         cart_rect: pr.Vector2,
-        path: list[pr.Vector2]
+        path: list[pr.Vector2],
     ) -> None:
         self.texture_id = texture_id
         self.render_pos = render_pos
