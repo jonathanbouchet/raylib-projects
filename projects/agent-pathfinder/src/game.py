@@ -58,7 +58,7 @@ class Game:
         self.agent = Agent(
             position=pr.Vector2(288, 96),
             direction=pr.Vector2(1, 0),
-            speed=100,
+            speed=50,
             debug=True,
             texture = self.textures.get("agent")["texture"],
             width=20,

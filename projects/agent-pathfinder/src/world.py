@@ -109,7 +109,7 @@ class World:
         ]
 
         if tile_type == LayerTile.ground:
-            tile = self.predefined_tile(grid_x=grid_x, grid_y=grid_y)
+            tile = self.map1(grid_x=grid_x, grid_y=grid_y)
 
         out = {
             "grid": [grid_x, grid_y],
@@ -121,7 +121,7 @@ class World:
         }
         return out
 
-    def predefined_tile(self, grid_x, grid_y) -> str:
+    def map1(self, grid_x, grid_y) -> str:
         tilename: str = ""
         if (grid_x > 1 and grid_x < 6) and (grid_y == 1 or grid_y == 6):
             tilename = "straight_L_R"
@@ -139,6 +139,7 @@ class World:
             tilename = random.choice(["grass", "dirt"])
         return tilename
 
+
     def make_path(self) -> list[pr.Vector2]:
         """
         - a path is build by adding all the paths data for each tile in the map
@@ -148,23 +149,6 @@ class World:
         """
         markers = []
         for tile in self.ground_tiles:
-            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B", "curve_L_B", "curve_L_T","curve_B_R", "curve_T_R"]:
-            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B"]:
-            #     grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
-            #     start = pr.vector2_add(
-            #         tile.get_path()[0],
-            #         pr.Vector2(
-            #             int(grid_x * self.TILE_SIZE), int(grid_y * self.TILE_SIZE)
-            #         ),
-            #     )
-            #     end = pr.vector2_add(
-            #         tile.get_path()[1],
-            #         pr.Vector2(
-            #             int(grid_x * self.TILE_SIZE), int(grid_y * self.TILE_SIZE)
-            #         ),
-            #     )
-            #     markers.append([int(start.x), int(start.y)])
-            #     markers.append([int(end.x), int(end.y)])
 
             if tile.get_tile_name() in [
                 "curve_L_B",
@@ -194,21 +178,6 @@ class World:
         - for the curve segments, there are 3 markers
         """
         for tile in self.ground_tiles:
-            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B", "curve_L_B", "curve_L_T","curve_B_R", "curve_T_R"]:
-            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B"]:
-            #     grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
-            #     start = pr.vector2_add(
-            #         tile.get_path()[0],
-            #         pr.Vector2(grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),
-            #     )
-            #     end = pr.vector2_add(
-            #         tile.get_path()[1],
-            #         pr.Vector2(grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),
-            #     )
-            #     pr.draw_line_ex(start, end, 1, pr.RED)
-            #     pr.draw_rectangle_v(start, pr.Vector2(5, 5), pr.RED)
-            #     pr.draw_rectangle_v(end, pr.Vector2(5, 5), pr.RED)
-
             if tile.get_tile_name() in [
                 "curve_L_B",
                 "curve_L_T",
