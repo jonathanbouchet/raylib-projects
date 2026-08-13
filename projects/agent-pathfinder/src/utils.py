@@ -15,39 +15,118 @@ def load_textures():
     curve_L_B = pr.load_texture(f"{THIS_DIR}/assets/roadTexture_03.png")
     curve_T_R = pr.load_texture(f"{THIS_DIR}/assets/roadTexture_14.png")
     curve_L_T = pr.load_texture(f"{THIS_DIR}/assets/roadTexture_15.png")
+    agent = pr.load_texture(f"{THIS_DIR}/assets/compact_blue.png")
 
     return {
-        "curve_L_B": {
-            "texture": curve_L_B,
-            "id": 0,
-            "path": [pr.Vector2(0, 32), pr.Vector2(20, 40), pr.Vector2(32, 64)],
-        },
-        "curve_L_T": {
-            "texture": curve_L_T,
-            "id": 1,
-            "path": [pr.Vector2(0, 32), pr.Vector2(20, 24), pr.Vector2(32, 0)],
-        },
-        "curve_B_R": {
-            "texture": curve_B_R,
-            "id": 2,
-            "path": [pr.Vector2(32, 64), pr.Vector2(40, 44), pr.Vector2(64, 32)],
-        },
-        "curve_T_R": {
-            "texture": curve_T_R,
-            "id": 3,
-            "path": [pr.Vector2(32, 0), pr.Vector2(40, 26), pr.Vector2(64, 32)],
-        },
-        "straight_L_R": {
-            "texture": straight_horizontal,
-            "id": 4,
-            "path": [pr.Vector2(0, 32), (64, 32)],
-        },
-        "straight_T_B": {
-            "texture": straight_vertical,
-            "id": 5,
-            "path": [pr.Vector2(32, 0), (32, 64)],
-        },
-        "crossing": {"texture": crossing, "id": 6, "path": []},
-        "grass": {"texture": grass, "id": 7, "path": []},
-        "dirt": {"texture": dirt, "id": 8, "path": []},
-    }
+            "curve_L_B": {
+                "texture": curve_L_B,
+                "id": 0,
+                "path": [pr.Vector2(0, 32), pr.Vector2(20, 40), pr.Vector2(32, 64)],
+            },
+            "curve_L_T": {
+                "texture": curve_L_T,
+                "id": 1,
+                "path": [pr.Vector2(0, 32), pr.Vector2(20, 24), pr.Vector2(32, 0)],
+            },
+            "curve_B_R": {
+                "texture": curve_B_R,
+                "id": 2,
+                "path": [pr.Vector2(32, 64), pr.Vector2(40, 44), pr.Vector2(64, 32)],
+            },
+            "curve_T_R": {
+                "texture": curve_T_R,
+                "id": 3,
+                "path": [pr.Vector2(32, 0), pr.Vector2(40, 26), pr.Vector2(64, 32)],
+            },
+            "straight_L_R": {
+                "texture": straight_horizontal,
+                "id": 4,
+                "path": [pr.Vector2(0, 32), (32, 32) ,(64, 32)],
+            },
+            "straight_T_B": {
+                "texture": straight_vertical,
+                "id": 5,
+                "path": [pr.Vector2(32, 0), (32, 32), (32, 64)],
+            },
+            "crossing": {"texture": crossing, "id": 6, "path": []},
+            "grass": {"texture": grass, "id": 7, "path": []},
+            "dirt": {"texture": dirt, "id": 8, "path": []},
+            "agent": {"texture": agent, "id": 9, "path": []}
+        }
+    
+
+    # return {
+    #     "curve_L_B": {
+    #         "texture": curve_L_B,
+    #         "id": 0,
+    #         "path": [pr.Vector2(0, 32), pr.Vector2(20, 40), pr.Vector2(32, 64)],
+    #     },
+    #     "curve_L_T": {
+    #         "texture": curve_L_T,
+    #         "id": 1,
+    #         "path": [pr.Vector2(0, 32), pr.Vector2(20, 24), pr.Vector2(32, 0)],
+    #     },
+    #     "curve_B_R": {
+    #         "texture": curve_B_R,
+    #         "id": 2,
+    #         "path": [pr.Vector2(32, 64), pr.Vector2(40, 44), pr.Vector2(64, 32)],
+    #     },
+    #     "curve_T_R": {
+    #         "texture": curve_T_R,
+    #         "id": 3,
+    #         "path": [pr.Vector2(32, 0), pr.Vector2(40, 26), pr.Vector2(64, 32)],
+    #     },
+    #     "straight_L_R": {
+    #         "texture": straight_horizontal,
+    #         "id": 4,
+    #         "path": [pr.Vector2(0, 32), (64, 32)],
+    #     },
+    #     "straight_T_B": {
+    #         "texture": straight_vertical,
+    #         "id": 5,
+    #         "path": [pr.Vector2(32, 0), (32, 64)],
+    #     },
+    #     "crossing": {"texture": crossing, "id": 6, "path": []},
+    #     "grass": {"texture": grass, "id": 7, "path": []},
+    #     "dirt": {"texture": dirt, "id": 8, "path": []},
+    #     "agent": {"texture": agent, "id": 9, "path": []}
+    # }
+
+    # return {
+    #         "curve_L_B": {
+    #             "texture": curve_L_B,
+    #             "id": 0,
+    #             "path": [pr.Vector2(0, 32), pr.Vector2(32, 64)],
+    #         },
+    #         "curve_L_T": {
+    #             "texture": curve_L_T,
+    #             "id": 1,
+    #             "path": [pr.Vector2(0, 32), pr.Vector2(32, 0)],
+    #         },
+    #         "curve_B_R": {
+    #             "texture": curve_B_R,
+    #             "id": 2,
+    #             "path": [pr.Vector2(32, 64), pr.Vector2(64, 32)],
+    #         },
+    #         "curve_T_R": {
+    #             "texture": curve_T_R,
+    #             "id": 3,
+    #             "path": [pr.Vector2(32, 0), pr.Vector2(64, 32)],
+    #         },
+    #         "straight_L_R": {
+    #             "texture": straight_horizontal,
+    #             "id": 4,
+    #             "path": [pr.Vector2(0, 32), (64, 32)],
+    #         },
+    #         "straight_T_B": {
+    #             "texture": straight_vertical,
+    #             "id": 5,
+    #             "path": [pr.Vector2(32, 0), (32, 64)],
+    #         },
+    #         "crossing": {"texture": crossing, "id": 6, "path": []},
+    #         "grass": {"texture": grass, "id": 7, "path": []},
+    #         "dirt": {"texture": dirt, "id": 8, "path": []},
+    #         "agent": {"texture": agent, "id": 9, "path": []}
+    #     }
+
+

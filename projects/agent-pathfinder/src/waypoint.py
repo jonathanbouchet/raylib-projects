@@ -13,6 +13,9 @@ class WayPoint:
     def get_idx(self) -> int:
         return self.idx
 
+    def get_position(self) -> pr.Vector2:
+        return self.position
+
     def move(self, dt: float) -> None:
         pass
 
@@ -46,10 +49,13 @@ class WayPoints:
                 position=position,
             )
             self.waypoints.append(point_sprite)
-            self.waypoint_ids.append(cnt - 1)
+            self.waypoint_ids.append(cnt)
 
     def get_waypoint(self, idx: int) -> WayPoint:
         return self.waypoints[idx]
+
+    def get_previous(self, idx: int) -> WayPoint:
+        return self.waypoints[idx-1]
 
     def get_number_waypoints(self) -> int:
         return len(self.waypoints)
@@ -57,7 +63,7 @@ class WayPoints:
     def draw_waypoint_index(self) -> None:
         for cnt, waypoint in enumerate(self.waypoints):
             pr.draw_text(
-                str(cnt),
+                str(waypoint.get_idx()),
                 int(waypoint.position.x),
                 int(waypoint.position.y - 20),
                 10,

@@ -148,28 +148,31 @@ class World:
         """
         markers = []
         for tile in self.ground_tiles:
-            if tile.get_tile_name() in ["straight_L_R", "straight_T_B"]:
-                grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
-                start = pr.vector2_add(
-                    tile.get_path()[0],
-                    pr.Vector2(
-                        int(grid_x * self.TILE_SIZE), int(grid_y * self.TILE_SIZE)
-                    ),
-                )
-                end = pr.vector2_add(
-                    tile.get_path()[1],
-                    pr.Vector2(
-                        int(grid_x * self.TILE_SIZE), int(grid_y * self.TILE_SIZE)
-                    ),
-                )
-                markers.append([int(start.x), int(start.y)])
-                markers.append([int(end.x), int(end.y)])
+            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B", "curve_L_B", "curve_L_T","curve_B_R", "curve_T_R"]:
+            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B"]:
+            #     grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
+            #     start = pr.vector2_add(
+            #         tile.get_path()[0],
+            #         pr.Vector2(
+            #             int(grid_x * self.TILE_SIZE), int(grid_y * self.TILE_SIZE)
+            #         ),
+            #     )
+            #     end = pr.vector2_add(
+            #         tile.get_path()[1],
+            #         pr.Vector2(
+            #             int(grid_x * self.TILE_SIZE), int(grid_y * self.TILE_SIZE)
+            #         ),
+            #     )
+            #     markers.append([int(start.x), int(start.y)])
+            #     markers.append([int(end.x), int(end.y)])
 
             if tile.get_tile_name() in [
                 "curve_L_B",
                 "curve_L_T",
                 "curve_B_R",
                 "curve_T_R",
+                "straight_L_R", 
+                "straight_T_B"
             ]:
                 grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
                 paths = tile.get_path()
@@ -191,25 +194,28 @@ class World:
         - for the curve segments, there are 3 markers
         """
         for tile in self.ground_tiles:
-            if tile.get_tile_name() in ["straight_L_R", "straight_T_B"]:
-                grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
-                start = pr.vector2_add(
-                    tile.get_path()[0],
-                    pr.Vector2(grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),
-                )
-                end = pr.vector2_add(
-                    tile.get_path()[1],
-                    pr.Vector2(grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),
-                )
-                pr.draw_line_ex(start, end, 1, pr.RED)
-                pr.draw_rectangle_v(start, pr.Vector2(5, 5), pr.RED)
-                pr.draw_rectangle_v(end, pr.Vector2(5, 5), pr.RED)
+            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B", "curve_L_B", "curve_L_T","curve_B_R", "curve_T_R"]:
+            # if tile.get_tile_name() in ["straight_L_R", "straight_T_B"]:
+            #     grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
+            #     start = pr.vector2_add(
+            #         tile.get_path()[0],
+            #         pr.Vector2(grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),
+            #     )
+            #     end = pr.vector2_add(
+            #         tile.get_path()[1],
+            #         pr.Vector2(grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),
+            #     )
+            #     pr.draw_line_ex(start, end, 1, pr.RED)
+            #     pr.draw_rectangle_v(start, pr.Vector2(5, 5), pr.RED)
+            #     pr.draw_rectangle_v(end, pr.Vector2(5, 5), pr.RED)
 
             if tile.get_tile_name() in [
                 "curve_L_B",
                 "curve_L_T",
                 "curve_B_R",
                 "curve_T_R",
+                "straight_L_R", 
+                "straight_T_B"
             ]:
                 grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
                 paths = tile.get_path()
@@ -225,7 +231,7 @@ class World:
                     pr.draw_line_ex(start, end, 1, pr.RED)
                 for p in paths:
                     point = pr.vector2_add(
-                        tile.get_path()[i],
+                        p,
                         pr.Vector2(grid_x * self.TILE_SIZE, grid_y * self.TILE_SIZE),
                     )
                     pr.draw_rectangle_v(point, pr.Vector2(5, 5), pr.RED)

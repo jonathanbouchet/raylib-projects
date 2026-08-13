@@ -3,6 +3,7 @@ import pyray as pr
 from .utils import load_textures
 from .world import World
 from .waypoint import WayPoints
+from .agent import Agent
 
 
 class Game:
@@ -27,8 +28,10 @@ class Game:
     def init(self):
         pr.init_window(self.width, self.height, self.name)
         pr.set_target_fps(self.fps_target)
+
         # load and add textures
         self.textures = load_textures()
+
         # create world
         self.world = World(
             grid_length_x=self.tile_x,
@@ -38,15 +41,35 @@ class Game:
             textures=self.textures,
         )
         _ = [print(tile) for tile in self.world.ground_tiles[0:5]]
+
         # add markers
         self.markers = self.world.make_path()
+        # uniques_markers, uniques_index = self.world.make_path()
+        # print(f"{uniques_index=}")
+
         # create and add waypoints
+        # self.waypoints = WayPoints(positions=uniques_markers)
         self.waypoints = WayPoints(positions=self.markers)
         print(f"number of waypoints: {self.waypoints.get_number_waypoints()}")
-        print(f"First waypoint: {self.waypoints.get_waypoint(idx=0)}")
+        for i in range(0, self.waypoints.get_number_waypoints()):
+            print(i, self.waypoints.get_waypoint(idx=i))
+
+        # create agent
+        self.agent = Agent(
+            position=pr.Vector2(288, 96),
+            direction=pr.Vector2(1, 0),
+            speed=100,
+            debug=True,
+            texture = self.textures.get("agent")["texture"],
+            width=20,
+            height=20,
+            color=pr.YELLOW
+        )
+        self.agent.set_initial_waypoint(markers=self.markers)
 
     def update(self) -> None:
         dt = pr.get_frame_time()
+        self.agent.update(dt=dt, waypoints=self.waypoints)
 
     async def run(self) -> None:
         while not pr.window_should_close():
@@ -69,6 +92,7 @@ class Game:
         self.world.draw_grid()
         self.world.draw_path()
         self.waypoints.draw_waypoint_index()
+        self.agent.draw()
 
     def end(self) -> None:
         pr.close_window()
