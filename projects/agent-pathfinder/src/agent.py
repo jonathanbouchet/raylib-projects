@@ -73,7 +73,7 @@ class Agent:
         dir_y = current_waypoint.position.y - self.position.y
 
         distance = math.hypot(dir_x, dir_y)
-        reach_threshold = 1
+        reach_threshold = 10
 
         if distance <= reach_threshold:
             # Snap to target and switch to next waypoint

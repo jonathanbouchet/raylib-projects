@@ -44,11 +44,8 @@ class Game:
 
         # add markers
         self.markers = self.world.make_path()
-        # uniques_markers, uniques_index = self.world.make_path()
-        # print(f"{uniques_index=}")
 
         # create and add waypoints
-        # self.waypoints = WayPoints(positions=uniques_markers)
         self.waypoints = WayPoints(positions=self.markers)
         print(f"number of waypoints: {self.waypoints.get_number_waypoints()}")
         for i in range(0, self.waypoints.get_number_waypoints()):
@@ -58,7 +55,7 @@ class Game:
         self.agent = Agent(
             position=pr.Vector2(288, 96),
             direction=pr.Vector2(1, 0),
-            speed=50,
+            speed=200,
             debug=True,
             texture = self.textures.get("agent")["texture"],
             width=20,
