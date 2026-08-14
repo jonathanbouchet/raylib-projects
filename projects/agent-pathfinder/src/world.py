@@ -1,7 +1,6 @@
 import random
 from pathlib import Path
 import pyray as pr
-import numpy as np
 from .tiles import TileData, LayerTile
 from .utils import parse_map, parse_tileset, dict_texture_name_to_game
 
@@ -144,7 +143,6 @@ class World:
             tilename = random.choice(["grass", "dirt"])
         return tilename
 
-
     def make_path(self) -> list[pr.Vector2]:
         """
         - a path is build by adding all the paths data for each tile in the map
@@ -154,14 +152,13 @@ class World:
         """
         markers = []
         for tile in self.ground_tiles:
-
             if tile.get_tile_name() in [
                 "curve_L_B",
                 "curve_L_T",
                 "curve_B_R",
                 "curve_T_R",
-                "straight_L_R", 
-                "straight_T_B"
+                "straight_L_R",
+                "straight_T_B",
             ]:
                 grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
                 paths = tile.get_path()
@@ -188,8 +185,8 @@ class World:
                 "curve_L_T",
                 "curve_B_R",
                 "curve_T_R",
-                "straight_L_R", 
-                "straight_T_B"
+                "straight_L_R",
+                "straight_T_B",
             ]:
                 grid_x, grid_y = tile.get_grid_tile_x(), tile.get_grid_tile_y()
                 paths = tile.get_path()
@@ -220,7 +217,9 @@ class World:
         for texture in textures_data:
             texture_dict = {
                 "id": int(texture.get("@id")),
-                "source": texture.get("image")["@source"].split("agent-pathfinder/")[-1].split("assets/")[-1],
+                "source": texture.get("image")["@source"]
+                .split("agent-pathfinder/")[-1]
+                .split("assets/")[-1],
                 "width": texture.get("image")["@width"],
                 "height": texture.get("image")["@height"],
             }
@@ -254,16 +253,18 @@ class World:
             tileset = textures_list
             for grid_y in range(0, self.grid_length_y):
                 for grid_x in range(0, self.grid_length_x):
-                    if data[tile_count]>0:
-                        texture_id = data[tile_count] - 1  # reminder: subtract 1 to reference tileset
+                    if data[tile_count] > 0:
+                        texture_id = (
+                            data[tile_count] - 1
+                        )  # reminder: subtract 1 to reference tileset
                         print(f"{texture_id=}")
                         # temporary overwrite the name of the tile
                         tmp = tileset[texture_id].get("source")
                         world_tile = self.grid_to_world(
-                            tile_type=LayerTile.prebuilt, 
-                            grid_x=grid_x, 
-                            grid_y=grid_y, 
-                            name_from_map=tmp
+                            tile_type=LayerTile.prebuilt,
+                            grid_x=grid_x,
+                            grid_y=grid_y,
+                            name_from_map=tmp,
                         )
 
                         render_pos = world_tile.get("render_pos")
@@ -283,12 +284,7 @@ class World:
                         )
                         self.ground_tiles.append(tmp_tile)
                         tile_count += 1
-                        
 
     def unload_textures(self) -> None:
         for k, v in self.textures.items():
             pr.unload_texture(v.get("texture"))
-
-
-
-    

@@ -55,7 +55,7 @@ class WayPoints:
         return self.waypoints[idx]
 
     def get_previous(self, idx: int) -> WayPoint:
-        return self.waypoints[idx-1]
+        return self.waypoints[idx - 1]
 
     def get_number_waypoints(self) -> int:
         return len(self.waypoints)

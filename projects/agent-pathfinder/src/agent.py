@@ -1,10 +1,6 @@
-import random
 import math
-import copy
-import numpy as np
-from scipy.spatial import KDTree
 import pyray as pr
-from .waypoint import WayPoints, WayPoint
+from .waypoint import WayPoints
 
 
 def lerp_angle_2d(current_angle, target_angle, t):
@@ -27,7 +23,7 @@ class Agent:
         texture: pr.Texture,
         width: int,
         height: int,
-        color: pr.Color
+        color: pr.Color,
     ) -> None:
         self.position = position
         self.direction = direction
@@ -38,7 +34,7 @@ class Agent:
         self.is_turning = False
         self.texture = texture
         self.origin = pr.Vector2(self.texture.width / 2, self.texture.height / 2)
-        self.width=width
+        self.width = width
         self.height = height
         self.color = color
         self.previous: int = None
@@ -79,7 +75,7 @@ class Agent:
             # Snap to target and switch to next waypoint
             self.position.x = current_waypoint.position.x
             self.position.y = current_waypoint.position.y
-            
+
             # test: finding closest marker to the current position
             tmp: list[pr.Vector2] = []
             for cnt, waypoint in enumerate(waypoints.waypoints):
@@ -97,18 +93,21 @@ class Agent:
 
             # handle rotation
             targetpos = waypoints.get_waypoint(self.waypoint_idx).get_position()
-            direction = pr.Vector2(targetpos.x - self.position.x, targetpos.y - self.position.y)
+            direction = pr.Vector2(
+                targetpos.x - self.position.x, targetpos.y - self.position.y
+            )
             self.rotation = 90 + math.degrees(math.atan2(direction.y, direction.x))
-            
 
     def find_closest(self, markers: list[pr.Vector2]) -> int:
-            min = 0
-            first = markers[0]
-            min_dst_sq = (self.position.x - first.x)**2 + (self.position.y - first.y)**2
-            for i in range(1, len(markers)):
-                current = markers[i]
-                current_dst_sq = (self.position.x - current.x)**2 + (self.position.y - current.y)**2
-                if current_dst_sq < min_dst_sq:
-                    min = i
-                    min_dst_sq = current_dst_sq
-            return min
+        min = 0
+        first = markers[0]
+        min_dst_sq = (self.position.x - first.x) ** 2 + (self.position.y - first.y) ** 2
+        for i in range(1, len(markers)):
+            current = markers[i]
+            current_dst_sq = (self.position.x - current.x) ** 2 + (
+                self.position.y - current.y
+            ) ** 2
+            if current_dst_sq < min_dst_sq:
+                min = i
+                min_dst_sq = current_dst_sq
+        return min

@@ -60,10 +60,10 @@ class Game:
             direction=pr.Vector2(1, 0),
             speed=200,
             debug=True,
-            texture = self.textures.get("agent")["texture"],
+            texture=self.textures.get("agent")["texture"],
             width=20,
             height=20,
-            color=pr.YELLOW
+            color=pr.YELLOW,
         )
         self.agent.set_initial_waypoint(markers=self.markers)
 

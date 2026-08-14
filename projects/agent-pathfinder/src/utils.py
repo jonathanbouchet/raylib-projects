@@ -5,6 +5,7 @@ import xmltodict
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
 
+
 def parse_map(map_name: str):
     print(map_name)
     with open(map_name, "r") as f:
@@ -32,41 +33,42 @@ def load_textures():
     agent = pr.load_texture(f"{THIS_DIR}/assets/compact_blue.png")
 
     return {
-            "curve_L_B": {
-                "texture": curve_L_B,
-                "id": 0,
-                "path": [pr.Vector2(0, 32), pr.Vector2(20, 40), pr.Vector2(32, 64)],
-            },
-            "curve_L_T": {
-                "texture": curve_L_T,
-                "id": 1,
-                "path": [pr.Vector2(0, 32), pr.Vector2(20, 24), pr.Vector2(32, 0)],
-            },
-            "curve_B_R": {
-                "texture": curve_B_R,
-                "id": 2,
-                "path": [pr.Vector2(32, 64), pr.Vector2(40, 44), pr.Vector2(64, 32)],
-            },
-            "curve_T_R": {
-                "texture": curve_T_R,
-                "id": 3,
-                "path": [pr.Vector2(32, 0), pr.Vector2(40, 26), pr.Vector2(64, 32)],
-            },
-            "straight_L_R": {
-                "texture": straight_horizontal,
-                "id": 4,
-                "path": [pr.Vector2(0, 32), (32, 32) ,(64, 32)],
-            },
-            "straight_T_B": {
-                "texture": straight_vertical,
-                "id": 5,
-                "path": [pr.Vector2(32, 0), (32, 32), (32, 64)],
-            },
-            "crossing": {"texture": crossing, "id": 6, "path": []},
-            "grass": {"texture": grass, "id": 7, "path": []},
-            "dirt": {"texture": dirt, "id": 8, "path": []},
-            "agent": {"texture": agent, "id": 9, "path": []}
-        }
+        "curve_L_B": {
+            "texture": curve_L_B,
+            "id": 0,
+            "path": [pr.Vector2(0, 32), pr.Vector2(20, 40), pr.Vector2(32, 64)],
+        },
+        "curve_L_T": {
+            "texture": curve_L_T,
+            "id": 1,
+            "path": [pr.Vector2(0, 32), pr.Vector2(20, 24), pr.Vector2(32, 0)],
+        },
+        "curve_B_R": {
+            "texture": curve_B_R,
+            "id": 2,
+            "path": [pr.Vector2(32, 64), pr.Vector2(40, 44), pr.Vector2(64, 32)],
+        },
+        "curve_T_R": {
+            "texture": curve_T_R,
+            "id": 3,
+            "path": [pr.Vector2(32, 0), pr.Vector2(40, 26), pr.Vector2(64, 32)],
+        },
+        "straight_L_R": {
+            "texture": straight_horizontal,
+            "id": 4,
+            "path": [pr.Vector2(0, 32), (32, 32), (64, 32)],
+        },
+        "straight_T_B": {
+            "texture": straight_vertical,
+            "id": 5,
+            "path": [pr.Vector2(32, 0), (32, 32), (32, 64)],
+        },
+        "crossing": {"texture": crossing, "id": 6, "path": []},
+        "grass": {"texture": grass, "id": 7, "path": []},
+        "dirt": {"texture": dirt, "id": 8, "path": []},
+        "agent": {"texture": agent, "id": 9, "path": []},
+    }
+
 
 dict_texture_name_to_game = {
     "roadTexture_25.png": "grass",
@@ -80,5 +82,3 @@ dict_texture_name_to_game = {
     "roadTexture_15.png": "curve_L_T",
     "compact_blue.png": "agent",
 }
-
-
