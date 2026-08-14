@@ -6,6 +6,7 @@ class LayerTile(Enum):
     ground = 0
     props = 1
     entity = 2
+    prebuilt = 3
 
 
 class TileData:

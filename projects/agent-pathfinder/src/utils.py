@@ -1,7 +1,21 @@
 import pyray as pr
 from pathlib import Path
+import json
+import xmltodict
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
+
+def parse_map(map_name: str):
+    print(map_name)
+    with open(map_name, "r") as f:
+        map_dict = json.load(f)
+    return map_dict
+
+
+def parse_tileset(tileset_name: str):
+    with open(tileset_name, "r", encoding="utf-8") as f:
+        data_dict = xmltodict.parse(f.read())
+    return data_dict
 
 
 def load_textures():
@@ -53,5 +67,18 @@ def load_textures():
             "dirt": {"texture": dirt, "id": 8, "path": []},
             "agent": {"texture": agent, "id": 9, "path": []}
         }
+
+dict_texture_name_to_game = {
+    "roadTexture_25.png": "grass",
+    "roadTexture_26.png": "dirt",
+    "roadTexture_01.png": "straight_T_B",
+    "roadTexture_13.png": "straight_L_R",
+    "roadTexture_10.png": "crossing",
+    "roadTexture_02.png": "curve_B_R",
+    "roadTexture_03.png": "curve_L_B",
+    "roadTexture_14.png": "curve_T_R",
+    "roadTexture_15.png": "curve_L_T",
+    "compact_blue.png": "agent",
+}
 
 

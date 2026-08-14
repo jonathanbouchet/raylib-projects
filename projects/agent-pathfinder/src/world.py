@@ -1,7 +1,9 @@
 import random
 from pathlib import Path
 import pyray as pr
+import numpy as np
 from .tiles import TileData, LayerTile
+from .utils import parse_map, parse_tileset, dict_texture_name_to_game
 
 THIS_DIR = (Path(__file__).parent.parent).resolve()
 
@@ -22,7 +24,7 @@ class World:
         self.textures = textures
         self.TILE_SIZE = 64
         self.ground_tiles: list[TileData] = []
-        self.create_world()
+        # self.create_world()
 
     def create_world(self) -> None:
         """
@@ -84,7 +86,7 @@ class World:
             )
 
     def grid_to_world(
-        self, tile_type: LayerTile, grid_x: int, grid_y: int
+        self, tile_type: LayerTile, grid_x: int, grid_y: int, name_from_map: str = None
     ) -> dict[str, list[int, int] | list[tuple[int, int]]]:
         """
         - return for each tile its data / info:
@@ -110,6 +112,9 @@ class World:
 
         if tile_type == LayerTile.ground:
             tile = self.map1(grid_x=grid_x, grid_y=grid_y)
+        elif tile_type == LayerTile.prebuilt:
+            tile = dict_texture_name_to_game.get(name_from_map)
+            print(f"{name_from_map=}, {tile=}")
 
         out = {
             "grid": [grid_x, grid_y],
@@ -205,6 +210,85 @@ class World:
                     )
                     pr.draw_rectangle_v(point, pr.Vector2(5, 5), pr.RED)
 
+    def load_map(self, map_data: str, tileset: str):
+        # tileset
+        tileset_name = f"{THIS_DIR}/assets/maps/{tileset}"
+        print(f"{tileset_name=}")
+        tileset = parse_tileset(tileset_name=tileset_name)
+        textures_data = tileset.get("tileset")["tile"]
+        textures_list = []
+        for texture in textures_data:
+            texture_dict = {
+                "id": int(texture.get("@id")),
+                "source": texture.get("image")["@source"].split("agent-pathfinder/")[-1].split("assets/")[-1],
+                "width": texture.get("image")["@width"],
+                "height": texture.get("image")["@height"],
+            }
+            textures_list.append(texture_dict)
+        print(f"{textures_list=}")
+
+        map_name = f"{THIS_DIR}/assets/maps/{map_data}"
+        print(f"{map_name=}")
+        map = parse_map(map_name=map_name)
+        layers = map.get("layers")
+        print(f"number of layers: {len(layers)}")
+        layers_data = []
+        for layer in layers:
+            layer_name = layer.get("name")
+            width, height = layer.get("width"), layer.get("width")
+            data = layer.get("data")
+            layers_data.append(
+                {"name": layer_name, "width": width, "height": height, "data": data}
+            )
+            # transpose y->x data
+            # data_1 = np.array(data).reshape(width, height)
+            # data_2 = data_1.transpose()
+            # data_3 = data_2.reshape(-1)
+            # data_4 = data_3.tolist()
+            # layers_data.append(
+            #     {"name": layer_name, "width": width, "height": height, "data": data_4}
+            # )
+            # data = layer.get("data")
+
+            tile_count = 0
+            tileset = textures_list
+            for grid_y in range(0, self.grid_length_y):
+                for grid_x in range(0, self.grid_length_x):
+                    if data[tile_count]>0:
+                        texture_id = data[tile_count] - 1  # reminder: subtract 1 to reference tileset
+                        print(f"{texture_id=}")
+                        # temporary overwrite the name of the tile
+                        tmp = tileset[texture_id].get("source")
+                        world_tile = self.grid_to_world(
+                            tile_type=LayerTile.prebuilt, 
+                            grid_x=grid_x, 
+                            grid_y=grid_y, 
+                            name_from_map=tmp
+                        )
+
+                        render_pos = world_tile.get("render_pos")
+                        tile_name = world_tile.get("tile")
+                        cart_rect = world_tile.get("cart_rect")
+                        texture_id = world_tile.get("texture_id")
+                        path = world_tile.get("path")
+                        # instantiate a TileData class
+                        tmp_tile = TileData(
+                            render_pos=render_pos,
+                            tile_name=tile_name,
+                            tile_id=tile_count,
+                            grid_pos={"tile_x": grid_x, "tile_y": grid_y},
+                            cart_rect=cart_rect,
+                            texture_id=texture_id,
+                            path=path,
+                        )
+                        self.ground_tiles.append(tmp_tile)
+                        tile_count += 1
+                        
+
     def unload_textures(self) -> None:
         for k, v in self.textures.items():
             pr.unload_texture(v.get("texture"))
+
+
+
+    

@@ -40,6 +40,9 @@ class Game:
             height=self.height,
             textures=self.textures,
         )
+        # test map loading
+        self.world.load_map(map_data="2d_road_test_map.tmj", tileset="2d_road.tsx")
+
         _ = [print(tile) for tile in self.world.ground_tiles[0:5]]
 
         # add markers
@@ -48,8 +51,8 @@ class Game:
         # create and add waypoints
         self.waypoints = WayPoints(positions=self.markers)
         print(f"number of waypoints: {self.waypoints.get_number_waypoints()}")
-        for i in range(0, self.waypoints.get_number_waypoints()):
-            print(i, self.waypoints.get_waypoint(idx=i))
+        # for i in range(0, self.waypoints.get_number_waypoints()):
+        #     print(i, self.waypoints.get_waypoint(idx=i))
 
         # create agent
         self.agent = Agent(
