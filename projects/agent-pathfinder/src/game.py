@@ -24,6 +24,8 @@ class Game:
         self.background_color = background_color
         self.tile_x = tile_x
         self.tile_y = tile_y
+        self.player_speed = pr.ffi.new("float *", 200.0) # UI slider for player speed
+        self.player_reach_threshold = pr.ffi.new("float *", 10.0) # UI slider for player reach distance 
 
     def init(self):
         pr.init_window(self.width, self.height, self.name)
@@ -64,11 +66,14 @@ class Game:
             width=20,
             height=20,
             color=pr.YELLOW,
+            reach_threshold=10
         )
         self.agent.set_initial_waypoint(markers=self.markers)
 
     def update(self) -> None:
         dt = pr.get_frame_time()
+        self.agent.speed = self.player_speed[0]
+        self.agent.reach_threshold = self.player_reach_threshold[0]
         self.agent.update(dt=dt, waypoints=self.waypoints)
 
     async def run(self) -> None:
@@ -84,8 +89,8 @@ class Game:
         # debug
         pr.clear_background(self.background_color)
         if pr.get_frame_time():
-            pr.draw_text(f"FPS: {int(1.0 / pr.get_frame_time())}", 0, 0, 20, pr.RED)
-            pr.draw_text(f"GROUND: {len(self.world.ground_tiles)}", 0, 20, 20, pr.RED)
+            pr.draw_text(f"FPS: {int(1.0 / pr.get_frame_time())}", 400, 0, 20, pr.RED)
+            pr.draw_text(f"GROUND: {len(self.world.ground_tiles)}", 400, 20, 20, pr.RED)
 
     def draw(self) -> None:
         self.world.draw_ground()
@@ -93,6 +98,10 @@ class Game:
         self.world.draw_path()
         self.waypoints.draw_waypoint_index()
         self.agent.draw()
+        pr.gui_slider(pr.Rectangle(300, 40, 60, 10), "1", "400", self.player_speed, 1, 400)
+        pr.gui_slider(pr.Rectangle(300, 60, 60, 10), "1", "20", self.player_reach_threshold, 1, 20)
+        pr.draw_text(f"SPEED: {int(self.agent.speed)}", 400, 40, 20, pr.RED)
+        pr.draw_text(f"REACH DISTANCE: {int(self.agent.reach_threshold)}", 400, 60, 20, pr.RED)
 
     def end(self) -> None:
         pr.close_window()

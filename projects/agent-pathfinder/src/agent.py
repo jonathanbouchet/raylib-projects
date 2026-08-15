@@ -24,6 +24,7 @@ class Agent:
         width: int,
         height: int,
         color: pr.Color,
+        reach_threshold: int
     ) -> None:
         self.position = position
         self.direction = direction
@@ -37,6 +38,7 @@ class Agent:
         self.width = width
         self.height = height
         self.color = color
+        self.reach_threshold = reach_threshold
         self.previous: int = None
 
     def set_initial_waypoint(self, markers: list[pr.Vector2]) -> None:
@@ -69,7 +71,7 @@ class Agent:
         dir_y = current_waypoint.position.y - self.position.y
 
         distance = math.hypot(dir_x, dir_y)
-        reach_threshold = 10
+        reach_threshold = self.reach_threshold
 
         if distance <= reach_threshold:
             # Snap to target and switch to next waypoint
