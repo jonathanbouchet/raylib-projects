@@ -27,7 +27,7 @@ class Static:
         body_size: pr.Vector2,
         elasticity: float,
         friction: float,
-        color: pr.Color
+        color: pr.Color,
     ) -> None:
         self.static_body = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.static_body.position = (position.x, position.y)
@@ -55,3 +55,30 @@ class Static:
                 int(self.static_body.position.y),
                 pr.GREEN,
             )
+
+
+class Dynamic:
+    def __init__(
+        self,
+        position: pr.Vector2,
+        radius: int,
+        velocity: pr.Vector2,
+        elasticity: float,
+        friction: float,
+        color: pr.Color,
+    ) -> None:
+        self.body = pymunk.Body(1.0, 100)
+        self.body.position = (position.x, position.y)
+        self.body.velocity = (velocity.x, velocity.y)
+        self.radius = radius
+        self.shape = pymunk.Circle(self.body, self.radius)
+        self.shape.elasticity = elasticity
+        self.shape.friction = friction
+        self.color = color
+
+    def draw(self) -> None:
+        pr.draw_circle_v(
+            pr.Vector2(self.body.position.x, self.body.position.y),
+            self.radius,
+            self.color,
+        )

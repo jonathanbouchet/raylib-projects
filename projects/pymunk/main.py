@@ -1,7 +1,7 @@
 import asyncio
 import pymunk
 import pyray as pr
-from src.pymunk_body import Static
+from src.pymunk_body import Static, Dynamic
 
 # 1. Initialize Raylib window
 SCREEN_WIDTH = 600
@@ -24,41 +24,43 @@ async def main() -> None:
     space.gravity = (0.0, 500.0)
 
     floor = Static(
-        position=pr.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT - FLOOR_THICKNESS//2), 
-        body_size=pr.Vector2(SCREEN_WIDTH, FLOOR_THICKNESS), 
-        elasticity=1.0, 
+        position=pr.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT - FLOOR_THICKNESS // 2),
+        body_size=pr.Vector2(SCREEN_WIDTH, FLOOR_THICKNESS),
+        elasticity=1.0,
         friction=1.0,
-        color = pr.RAYWHITE
+        color=pr.RAYWHITE,
     )
     left_wall = Static(
-            position=pr.Vector2(FLOOR_THICKNESS//2, (SCREEN_HEIGHT - FLOOR_THICKNESS) // 2), 
-            body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS), 
-            elasticity=1.0, 
-            friction=1.0,
-            color = pr.ORANGE
+        position=pr.Vector2(
+            FLOOR_THICKNESS // 2, (SCREEN_HEIGHT - FLOOR_THICKNESS) // 2
+        ),
+        body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS),
+        elasticity=1.0,
+        friction=1.0,
+        color=pr.ORANGE,
     )
     right_wall = Static(
-                position=pr.Vector2(SCREEN_WIDTH - FLOOR_THICKNESS//2, (SCREEN_HEIGHT - FLOOR_THICKNESS) // 2), 
-                body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS), 
-                elasticity=1.0, 
-                friction=1.0,
-                color = pr.MAGENTA
-        )
+        position=pr.Vector2(
+            SCREEN_WIDTH - FLOOR_THICKNESS // 2, (SCREEN_HEIGHT - FLOOR_THICKNESS) // 2
+        ),
+        body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS),
+        elasticity=1.0,
+        friction=1.0,
+        color=pr.MAGENTA,
+    )
+    ball = Dynamic(
+        position=pr.Vector2(SCREEN_WIDTH // 2, 100),
+        radius=20,
+        velocity=pr.Vector2(1000, 100),
+        elasticity=1,
+        friction=0.5,
+        color=pr.Color(57, 255, 20, 255),
+    )
 
     space.add(floor.static_body, floor.shape)
     space.add(left_wall.static_body, left_wall.shape)
     space.add(right_wall.static_body, right_wall.shape)
-
-    # create a dynamic body
-    circle_radius = 20
-    ball_body = pymunk.Body(1.0, 100)
-    ball_body.position = (SCREEN_WIDTH // 2, 100)
-    ball_body.velocity = (1000, 100)
-    ball_shape = pymunk.Circle(ball_body, circle_radius)
-    ball_shape.elasticity = 1
-    ball_shape.friction = 0.5
-    space.add(ball_body, ball_shape)
-
+    space.add(ball.body, ball.shape)
 
     while not pr.window_should_close():
         # logic here
@@ -71,8 +73,7 @@ async def main() -> None:
         floor.draw()
         left_wall.draw()
         right_wall.draw()
-
-        pr.draw_circle_v(pr.Vector2(ball_body.position.x, ball_body.position.y), circle_radius, pr.Color(57, 255, 20, 255))
+        ball.draw()
 
         pr.draw_fps(0, 0)
         pr.draw_line(SCREEN_WIDTH // 2, 0, SCREEN_WIDTH // 2, SCREEN_HEIGHT, pr.RED)
