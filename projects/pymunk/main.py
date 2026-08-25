@@ -64,7 +64,14 @@ async def main() -> None:
         color=pr.Color(57, 255, 20, 255),
     )
 
-    player = DynamicMouse(position=pr.Vector2(100, 100), body_size=pr.Vector2(20, 200), elasticity=1, friction=0, color=pr.RED)
+    player = DynamicMouse(
+        position=pr.Vector2(100, 100),
+        body_size=pr.Vector2(20, 200),
+        elasticity=1,
+        friction=0,
+        color=pr.RED,
+        debug=True,
+    )
 
     space.add(floor.static_body, floor.shape)
     space.add(ceilling.static_body, ceilling.shape)
@@ -76,7 +83,7 @@ async def main() -> None:
     while not pr.window_should_close():
         # logic here
         dt = pr.get_frame_time()
-        player.update()
+        player.update(dt=dt)
 
         # rendering
         pr.begin_drawing()

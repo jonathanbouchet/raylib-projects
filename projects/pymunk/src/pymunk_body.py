@@ -1,5 +1,6 @@
 import pymunk
 import pyray as pr
+import math
 
 """
 this class defines a pymunk STATIC body based on a raylib definition:
@@ -83,15 +84,17 @@ class Dynamic:
             self.color,
         )
 
+
 class DynamicMouse:
     def __init__(
-    self,
-    position: pr.Vector2,
-    body_size: pr.Vector2,
-    elasticity: float,
-    friction: float,
-    color: pr.Color,
-) -> None:
+        self,
+        position: pr.Vector2,
+        body_size: pr.Vector2,
+        elasticity: float,
+        friction: float,
+        color: pr.Color,
+        debug: bool,
+    ) -> None:
         self.body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
         self.body.position = (position.x, position.y)
         self.body_size = (body_size.x, body_size.y)
@@ -99,26 +102,57 @@ class DynamicMouse:
         self.shape.elasticity = elasticity
         self.shape.friction = friction
         self.color = color
-        self.debug = False
+        self.debug = debug
+        self.rotation_speed = math.radians(90)  # 90 degrees per second
 
-    def update(self):
+    def update(self, dt: float):
         pos = pr.get_mouse_position()
+        # update position
         self.body.position = (pos.x, pos.y)
+        # update rotation
+        self.body.angle += self.rotation_speed * dt * 2
 
     def draw(self) -> None:
-        pr.draw_rectangle_v(
-            pr.Vector2(
-                self.body.position.x - self.body_size[0] / 2,
-                self.body.position.y - self.body_size[1] / 2,
-            ),
-            self.body_size,
+        center = pr.Vector2(
+            self.body.position.x,
+            self.body.position.y,
+        )
+
+        rectangle = pr.Rectangle(
+            center.x,
+            center.y,
+            self.body_size[0],
+            self.body_size[1],
+        )
+
+        # pymunk angle: radians
+        # raylib angle: degrees
+        rotation_degrees = math.degrees(self.body.angle)
+        # origin is half the rectangle size, so it rotates around its center
+        origin = pr.Vector2(
+            self.body_size[0] / 2,
+            self.body_size[1] / 2,
+        )
+
+        pr.draw_rectangle_pro(
+            rectangle,
+            origin,
+            rotation_degrees,
             self.color,
         )
+
         if self.debug:
-            pr.draw_line(
-                int(self.body.position.x - self.body_size[0] / 2),
-                int(self.body.position.y),
-                int(self.body.position.x + self.body_size[0] / 2),
-                int(self.body.position.y),
-                pr.GREEN,
+            # Draw the body's local x-axis.
+            axis_length = self.body_size[0] / 2
+            direction = pymunk.Vec2d(1, 0).rotated(self.body.angle)
+
+            start = pr.Vector2(
+                center.x - direction.x * axis_length,
+                center.y - direction.y * axis_length,
             )
+            end = pr.Vector2(
+                center.x + direction.x * axis_length,
+                center.y + direction.y * axis_length,
+            )
+
+            pr.draw_line_v(start, end, pr.GREEN)
