@@ -26,13 +26,13 @@ floor_bottom = floor_top - FLOOR_THICKNESS
 floor_verts = [(0, floor_bottom), (SCREEN_WIDTH, floor_bottom), (SCREEN_WIDTH, floor_top), (0, floor_top)]
 print(f"{floor_verts=}")
 floor_shape = pymunk.Poly(static_body, floor_verts)
-floor_shape.elasticity = 0.5
+floor_shape.elasticity = 1.0#0.5
 floor_shape.friction = 0.9
 
 # Left wall as polygon (x from 0 to WALL_THICKNESS)
 left_wall_verts = [(0, 0), (WALL_THICKNESS, 0), (WALL_THICKNESS, SCREEN_HEIGHT), (0, SCREEN_HEIGHT)]
 left_wall = pymunk.Poly(static_body, left_wall_verts)
-left_wall.elasticity = 0.8
+left_wall.elasticity = 1.0#0.8
 left_wall.friction = 0.9
 print(f"{left_wall_verts=}")
 
@@ -44,7 +44,7 @@ right_wall_verts = [
     (SCREEN_WIDTH - WALL_THICKNESS, SCREEN_HEIGHT),
 ]
 right_wall = pymunk.Poly(static_body, right_wall_verts)
-right_wall.elasticity = 0.8
+right_wall.elasticity = 1.0#0.8
 right_wall.friction = 0.9
 print(f"{right_wall_verts=}")
 
@@ -54,9 +54,9 @@ space.add(static_body, floor_shape, left_wall, right_wall)
 circle_radius = 25
 ball_body = pymunk.Body(1.0, 100)
 ball_body.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)  # start mid-screen
-ball_body.velocity = (600, 0)
+ball_body.velocity = (1000, 0)
 ball_shape = pymunk.Circle(ball_body, circle_radius)
-ball_shape.elasticity = 0.8
+ball_shape.elasticity = 1.0#0.8
 ball_shape.friction = 0.5
 space.add(ball_body, ball_shape)
 
