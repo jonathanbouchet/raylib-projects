@@ -1,7 +1,7 @@
 import asyncio
 import pymunk
 import pyray as pr
-from src.pymunk_body import Static, Dynamic
+from src.pymunk_body import Static, Dynamic, DynamicMouse
 
 # 1. Initialize Raylib window
 SCREEN_WIDTH = 600
@@ -27,8 +27,15 @@ async def main() -> None:
         position=pr.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT - FLOOR_THICKNESS // 2),
         body_size=pr.Vector2(SCREEN_WIDTH, FLOOR_THICKNESS),
         elasticity=1.0,
-        friction=1.0,
+        friction=0.0,
         color=pr.RAYWHITE,
+    )
+    ceilling = Static(
+        position=pr.Vector2(SCREEN_WIDTH / 2, FLOOR_THICKNESS // 2),
+        body_size=pr.Vector2(SCREEN_WIDTH, FLOOR_THICKNESS),
+        elasticity=1.0,
+        friction=0,
+        color=pr.BLACK,
     )
     left_wall = Static(
         position=pr.Vector2(
@@ -36,7 +43,7 @@ async def main() -> None:
         ),
         body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS),
         elasticity=1.0,
-        friction=1.0,
+        friction=0,
         color=pr.ORANGE,
     )
     right_wall = Static(
@@ -45,7 +52,7 @@ async def main() -> None:
         ),
         body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS),
         elasticity=1.0,
-        friction=1.0,
+        friction=0,
         color=pr.MAGENTA,
     )
     ball = Dynamic(
@@ -53,27 +60,34 @@ async def main() -> None:
         radius=20,
         velocity=pr.Vector2(1000, 100),
         elasticity=1,
-        friction=0.5,
+        friction=0,
         color=pr.Color(57, 255, 20, 255),
     )
 
+    player = DynamicMouse(position=pr.Vector2(100, 100), body_size=pr.Vector2(20, 200), elasticity=1, friction=0, color=pr.RED)
+
     space.add(floor.static_body, floor.shape)
+    space.add(ceilling.static_body, ceilling.shape)
     space.add(left_wall.static_body, left_wall.shape)
     space.add(right_wall.static_body, right_wall.shape)
     space.add(ball.body, ball.shape)
+    space.add(player.body, player.shape)
 
     while not pr.window_should_close():
         # logic here
         dt = pr.get_frame_time()
+        player.update()
 
         # rendering
         pr.begin_drawing()
         pr.clear_background(pr.Color(0, 0, 28, 255))
 
         floor.draw()
+        ceilling.draw()
         left_wall.draw()
         right_wall.draw()
         ball.draw()
+        player.draw()
 
         pr.draw_fps(0, 0)
         pr.draw_line(SCREEN_WIDTH // 2, 0, SCREEN_WIDTH // 2, SCREEN_HEIGHT, pr.RED)

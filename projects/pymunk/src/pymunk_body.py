@@ -82,3 +82,43 @@ class Dynamic:
             self.radius,
             self.color,
         )
+
+class DynamicMouse:
+    def __init__(
+    self,
+    position: pr.Vector2,
+    body_size: pr.Vector2,
+    elasticity: float,
+    friction: float,
+    color: pr.Color,
+) -> None:
+        self.body = pymunk.Body(body_type=pymunk.Body.KINEMATIC)
+        self.body.position = (position.x, position.y)
+        self.body_size = (body_size.x, body_size.y)
+        self.shape = pymunk.Poly.create_box(self.body, self.body_size)
+        self.shape.elasticity = elasticity
+        self.shape.friction = friction
+        self.color = color
+        self.debug = False
+
+    def update(self):
+        pos = pr.get_mouse_position()
+        self.body.position = (pos.x, pos.y)
+
+    def draw(self) -> None:
+        pr.draw_rectangle_v(
+            pr.Vector2(
+                self.body.position.x - self.body_size[0] / 2,
+                self.body.position.y - self.body_size[1] / 2,
+            ),
+            self.body_size,
+            self.color,
+        )
+        if self.debug:
+            pr.draw_line(
+                int(self.body.position.x - self.body_size[0] / 2),
+                int(self.body.position.y),
+                int(self.body.position.x + self.body_size[0] / 2),
+                int(self.body.position.y),
+                pr.GREEN,
+            )
