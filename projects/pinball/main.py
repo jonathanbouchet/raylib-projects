@@ -1,0 +1,109 @@
+import asyncio
+import pymunk
+import pyray as pr
+from src.pymunk_body import Static, Dynamic, DynamicMouse
+
+# 1. Initialize Raylib window
+SCREEN_WIDTH = 500
+SCREEN_HEIGHT = 800
+
+# Thickness / offset parameters
+FLOOR_THICKNESS = 5
+WALL_THICKNESS = 5
+
+
+async def main() -> None:
+
+    pr.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "app")
+    pr.set_target_fps(60)
+
+    # create a space and add properties
+    space = pymunk.Space()
+    space.gravity = (0.0, 500.0)
+
+    floor = Static(
+        position=pr.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT - FLOOR_THICKNESS // 2),
+        body_size=pr.Vector2(SCREEN_WIDTH, FLOOR_THICKNESS),
+        elasticity=1.0,
+        friction=0.0,
+        color=pr.RAYWHITE,
+    )
+    ceilling = Static(
+        position=pr.Vector2(SCREEN_WIDTH / 2, FLOOR_THICKNESS // 2),
+        body_size=pr.Vector2(SCREEN_WIDTH, FLOOR_THICKNESS),
+        elasticity=1.0,
+        friction=0,
+        color=pr.RAYWHITE,
+    )
+    left_wall = Static(
+        position=pr.Vector2(
+            FLOOR_THICKNESS // 2, (SCREEN_HEIGHT - FLOOR_THICKNESS) // 2
+        ),
+        body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS),
+        elasticity=1.0,
+        friction=0,
+        color=pr.RAYWHITE,
+    )
+    right_wall = Static(
+        position=pr.Vector2(
+            SCREEN_WIDTH - FLOOR_THICKNESS // 2, (SCREEN_HEIGHT - FLOOR_THICKNESS) // 2
+        ),
+        body_size=pr.Vector2(FLOOR_THICKNESS, SCREEN_HEIGHT - FLOOR_THICKNESS),
+        elasticity=1.0,
+        friction=0,
+        color=pr.RAYWHITE,
+    )
+    ball = Dynamic(
+        position=pr.Vector2(SCREEN_WIDTH // 2, 100),
+        radius=20,
+        velocity=pr.Vector2(1000, 100),
+        elasticity=1,
+        friction=0,
+        color=pr.Color(57, 255, 20, 255),
+    )
+
+    # player = DynamicMouse(
+    #     position=pr.Vector2(100, 100),
+    #     body_size=pr.Vector2(20, 200),
+    #     elasticity=1,
+    #     friction=0,
+    #     color=pr.RED,
+    #     debug=True,
+    # )
+
+    space.add(floor.static_body, floor.shape)
+    space.add(ceilling.static_body, ceilling.shape)
+    space.add(left_wall.static_body, left_wall.shape)
+    space.add(right_wall.static_body, right_wall.shape)
+    space.add(ball.body, ball.shape)
+    # space.add(player.body, player.shape)
+
+    while not pr.window_should_close():
+        # logic here
+        dt = pr.get_frame_time()
+        # player.update(dt=dt)
+
+        # rendering
+        pr.begin_drawing()
+        pr.clear_background(pr.Color(0, 0, 28, 255))
+
+        floor.draw()
+        ceilling.draw()
+        left_wall.draw()
+        right_wall.draw()
+        ball.draw()
+        # player.draw()
+
+        pr.draw_fps(5, 5)
+        pr.draw_line(SCREEN_WIDTH // 2, 0, SCREEN_WIDTH // 2, SCREEN_HEIGHT, pr.RED)
+        pr.draw_line(0, SCREEN_HEIGHT // 2, SCREEN_WIDTH, SCREEN_HEIGHT // 2, pr.RED)
+        pr.end_drawing()
+        # update pymunk
+        space.step(dt)
+        await asyncio.sleep(0)
+
+    pr.close_window()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
